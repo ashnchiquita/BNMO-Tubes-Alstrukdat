@@ -10,13 +10,12 @@
 typedef struct { 
 	int X; /* absis   */
 	int Y; /* ordinat */
+   int maxKanan;
+   int maxBawah;
 } POINT;
 
 /*Define Maks X dan Maks Y (batas kanan dan atas peta)*/
 // Nanti diubah kalau sudah ada adt peta 
-
-#define Max_X 10
-#define Max_Y 10
 
 /*Define Min X dan Min Y*/
 #define Min_X 0 
@@ -25,21 +24,15 @@ typedef struct {
 /* *** Notasi Akses: Selektor POINT *** */
 #define Absis(P) (P).X
 #define Ordinat(P) (P).Y
-        
+#define MAXB(P) (P).maxBawah
+#define MAXK(P) (P).maxKanan
+
 /* *** DEFINISI PROTOTIPE PRIMITIF *** */
 /* *** Konstruktor membentuk POINT *** */
-void CreatePoint (POINT * P, int X, int Y);
+void CreatePoint (POINT * P, int maxKanan, int maxKiri);
 /* Membentuk sebuah POINT dari komponen-komponennya */
 
 /* *** KELOMPOK Interaksi dengan I/O device, BACA/TULIS  *** */                                                 
-void BacaPOINT (POINT * P); 
-/* Membaca nilai absis dan ordinat dari keyboard dan membentuk 
-   POINT P berdasarkan dari nilai absis dan ordinat tersebut */
-/* Komponen X dan Y dibaca dalam 1 baris, dipisahkan 1 buah spasi */
-/* Contoh: 1 2 
-   akan membentuk POINT <1,2> */
-/* I.S. Sembarang */
-/* F.S. P terdefinisi */
 void TulisPOINT (POINT P);
 /* Nilai P ditulis ke layar dengan format "(X,Y)" 
    tanpa spasi, enter, atau karakter lain di depan, belakang, 
@@ -53,7 +46,7 @@ void TulisPOINT (POINT P);
 boolean IsOrigin (POINT P);
 /* Menghasilkan true jika P adalah titik origin */
 
-boolean isValid(int x, int y);
+boolean isValid(POINT P,int x, int y);
 
 /* *** KELOMPOK OPERASI LAIN TERHADAP TYPE *** */                           
 void NextX (POINT *P);

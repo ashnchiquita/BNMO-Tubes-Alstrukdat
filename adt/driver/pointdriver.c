@@ -3,16 +3,16 @@
 
 int main(){
     POINT P;
-    int x = 0; 
-    int y = 0; 
+    // Nanti diganti setelah baca map dari file (tunggu ADT Map)
+    int maxB = 10;
+    int maxK = 10;
     // Tes create point
-    CreatePoint(&P,x,y);
-
+    CreatePoint(&P,maxK,maxB);
+    
     // Tes tulis point
     TulisPOINT(P);
 
     // Tes baca point 
-    BacaPOINT(&P);
     
     // Tes move left (PrevX)
     NextX(&P);
