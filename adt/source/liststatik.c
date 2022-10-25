@@ -1,184 +1,239 @@
 #include <stdio.h>
 #include "liststatik.h"
+#include "boolean.h"
 
+/* ********** KONSTRUKTOR ********** */
 void CreateListStatik(ListStatik *l) {
-    int i;
-    for (i = 0; i < CAPACITY; i++) {
-        ELMT(*l, i) = MARK;
-    }
+	int i;
+	for (i = IDX_MIN; i < CAPACITY; i++) {
+		ELMT(*l, i) = MARK;
+	}
 }
 
+/* ********** SELEKTOR (TAMBAHAN) ********** */
 int listLength(ListStatik l) {
-    int i =0;
-    while ((i < CAPACITY) && (ELMT(l,i) != MARK)) {
-        i += 1;
-    }
-    return i;
+	int i, length;
+	length = 0;
+	for (i = IDX_MIN; i < CAPACITY; i++) {
+		if (ELMT(l, i) != MARK) {
+			length += 1;
+		}
+	}
+	return length;
 }
 
+/* *** Selektor INDEKS *** */
 IdxType getFirstIdx(ListStatik l) {
-    int i = 0;
-    return ELMT(l, i);
-}
-IdxType getLastIdx(ListStatik l) {
-    int i = CAPACITY - 1;
-    return ELMT(l, i);
+	int i;
+	for (i = IDX_MIN; i < CAPACITY; i++) {
+		if (ELMT(l, i) != MARK) {
+			return i;
+		}
+	}
+	
 }
 
-boolean isIdxValid(ListStatik l, IdxType i) {
-    return (i < CAPACITY) && (i >= 0);
+IdxType getLastIdx(ListStatik l) {
+	int i;
+	for (i = CAPACITY-1; i >= IDX_MIN; i--) {
+			if (ELMT(l, i) != MARK) {
+				return i;
+			}
+		}
 }
+
+/* ********** Test Indeks yang valid ********** */
+boolean isIdxValid(ListStatik l, IdxType i) {
+	return ((i >= IDX_MIN) && (i <= CAPACITY-1));
+}
+
 
 boolean isIdxEff(ListStatik l, IdxType i) {
-    return (i < listLength(l)) && (i >= 0);
+	return ((i >= IDX_MIN) && (i <= listLength(l)-1));
 }
 
+/* ********** TEST KOSONG/PENUH ********** */
 boolean isEmpty(ListStatik l) {
-    return (listLength(l) == 0);
+	return (listLength(l) == 0);
 }
 
 boolean isFull(ListStatik l) {
-    return (listLength(l) == CAPACITY);
+	return (listLength(l) == CAPACITY);
 }
 
 void readList(ListStatik *l) {
-    int n = IDX_UNDEF, i;
-    CreateListStatik(l);
-    while ((n > CAPACITY) || (n < 0)) {
-        scanf("%d", &n);
-    }
-    for (i = 0; i < n; i++) {
-        scanf("%d", &ELMT(*l, i));
-    }
+	int n, i;
+	do {
+		scanf("%d", &n);
+	} while ((n < 0) || (n > CAPACITY));
+	CreateListStatik(l);
+	for (i = IDX_MIN; i < n; i++) {
+		scanf("%d", &ELMT(*l, i));
+	}
 }
 
 void printList(ListStatik l) {
-    int i;
-    printf("[");
-    if (listLength(l) != 0) {
-        printf("%d", ELMT(l,0));
-        for (i =1; i < listLength(l); i++) {
-            printf(",%d", ELMT(l,i));
-        }
-    }
-    printf("]");
+	int i, length;
+	length = listLength(l);
+	printf("[");
+	if (length != 0) {
+		for (i = IDX_MIN; i < length-1; i++) {
+		printf("%d,", ELMT(l,i));
+	}
+	printf("%d]", ELMT(l,length-1));
+	} else {
+		printf("]");
+	}
 }
 
+/* ********** OPERATOR ARITMATIKA ********** */
 ListStatik plusMinusList(ListStatik l1, ListStatik l2, boolean plus) {
-    int i;
-    ListStatik l;
-    CreateListStatik(&l);
-    if (plus) {
-        for (i = 0; i < listLength(l1); i++) {
-            ELMT(l,i) = ELMT(l1,i) + ELMT(l2,i);
-        }
-    }
-    else {
-        for (i = 0; i < listLength(l1); i++) {
-            ELMT(l,i) = ELMT(l1,i) - ELMT(l2,i);
-        }
-    }
-    return l;
+	int i, length;
+	length = listLength(l1);
+	if (plus) {
+		for (i = IDX_MIN; i < length; i++) {
+			ELMT(l1,i) += ELMT(l2,i);
+		}
+	} else {
+		for (i = IDX_MIN; i < length; i++) {
+			ELMT(l1,i) -= ELMT(l2,i);
+		}
+	}
+	return l1;
 }
 
+
+/* ********** OPERATOR RELASIONAL ********** */
 boolean isListEqual(ListStatik l1, ListStatik l2) {
-    boolean x = true;
-    int i;
-    if (listLength(l1) == listLength(l2)) {
-        for (i = 0; i < listLength(l1); i++) {
-            if (ELMT(l1,i) != ELMT(l2,i)) {
-                x = false;
-            }
-        }
-    } else {
-        x = false;
-    }
-    return x;
+	int i, length;
+	length = listLength(l1);
+	if (length == listLength(l2)) {
+		for (i = 0; i < length; i++) {
+			if (ELMT(l1,i) != ELMT(l2,i)) {
+				return false;
+			}
+		}
+		return true;
+	} else {
+		return false;
+	}
 }
 
+/* ********** SEARCHING ********** */
 int indexOf(ListStatik l, ElType val) {
-    int i = 0;
-    while ((ELMT(l,i) != val) && (i < listLength(l))) {
-        i += 1;
-    }
-    if (ELMT(l,i) == val) {
-        return i;
-    } else {
-        return IDX_UNDEF;
-    }
+	int i, length;
+	length = listLength(l);
+	for (i = IDX_MIN; i < length; i++) {
+		if (ELMT(l,i) == val) {
+			return i;
+		}
+	}
+	return IDX_UNDEF;
 }
 
+/* ********** NILAI EKSTREM ********** */
 void extremeValues(ListStatik l, ElType *max, ElType *min) {
-    int i;
-    *max = ELMT(l, 0);
-    *min = ELMT(l, 0);
-    for (i = 1; i < listLength(l); i++) {
-        if (ELMT(l,i) > *max) {
-            *max = ELMT(l, i);
-        }
-        if (ELMT(l,i) < *min) {
-            *min = ELMT(l,i);
-        }
-    }
+	int i;
+	*max = ELMT(l,IDX_MIN);
+	*min = ELMT(l,IDX_MIN);
+	
+	i = 1;
+	while (ELMT(l,i) != MARK) {
+		if (ELMT(l,i) > *max) {
+			*max = ELMT(l,i);
+		}	
+		if (ELMT(l,i) < *min) {
+			*min = ELMT(l,i);
+		}
+		i++;
+	}
 }
 
+/* ********** MENAMBAH ELEMEN ********** */
 void insertFirst(ListStatik *l, ElType val) {
-    ELMT(*l, listLength(*l)) = val;
+	int i, length;
+	length = listLength(*l);
+	for (i = length; i > IDX_MIN; i--) {
+		ELMT(*l,i) = ELMT(*l,i-1);
+	}
+	ELMT(*l,IDX_MIN) = val;
 }
 
 void insertAt(ListStatik *l, ElType val, IdxType idx) {
-    ELMT(*l, listLength(*l)-idx) = val;
+	int i, length;
+	length = listLength(*l);
+	for (i = length; i > idx; i--) {
+		ELMT(*l,i) = ELMT(*l,i-1);
+	}
+	ELMT(*l,idx) = val;
 }
 
 void insertLast(ListStatik *l, ElType val) {
-    ELMT(*l, listLength(*l)) = val;
+	int length;
+	length = listLength(*l);
+	ELMT(*l,length) = val;
 }
 
+/* ********** MENGHAPUS ELEMEN ********** */
 void deleteFirst(ListStatik *l, ElType *val) {
-    *val = ELMT(*l, listLength(*l)-1);
-    ELMT(*l, listLength(*l)-1) = IDX_MIN;
+	int i, length;
+	*val = ELMT(*l, IDX_MIN);
+	length = listLength(*l);
+	for (i = IDX_MIN; i < length; i++) {
+		ELMT(*l,i) = ELMT(*l,i+1);
+	}
 }
 
 void deleteAt(ListStatik *l, ElType *val, IdxType idx) {
-    *val = ELMT(*l, listLength(*l)-idx);
-    ELMT(*l, listLength(*l)-idx) = MARK;
+	int i, length;
+	*val = ELMT(*l, idx);
+	length = listLength(*l);
+	for (i = idx; i < length; i++) {
+		ELMT(*l,i) = ELMT(*l,i+1);
+	}
 }
 
 void deleteLast(ListStatik *l, ElType *val) {
-    *val = ELMT(*l, listLength(*l)-1);
-    ELMT(*l, listLength(*l)-1) = MARK;
+	int i, length;
+	length = listLength(*l);
+	*val = ELMT(*l, length-1);
+	ELMT(*l, length-1) = MARK;
 }
 
+/* ********** SORTING ********** */
 void sortList(ListStatik *l, boolean asc) {
-    ElType Temp;
-    int Pass, i, IMax, IMin;
-    if (asc) {
-        if (listLength(*l) > 0) {
-            for (Pass = 0; Pass < listLength(*l)-1; Pass++) {
-                IMin = Pass;
-                for (i=Pass+1; i<listLength(*l);i++) {
-                    if (ELMT(*l, IMin) > ELMT(*l,1)) {
-                        IMin = i;
-                    }
-                }
-                Temp = ELMT(*l, IMin);
-                ELMT(*l, IMin) = ELMT(*l, Pass);
-                ELMT(*l, Pass) = Temp;
-            }
-        }
-    } else {
-        if (listLength(*l)>0) {
-            for (Pass=0; Pass<listLength(*l)-1;Pass++) {
-                IMax = Pass;
-                for (i=Pass+1; i<listLength(*l);i++) {
-                    if (ELMT(*l, IMax) < ELMT(*l,i)) {
-                        IMax = i;
-                    }
-                }
-                Temp = ELMT(*l, IMax);
-                ELMT(*l, IMax) = ELMT(*l, Pass);
-                ELMT(*l, Pass) = Temp;
-            }
-        }
-    }
+	int i, j, length, temp, idx;
+	length = listLength(*l);
+	if (asc) {
+		for (i = IDX_MIN; i < length; i++) {
+			idx = i;
+			for (j = i+1; j < length; j++) {
+				if (ELMT(*l,j) < ELMT(*l,idx)) {
+					idx = j;
+				}
+			}
+			
+			if (idx != i) {
+				temp = ELMT(*l, i);
+				ELMT(*l, i) = ELMT(*l, idx);
+				ELMT(*l, idx) = temp;
+			}
+		}
+	} else {
+		int idx;
+		for (i = IDX_MIN; i < length; i++) {
+			idx = i;
+			for (j = i+1; j < length; j++) {
+				if (ELMT(*l,j) > ELMT(*l,idx)) {
+					idx = j;
+				}
+			}
+			
+			if (idx != i) {
+				temp = ELMT(*l, i);
+				ELMT(*l, i) = ELMT(*l, idx);
+				ELMT(*l, idx) = temp;
+			}
+		}
+	}
 }
