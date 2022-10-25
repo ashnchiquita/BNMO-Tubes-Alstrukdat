@@ -1,9 +1,3 @@
-// Nama : Ferindya Aulia Berlianty //
-// NIM : 13521161 //
-// Kelas : 02 //
-// Tanggal : 28 September 2022 //
-// Topik : ADT Mesin Kata //
-
 #include "boolean.h"
 #include "charmachine.h"
 #include "wordmachine.h"
