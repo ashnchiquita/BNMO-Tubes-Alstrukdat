@@ -3,52 +3,57 @@
 #include "wordmachine.h"
 #include <stdio.h>
 
-
 boolean EndWord;
 Word currentWord;
 
-void IgnoreBlanks() {
-   while (currentChar == BLANK) {
-    ADV();
-   }
+void IgnoreBlanks()
+{
+    while (currentChar == BLANK)
+    {
+        ADV();
+    }
 }
 
-
-void STARTWORD() {
+void STARTWORD()
+{
     START();
     IgnoreBlanks();
-    if (currentChar == MARK) {
-        EndWord = true;
+    if (currentChar == MARK)
+    {
+        endWord = true;
     }
-    else {
-        EndWord = false;
+    else
+    {
+        endWord = false;
         CopyWord();
     }
 }
 
-void ADVWORD() {
+void ADVWORD()
+{
     IgnoreBlanks();
-    if (currentChar == MARK) {
-        EndWord = true;
+    if (currentChar == MARK)
+    {
+        endWord = true;
     }
-    else {
+    else
+    {
         CopyWord();
         IgnoreBlanks();
     }
 }
 
-void CopyWord() {
-    int i = 0;
-    while (currentChar != MARK && currentChar != BLANK) {
-        currentWord.TabWord[i] = currentChar;
-        ADV();
-        i++;
-    }
-    if (i > NMax) {
-        currentWord.Length = NMax;
-    }
-    else {
-        currentWord.Length = i;
-
+void CopyWord()
+{
+    currentWord.Length = 0;
+    while (currentChar != BLANK && currentChar != MARK)
+    {
+        if (currentWord.Length < NMax)
+        { // jika lebih akan terpotong
+            currentWord.TabWord[currentWord.Length++] = currentChar;
+            ADV();
+        }
+        else
+            break;
     }
 }
