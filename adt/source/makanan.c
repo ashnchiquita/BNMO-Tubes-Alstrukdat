@@ -1,21 +1,6 @@
 #include "../makanan.h"
 #include <stdio.h>
 
-Word readMakanan(){
-    int i = 1;
-    Word tempWord;
-    int index = currentWord.Length;
-    char temp = currentChar;
-    while(currentChar != MARK){
-        i++;
-        tempWord.TabWord[i-1] = currentChar;
-        ADV();
-    }
-    tempWord.Length = i;
-    Word w3 = concatWord(currentWord,tempWord);
-    return w3;
-
-}
 void CreateListMakanan(ListMakanan *l){
     for(int i = IDX_MIN; i < CAPACITY;i++){
         id((*l).contents[i]) = -1;

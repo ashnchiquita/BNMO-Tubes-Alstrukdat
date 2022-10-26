@@ -7,10 +7,9 @@
 
 #include "boolean.h"
 
-#define MARKTime {-99, -99, -99}
 /* *** Definisi TYPE TIME <HH:MM:SS> *** */
 typedef struct { 
-    int HH; /* integer [0..30] */
+   int HH; /* integer [0..30] */
 	int JJ; /* integer [0..23] */
 	int MM; /* integer [0..59] */
 } TIME;

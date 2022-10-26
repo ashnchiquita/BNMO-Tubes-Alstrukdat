@@ -26,6 +26,19 @@ void STARTWORD() {
     }
 }
 
+void ADVMAKANAN(){
+    Word EMPTY = {"", 0};
+    currentWord = EMPTY;
+    IgnoreBlanks();
+    if(currentChar == MARK){
+        EndWord = true;
+    }
+    else{
+        CopyWordMakanan();
+        IgnoreBlanks();
+    }
+}
+
 void ADVWORD() {
     Word EMPTY = {"", 0};
     currentWord = EMPTY;
@@ -40,17 +53,16 @@ void ADVWORD() {
 }
 
 void CopyWord() {
-    int i = 0;
-    while(currentChar != MARK && currentChar != BLANK){
-        currentWord.TabWord[i] = currentChar;
-        ADV();
-        i++;
-    }
-    if (i > NMax){
-        currentWord.Length = NMax;
-    }
-    else{
-        currentWord.Length = i;
+    currentWord.Length = 0;
+    while (currentChar != MARK && currentChar != BLANK)
+    {
+        if (currentWord.Length < NMax)
+        { // jika lebih akan terpotong
+            currentWord.TabWord[currentWord.Length++] = currentChar;
+            ADV();
+        }
+        else
+            break;
     }
 }
 
@@ -119,5 +131,19 @@ boolean wordEqual(Word w1, Word w2){
             }
         }
         return true;
+    }
+}
+
+void CopyWordMakanan() {
+    currentWord.Length = 0;
+    while (currentChar != MARK)
+    {
+        if (currentWord.Length < NMax)
+        { // jika lebih akan terpotong
+            currentWord.TabWord[currentWord.Length++] = currentChar;
+            ADV();
+        }
+        else
+            break;
     }
 }

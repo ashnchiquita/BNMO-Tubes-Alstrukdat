@@ -1,8 +1,5 @@
-#include "wordmachine.h"
-#include "charmachine.h"
-#include "time.h"
+#include "../config.h"
 #include <stdio.h>
-#include "makanan.h"
 
 // Mengubah Word ke integer
 int wordToInt(Word w){
@@ -13,12 +10,12 @@ int wordToInt(Word w){
     return jumlah;
 }
 
-int main(){
+void configMakanan(Word w){
     Word temp1;
     Makanan mTemp;
     int HH,JJ,MM;
     
-    STARTFILE("./configMakanan.txt");
+    STARTFILE("./adt/configMakanan.txt");
     // Mendapatkan banyaknya data makanan yang akan diberikan
     ADVWORD();
     int n = wordToInt(currentWord);
@@ -35,8 +32,8 @@ int main(){
         ADVNEWLINE();
 
         // Mendapatkan nama makanan 
-        ADVWORD();
-        Word nama= readMakanan();
+        ADVMAKANAN();
+        Word nama = currentWord;
         ADVNEWLINE();
 
         // Mendapatkan Waktu Expired makanan

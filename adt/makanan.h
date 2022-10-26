@@ -27,11 +27,6 @@ typedef struct
 #define aksi(e) (e).aksi
 #define makanan(m,i) (m).contents[(i)]
 
-Word readMakanan();
-/* Berfungsi untuk membaca makanan dari file konfigurasi makanan */
-/* I.S. File konfigurasi makanan sudah terdefinisi */
-/* F.S List makanan sudah terisi beberapa jenis makanan */
-
 void CreateListMakanan(ListMakanan *l);
 /* Berfungsi untuk membuat list makanan */
 /* I.S. : l sembarang */
