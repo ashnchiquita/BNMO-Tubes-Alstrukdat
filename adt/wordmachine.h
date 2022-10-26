@@ -54,8 +54,22 @@ void CopyWord();
           Jika panjang kata melebihi NMax, maka sisa kata "dipotong" */
 
 void printWord(Word w);
+/* Menampilkan kata ke dalam layar */
+/* I.S. : word W terdfinisi*/
+/* F.S : word W tercetak ke dalam layar  */
+
 void ADVNEWLINE();
+/* Mengabaikan '\n */
+/* I.S. : currentChar = MARK dan EndWord bernilai true  */
+/* F.S. : currentChar != MARK dan EndWord bernilai false */
+
 Word concatWord(Word w1, Word w2);
+/* Menggabungkan dua kata menjadi 1 kata */
+
 Word CopyPaste(Word w);
+/* Mengcopy Word w menjadi Word lain */
+
 boolean wordEqual(Word w1, Word w2);
+/* Mengembalikan nilai benar (true) jika Word w1 = Word w2 */
+
 #endif

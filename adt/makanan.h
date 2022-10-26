@@ -28,10 +28,30 @@ typedef struct
 #define makanan(m,i) (m).contents[(i)]
 
 Word readMakanan();
+/* Berfungsi untuk membaca makanan dari file konfigurasi makanan */
+/* I.S. File konfigurasi makanan sudah terdefinisi */
+/* F.S List makanan sudah terisi beberapa jenis makanan */
+
 void CreateListMakanan(ListMakanan *l);
+/* Berfungsi untuk membuat list makanan */
+/* I.S. : l sembarang */
+/* Terbentuk ListMakanan l kosong dengan kapasitas CAPACITY*/
+/* Inisialisasi semua id MAKANAN dalam ListMakanan dengan nilai -1 */
+
 int panjangListMakanan(ListMakanan l);
+/* Mengirimkan banyaknya elemen dalam list makanan l*/
+
 void printMakanan(ListMakanan l);
+/* Menampilkan isi list makanan ke terminal */
+/* I.S : ListMakanan l terdefinisi */
+/* F.S : Isi dari ListMakanan l tercetak ke layar */
+
 void addMakanan(ListMakanan *l, MAKANAN m);
+/* Menambahkan MAKANAN m ke dalam ListMakanan l */
+/* I.S : ListMakanan l dan MAKANAN m terdefinisi */
+/* F.S : MAKANAN m masuk sebagai elemen terakhir di ListMakanan *l */
+
 ListMakanan pengelompokanMakanan(ListMakanan l,Word w);
+/* Mengelompokkan makanan berdasarkan kategori aksi yang dimiliki makanan*/
 
 #endif

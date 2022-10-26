@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "makanan.h"
 
+// Mengubah Word ke integer
 int wordToInt(Word w){
     int jumlah = 0; 
     for(int i = 0; i < w.Length;i++){
@@ -18,70 +19,77 @@ int main(){
     int HH,JJ,MM;
     START();
 
-    // Kapasitas maksimal list
+    // Mendapatkan banyaknya data makanan yang akan diberikan
     ADVWORD();
     int n = wordToInt(currentWord);
     int i = 0; 
-    printf("%d\n",n);
     ADVNEWLINE();
+
+    // Membuat ListMakanan untuk menampung semua makanan yang ada 
     ListMakanan l;
     CreateListMakanan(&l);
     while(!EndWord){
-        // ID dari makanan
+        // Mendapatkan ID makanan
         ADVWORD();
         int id = wordToInt(currentWord);
-        printf("%d\n",id);
         ADVNEWLINE();
 
-
-        // Nama makanan 
+        // Mendapatkan nama makanan 
         ADVWORD();
         Word nama= readMakanan();
-        printWord(currentWord);
         ADVNEWLINE();
 
-        // Waktu Expired makanan
+        // Mendapatkan Waktu Expired makanan
         ADVWORD();
         TIME expired;
+        // Mendapatkan hari expired  makanan
         HH = wordToInt(currentWord);
-
+        // Mendapatkan jam expired makanan
         ADVWORD();
         JJ = wordToInt(currentWord);
-
+        // Mendapatkan menit expired makanan
         ADVWORD();
         MM = wordToInt(currentWord);
+
+        // Membuat waktu dengan hari,jam, dan menit yang sudah ada
         CreateTime(&expired,HH,JJ,MM);
-        TulisTIME(expired);
         ADVNEWLINE();
         
-        // Waktu Pengiriman 
+        // Mendapatkan Waktu Pengiriman makanan
         ADVWORD();
         TIME delivery;
+        // Mendapatkan hari delivery makanan
         HH = wordToInt(currentWord);
-
+        // Mendapatkan jam delivery makanan
         ADVWORD();
         JJ = wordToInt(currentWord);
-
+        // Mendapatkan menit delivery makanan
         ADVWORD();
         MM = wordToInt(currentWord);
+        // Membuat waktu delivery dengan hari,jam, dan menit yang ada
         CreateTime(&delivery,HH,JJ,MM);
-        TulisTIME(delivery);
         ADVNEWLINE();
 
-        // Aksi 
+        // Mendapatkan aksi makanan 
         ADVWORD();
         Word aksi;
         aksi = CopyPaste(currentWord);
-        printWord(aksi);
+
+        /*Jika sudah berada pada MAKANAN terakhir dalam list, gunakan ADVWORD
+        agar MARK terbaca dan EndWord bernilai True*/ 
         if(i == n-1){
             ADVWORD();
         }else{
+            /*Jika belum pada MAKANAN terakhir di list, gunakan ADVNEWLINE
+            agar MARK tidak terbaca dan EndWord bernilai false*/
             ADVNEWLINE();
         }
+
+        // Simpan data - data di atas dalam variable MAKANAN mTemp
         MAKANAN mTemp = {id,nama,expired,delivery,aksi};
+        // Masukkan mTemp ke dalam ListMakanan
         addMakanan(&l,mTemp);
         i++;
     }
-    printf("%d\n",panjangListMakanan(l));
     printMakanan(l);
 }

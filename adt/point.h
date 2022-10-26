@@ -29,8 +29,10 @@ typedef struct {
 
 /* *** DEFINISI PROTOTIPE PRIMITIF *** */
 /* *** Konstruktor membentuk POINT *** */
-void CreatePoint (POINT * P, int maxKanan, int maxKiri);
-/* Membentuk sebuah POINT dari komponen-komponennya */
+void CreatePoint (POINT * P, int maxKanan, int maxBawah);
+/* Membuat point dengan batas kanan dan batas bawah yang sudah ditentukan dari konfigurasi peta*/
+/* I.S. : Konfigurasi peta sudah dilakukan */
+/* F.S. : Terbentuk POINT P dengan nilai x,y = 0,0 dan memiliki nilai batas kanan dan batas bawah */
 
 /* *** KELOMPOK Interaksi dengan I/O device, BACA/TULIS  *** */                                                 
 void TulisPOINT (POINT P);
@@ -47,6 +49,7 @@ boolean IsOrigin (POINT P);
 /* Menghasilkan true jika P adalah titik origin */
 
 boolean isValid(POINT P,int x, int y);
+/*Menghasilkan True jika 0<=x<=MAXK(P) dan 0<=y<=MAXB(P)*/
 
 /* *** KELOMPOK OPERASI LAIN TERHADAP TYPE *** */                           
 void NextX (POINT *P);
