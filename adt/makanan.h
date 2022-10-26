@@ -13,11 +13,11 @@ typedef struct{
     TIME expired;
     TIME delivery;
     Word aksi;
-}MAKANAN;
+}Makanan;
 
 typedef struct 
 {
-    MAKANAN contents[CAPACITY];
+    Makanan contents[CAPACITY];
 }ListMakanan;
 
 #define id(e) (e).id
@@ -46,7 +46,7 @@ void printMakanan(ListMakanan l);
 /* I.S : ListMakanan l terdefinisi */
 /* F.S : Isi dari ListMakanan l tercetak ke layar */
 
-void addMakanan(ListMakanan *l, MAKANAN m);
+void addMakanan(ListMakanan *l, Makanan m);
 /* Menambahkan MAKANAN m ke dalam ListMakanan l */
 /* I.S : ListMakanan l dan MAKANAN m terdefinisi */
 /* F.S : MAKANAN m masuk sebagai elemen terakhir di ListMakanan *l */

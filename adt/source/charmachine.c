@@ -19,7 +19,12 @@ void START()
                  Jika currentChar = MARK maka EOP akan menyala (true) */
 
        /* Algoritma */
-       pita = fopen("./config.txt","r");
+       pita =stdin;
+       ADV();
+}
+
+void STARTFILE(char *str){
+       pita = fopen(str,"r");
        ADV();
 }
 

@@ -11,7 +11,7 @@ int main(){
     CreateTime(&T1,0,0,15);
     // Testint create list makanan
     CreateListMakanan(&l1);
-    MAKANAN m = {12,nama,T1,T2,aksi};
+    Makanan m = {12,nama,T1,T2,aksi};
 
     // Testing add makanan ke dalam list makanan
     addMakanan(&l1,m);

@@ -18,6 +18,7 @@ void START();
    F.S. : currentChar adalah karakter pertama pada pita
           Jika currentChar != MARK maka EOP akan padam (false)
           Jika currentChar = MARK maka EOP akan menyala (true) */
+void STARTFILE(char *str);
 
 void ADV();
 /* Pita dimajukan satu karakter.
@@ -25,5 +26,7 @@ void ADV();
    F.S. : currentChar adalah karakter berikutnya dari currentChar yang lama,
           currentChar mungkin = MARK
           Jika  currentChar = MARK maka EOP akan menyala (true) */
+
+
 
 #endif

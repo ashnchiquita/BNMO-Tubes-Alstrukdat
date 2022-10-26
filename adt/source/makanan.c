@@ -50,7 +50,7 @@ void printMakanan(ListMakanan l){
     }
 }
 
-void addMakanan(ListMakanan *l,MAKANAN m){
+void addMakanan(ListMakanan *l,Makanan m){
     int length = panjangListMakanan(*l);
     makanan(*l,length) = m;
 }

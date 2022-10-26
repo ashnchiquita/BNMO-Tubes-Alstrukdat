@@ -15,10 +15,10 @@ int wordToInt(Word w){
 
 int main(){
     Word temp1;
-    MAKANAN mTemp;
+    Makanan mTemp;
     int HH,JJ,MM;
-    START();
-
+    
+    STARTFILE("./configMakanan.txt");
     // Mendapatkan banyaknya data makanan yang akan diberikan
     ADVWORD();
     int n = wordToInt(currentWord);
@@ -86,7 +86,7 @@ int main(){
         }
 
         // Simpan data - data di atas dalam variable MAKANAN mTemp
-        MAKANAN mTemp = {id,nama,expired,delivery,aksi};
+        Makanan mTemp = {id,nama,expired,delivery,aksi};
         // Masukkan mTemp ke dalam ListMakanan
         addMakanan(&l,mTemp);
         i++;

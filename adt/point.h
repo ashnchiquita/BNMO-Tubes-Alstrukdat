@@ -53,15 +53,23 @@ boolean isValid(POINT P,int x, int y);
 
 /* *** KELOMPOK OPERASI LAIN TERHADAP TYPE *** */                           
 void NextX (POINT *P);
-/* Mengirim salinan P dengan absis ditambah satu */              
+/* Menambahkan 1 ke nilai x dari POINT P  */
+/* I.S. POINT P terdefinisi */
+/* F.S. POINT P bergerak 1 ke kanan jika valid. POINT P tetap di posisi semula jika x tidak valid */
+
 void NextY (POINT *P);
-/* Mengirim salinan P dengan ordinat ditambah satu */
+/* Menambahkan 1 ke nilai y dari POINT P  */
+/* I.S. POINT P terdefinisi */
+/* F.S. POINT P bergerak 1 ke bawah jika valid. POINT P tetap di posisi semula jika y tidak valid */
 
 void PrevX(POINT *P);
-// Mengirim salinan P dengan absis dikurangi 1
+/* Mengurangi 1 ke nilai x dari POINT P  */
+/* I.S. POINT P terdefinisi */
+/* F.S. POINT P bergerak 1 ke kiri jika valid. POINT P tetap di posisi semula jika y tidak valid */
 
 void PrevY (POINT *P);
-// Mengirim salinan P dengan ordinat dikurangi 1 
-
+/* Mengurangi 1 ke nilai y dari POINT P  */
+/* I.S. POINT P terdefinisi */
+/* F.S. POINT P bergerak 1 ke atas jika valid. POINT P tetap di posisi semula jika y tidak valid */
 
 #endif
