@@ -6,6 +6,7 @@
 
 #include "boolean.h"
 #include "charmachine.h"
+#include "liststatik.h"
 
 #define NMax 50
 #define BLANK ' '
@@ -15,6 +16,12 @@ typedef struct
    char TabWord[NMax]; /* container penyimpan kata, indeks yang dipakai [0..NMax-1] */
    int Length;
 } Word;
+
+typedef struct 
+{
+   Word contents[NMax];
+}WordList;
+
 
 /* State Mesin Word */
 extern boolean EndWord;
@@ -46,4 +53,9 @@ void CopyWord();
           currentChar adalah karakter sesudah karakter terakhir yang diakuisisi.
           Jika panjang kata melebihi NMax, maka sisa kata "dipotong" */
 
+void printWord(Word w);
+void ADVNEWLINE();
+Word concatWord(Word w1, Word w2);
+Word CopyPaste(Word w);
+boolean wordEqual(Word w1, Word w2);
 #endif

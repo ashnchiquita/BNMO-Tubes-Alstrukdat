@@ -1,7 +1,7 @@
 /* File: charmachine.c */
 /* Implementasi Mesin Karakter */
 
-#include "charmachine.h"
+#include "../charmachine.h"
 #include <stdio.h>
 
 char currentChar;
@@ -19,7 +19,7 @@ void START()
                  Jika currentChar = MARK maka EOP akan menyala (true) */
 
        /* Algoritma */
-       pita = stdin;
+       pita = fopen("./config.txt","r");
        ADV();
 }
 
@@ -35,8 +35,8 @@ void ADV()
        /* Algoritma */
        retval = fscanf(pita, "%c", &currentChar);
        EOP = (currentChar == MARK);
-       if (EOP)
-       {
-              fclose(pita);
-       }
+       // if (EOP)
+       // {
+       //        fclose(pita);
+       // }
 }

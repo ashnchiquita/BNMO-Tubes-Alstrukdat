@@ -25,7 +25,7 @@ void BacaTIME (TIME * T)
     CreateTime(T,HH,JJ,MM);
 }
 void TulisTIME (TIME T){
-    printf("%d:%d:%d\n",Hari(T),Jam(T),Menit(T));
+    printf("%d %d %d",Hari(T),Jam(T),Menit(T));
 };
 /* I.S. : T sembarang */
 /* F.S. : Nilai T ditulis dg format HH:MM:SS */

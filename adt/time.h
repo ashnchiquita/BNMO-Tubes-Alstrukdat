@@ -7,6 +7,7 @@
 
 #include "boolean.h"
 
+#define MARKTime {-99, -99, -99}
 /* *** Definisi TYPE TIME <HH:MM:SS> *** */
 typedef struct { 
     int HH; /* integer [0..30] */
@@ -36,6 +37,7 @@ void CreateTime (TIME * T, int HH, int JJ, int MM);
 /* ***************************************************************** */
 /* KELOMPOK BACA/TULIS                                               */
 /* ***************************************************************** */
+
 void BacaTIME (TIME * T);
 /* I.S. : T tidak terdefinisi */
 /* F.S. : T terdefinisi dan merupakan jam yang valid */

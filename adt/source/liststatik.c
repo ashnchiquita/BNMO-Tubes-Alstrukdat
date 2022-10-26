@@ -1,12 +1,11 @@
 #include <stdio.h>
-#include "liststatik.h"
-#include "boolean.h"
+#include "../liststatik.h"
 
 /* ********** KONSTRUKTOR ********** */
 void CreateListStatik(ListStatik *l) {
 	int i;
 	for (i = IDX_MIN; i < CAPACITY; i++) {
-		ELMT(*l, i) = MARK;
+		ELMT(*l, i) = -1;
 	}
 }
 
@@ -15,7 +14,7 @@ int listLength(ListStatik l) {
 	int i, length;
 	length = 0;
 	for (i = IDX_MIN; i < CAPACITY; i++) {
-		if (ELMT(l, i) != MARK) {
+		if (ELMT(l, i) != MARKList) {
 			length += 1;
 		}
 	}
@@ -26,7 +25,7 @@ int listLength(ListStatik l) {
 IdxType getFirstIdx(ListStatik l) {
 	int i;
 	for (i = IDX_MIN; i < CAPACITY; i++) {
-		if (ELMT(l, i) != MARK) {
+		if (ELMT(l, i) != MARKList) {
 			return i;
 		}
 	}
@@ -36,7 +35,7 @@ IdxType getFirstIdx(ListStatik l) {
 IdxType getLastIdx(ListStatik l) {
 	int i;
 	for (i = CAPACITY-1; i >= IDX_MIN; i--) {
-			if (ELMT(l, i) != MARK) {
+			if (ELMT(l, i) != MARKList) {
 				return i;
 			}
 		}
@@ -138,7 +137,7 @@ void extremeValues(ListStatik l, ElType *max, ElType *min) {
 	*min = ELMT(l,IDX_MIN);
 	
 	i = 1;
-	while (ELMT(l,i) != MARK) {
+	while (ELMT(l,i) != MARKList) {
 		if (ELMT(l,i) > *max) {
 			*max = ELMT(l,i);
 		}	
@@ -197,7 +196,7 @@ void deleteLast(ListStatik *l, ElType *val) {
 	int i, length;
 	length = listLength(*l);
 	*val = ELMT(*l, length-1);
-	ELMT(*l, length-1) = MARK;
+	ELMT(*l, length-1) = MARKList;
 }
 
 /* ********** SORTING ********** */
