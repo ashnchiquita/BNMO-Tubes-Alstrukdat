@@ -1,4 +1,5 @@
 #include "liststatik.h"
+#include "liststatik.c"
 #include <stdio.h>
 
 int main() {
