@@ -8,6 +8,6 @@
 #include "makanan.h"
 
 int wordToInt(Word w);
-void configMakanan();
+ListMakanan configMakanan();
 
 #endif

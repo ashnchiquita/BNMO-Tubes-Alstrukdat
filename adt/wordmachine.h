@@ -38,7 +38,9 @@ void STARTWORD();
           atau EndWord = false, currentWord adalah kata yang sudah diakuisisi,
           currentChar karakter pertama sesudah karakter terakhir kata */
 
-void ADVMAKANAN();
+void STARTINPUT();
+
+void ADVSPASI();
 
 void ADVWORD();
 /* I.S. : currentChar adalah karakter pertama kata yang akan diakuisisi
@@ -74,6 +76,6 @@ Word CopyPaste(Word w);
 boolean wordEqual(Word w1, Word w2);
 /* Mengembalikan nilai benar (true) jika Word w1 = Word w2 */
 
-void CopyWordMakanan();
+void CopySpasi();
 
 #endif

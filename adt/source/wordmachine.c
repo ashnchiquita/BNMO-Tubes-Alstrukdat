@@ -13,7 +13,16 @@ void IgnoreBlanks() {
     }
 }
 
-
+void STARTINPUT(){
+    START();
+    IgnoreBlanks();
+    if(currentChar == MARK){
+        EndWord = true;
+    }else{
+        EndWord = false;
+        CopySpasi();
+    }
+}
 void STARTWORD() {
     START();
     IgnoreBlanks();
@@ -26,7 +35,7 @@ void STARTWORD() {
     }
 }
 
-void ADVMAKANAN(){
+void ADVSPASI(){
     Word EMPTY = {"", 0};
     currentWord = EMPTY;
     IgnoreBlanks();
@@ -34,7 +43,7 @@ void ADVMAKANAN(){
         EndWord = true;
     }
     else{
-        CopyWordMakanan();
+        CopySpasi();
         IgnoreBlanks();
     }
 }
@@ -134,7 +143,7 @@ boolean wordEqual(Word w1, Word w2){
     }
 }
 
-void CopyWordMakanan() {
+void CopySpasi() {
     currentWord.Length = 0;
     while (currentChar != MARK)
     {

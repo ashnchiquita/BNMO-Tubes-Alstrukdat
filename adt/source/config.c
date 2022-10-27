@@ -10,7 +10,7 @@ int wordToInt(Word w){
     return jumlah;
 }
 
-void configMakanan(Word w){
+ListMakanan configMakanan(){
     Word temp1;
     Makanan mTemp;
     int HH,JJ,MM;
@@ -32,7 +32,7 @@ void configMakanan(Word w){
         ADVNEWLINE();
 
         // Mendapatkan nama makanan 
-        ADVMAKANAN();
+        ADVSPASI();
         Word nama = currentWord;
         ADVNEWLINE();
 
@@ -88,5 +88,6 @@ void configMakanan(Word w){
         addMakanan(&l,mTemp);
         i++;
     }
-    printMakanan(l);
+    return l;
+    // printMakanan(l);
 }
