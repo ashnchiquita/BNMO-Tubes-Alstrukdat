@@ -49,4 +49,9 @@ void addMakanan(ListMakanan *l, Makanan m);
 ListMakanan pengelompokanMakanan(ListMakanan l,Word w);
 /* Mengelompokkan makanan berdasarkan kategori aksi yang dimiliki makanan*/
 
+int getIdx(ListMakanan l, int id);
+
+void printCommand(ListMakanan l, Word command);
+
+boolean isFound(ListMakanan l, int id);
 #endif

@@ -1,4 +1,5 @@
 #include "../makanan.h"
+#include "../wordmachine.h"
 #include <stdio.h>
 
 void CreateListMakanan(ListMakanan *l){
@@ -74,4 +75,38 @@ ListMakanan pengelompokanMakanan(ListMakanan l,Word w){
         }
     }
     return lResult;
+}
+int getIdx(ListMakanan l, int id){
+    int i = 0 ;
+    while(id(ELMT(l,i)) != id){
+        i++;
+    }
+    return i;
+}
+
+
+
+void printCommand(ListMakanan l, Word command){
+    printf("==================================\n");
+    printf("========    ");
+    printWord(command); 
+    printf("      =============\n");
+    printf("==================================\n");
+    for(int i =0 ; i < panjangListMakanan(l);i++){
+        printf("%d. ",i+1);
+        TIME temp = delivery(ELMT(l,i));
+        printWord(nama(ELMT(l,i)));
+        printf(" (");
+        Hari(temp) == 0 ? printf(""): printf(" %d hari ", Hari(temp));
+        Jam(temp) == 0 ? printf(""):printf(" %d jam ", Jam(temp));
+        Menit(temp) == 0 ? printf("") : printf(" %d menit ", Menit(temp));
+        printf(")");
+        printf("\n");
+    }
+    printf("Kirim 0 untuk exit");
+    printf("\n");
+}
+
+boolean isFound(ListMakanan l, int idx){
+    return(idx >= 0 && idx < panjangListMakanan(l));
 }

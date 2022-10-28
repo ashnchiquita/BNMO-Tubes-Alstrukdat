@@ -12,9 +12,6 @@ void tampilanLayar(Simulator pemain, TIME waktuMain){
     printf("Waktu : %d.%d\n",Jam(waktuMain),Menit(waktuMain));
 }
 
-boolean validasiInput(Word input){
-
-}
 int main(){
     printf("======== Selamat datang ke game BNMO ==============\n");
     printf("List Command : \n");
@@ -30,7 +27,11 @@ int main(){
     if(startCommand(currentWord) == 1){
         Simulator pemain;
         TIME waktuGame;
+
+        /*Kalau udah config peta, tolong disimpen di lokasiPemain*/
         POINT lokasiPemain;
+        /*createPoint(&lokasiPemain,x,y)*/
+
         ListMakanan listMakanan = configMakanan();
         printf("Masukkan nama pertama anda : \n");
         STARTINPUT();
@@ -51,10 +52,32 @@ int main(){
                 printMakanan(listMakanan);
             case 4 : 
                 Word Buy = {"Buy",3};
-                printMakanan(pengelompokanMakanan(listMakanan,Buy));
+                NextMenit(&waktuGame);
+                ListMakanan buy = pengelompokanMakanan(listMakanan,Buy);
+                printCommand(buy,Buy);
+                printf("Enter command: \n");
+                STARTWORD();
+                while(!isFound(buy,wordToInt(currentWord)-1) && wordToInt(currentWord) != 0){
+                    printf("Nomor makanan tidak terdapat, silakan masukan input lagi\n");
+                    printCommand(buy,Buy);
+                    printf("Enter command: \n");
+                    STARTWORD();
+                }
+                if(isFound(buy,wordToInt(currentWord)-1)){
+                    Makanan temp = ELMT(buy,wordToInt(currentWord)-1);
+                    printf("dapet");
+                    NextMenit(&waktuGame);
+                    /* Push ke dalam delivery list (lagi nunggu kelar)*/
+                }
+                break;
             case 5: 
+                Word Fry = {"Fry",3};
+                NextMenit(&waktuGame);
+                printMakanan(pengelompokanMakanan(listMakanan,Fry));
             case 6 : 
-            case 7: 
+                Word Boil = {"Boil",4};
+                printMakanan(pengelompokanMakanan(listMakanan,Boil));
+           
         }
     }
     return 0;

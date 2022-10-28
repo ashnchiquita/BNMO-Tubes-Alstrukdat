@@ -19,8 +19,7 @@ int startCommand(Word w1){
     Word Buy = {"BUY",3};
     Word Fry = {"FRY",3};
     Word Boil = {"BOIL",4};
-    Word MoveNorth = {"MOVE NORTH", 10};
-    Word MoveSouth = {"MOVE SOUTH", 10};
+   
 
     if(wordEqual(w1,Start)){
         return 1; 
@@ -34,12 +33,7 @@ int startCommand(Word w1){
         return 5;
     }else if(wordEqual(w1,Boil)){
         return 6;
-    }else if(wordEqual(w1,MoveNorth)){
-        return 7;
-    }else if(wordEqual(w1,MoveSouth)){
-        return 8;
-    }
-    else{
+    }else{
         return 0;
     }
 }
