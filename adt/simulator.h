@@ -16,7 +16,7 @@ typedef struct
 #define namaPemain(S) (S).namaPemain
 #define lokasiPemain(S) (S).lokasi
 
-void createSimulator(Simulator *S, Word nama);
+void createSimulator(Simulator *S, POINT p, Word nama);
 
 // void ubahLokasi(Simulator S);
 

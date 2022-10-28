@@ -1,8 +1,8 @@
 #include "../simulator.h"
 #include <stdio.h>
 
-void createSimulator(Simulator *S, Word namaPemain){
-    POINT startPoint = {0,0};
+void createSimulator(Simulator *S, POINT p,Word namaPemain){
+    CreatePoint(&p,10,10);
     namaPemain(*S) = namaPemain;
-    lokasiPemain(*S) = startPoint;
+    lokasiPemain(*S) = p;
 }

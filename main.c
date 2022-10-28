@@ -30,11 +30,12 @@ int main(){
     if(startCommand(currentWord) == 1){
         Simulator pemain;
         TIME waktuGame;
+        POINT lokasiPemain;
         ListMakanan listMakanan = configMakanan();
         printf("Masukkan nama pertama anda : \n");
         STARTINPUT();
-        createSimulator(&pemain,currentWord);
-        CreateTime(&waktuGame,0,1,23);
+        createSimulator(&pemain,lokasiPemain,currentWord);
+        CreateTime(&waktuGame,0,0,0);
         printf("Konfigurasi selesai, selamat bermain ");
         printWord(namaPemain(pemain));
         printf("!\n");
@@ -42,11 +43,19 @@ int main(){
         printf("Enter Command :");
         
         STARTINPUT();
-        Word Catalog = {"Catalog",7};
-        if(startCommand(currentWord) == 3){
-            printMakanan(listMakanan);
+        switch(startCommand(currentWord)){
+            case 1 : 
+                printf("Game sudah dimulai, masukan input yang lain!");
+            case 2 :
+            case 3: 
+                printMakanan(listMakanan);
+            case 4 : 
+                Word Buy = {"Buy",3};
+                printMakanan(pengelompokanMakanan(listMakanan,Buy));
+            case 5: 
+            case 6 : 
+            case 7: 
         }
-
     }
     return 0;
 }
