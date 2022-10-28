@@ -1,5 +1,7 @@
-#include "boolean.h"
+#include "../boolean.h"
 #include "../prioqueue.h"
+#include "../makanan.h"
+#include "../time.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -90,10 +92,10 @@ void Enqueue (PrioQueue * Q, infotype X) {
     } else {
         found = false;
         for (i =  Head(*Q); i <= Tail(*Q) && !found; i++) {
-            /* if (TGT(expired(Elmt(*Q, i)), expired(X)) ) {
+            if (TGT(expired(Elmt(*Q, i)), expired(X)) ) {
                 idxSisip = i;
                 found = true;
-            } */
+            }
         }
 
         if (!found) {
@@ -117,7 +119,11 @@ void Dequeue (PrioQueue * Q, infotype * X) {
     address i;
 
     /* ALGORITMA */
-    *X = InfoHead(*Q);
+    id(*X) = id(InfoHead(*Q));
+    nama(*X) = nama(InfoHead(*Q));
+    expired(*X) = expired(InfoHead(*Q));
+    delivery(*X) = delivery(InfoHead(*Q));
+    aksi(*X) = aksi(InfoHead(*Q));
 
     if (CountElmt(*Q) == 1) {
         Head(*Q) = Nil;
@@ -139,7 +145,7 @@ void PrintPrioQueue (PrioQueue Q) {
     < address + 1 >. < nama makanan > (< waktu kedaluarsa >)
     ...
     < CountElmt(Q) >. < nama makanan > (< waktu kedaluarsa >)
-    Di akhir terdapat '\n'
+    Di akhir terdapat "\n"
 */
     /* KAMUS LOKAL */
     address i;
@@ -150,11 +156,11 @@ void PrintPrioQueue (PrioQueue Q) {
             printf("%d. ", i + 1);
             // printWord(nama(Elmt(Q, i)));
             printf(" (");
-            // printTimeKata(expired(Elmt(Q, i)));
+            PrintKalimatDurasi(expired(Elmt(Q, i)));
             printf(" )\n");
         }
     } else {
-        printf('\n');
+        printf("\n");
     }
 }
 
@@ -192,7 +198,7 @@ void expandPrioQueue(PrioQueue *Q, int num) {
     DeAlokasi(Q);
     MakeEmpty(Q, prevMaxEl + num);
     copyPrioQueue(temp, Q);
-    dealocateList(&temp);
+    DeAlokasi(&temp);
 }
 
 void shrinkPrioQueue(PrioQueue *Q, int num) {
@@ -209,7 +215,7 @@ void shrinkPrioQueue(PrioQueue *Q, int num) {
     DeAlokasi(Q);
     MakeEmpty(Q, prevMaxEl - num);
     copyPrioQueue(temp, Q);
-    dealocateList(&temp);
+    DeAlokasi(&temp);
 }
 
 
@@ -219,16 +225,17 @@ void update1Min(PrioQueue *Q) {
 /* F.S. Waktu kedaluarsa tiap Makanan di Q berkurang 1 menit. Jika ada yang awalnya waktu kedaluarsanya < 1 menit, waktu kedaluarsa akan menjadi nol (expired) */
     /* KAMUS LOKAL */
     address i;
+    TIME zeroTime;
 
     /* ALGORITMA */
     if(!IsEmpty(*Q)) {
         for (i = Head(*Q); i <= Tail(*Q); i++) {
-            /* if (!isZeroTime(time(Elmt(*Q, i)))) {
-                time(Elmt(*Q, i)) = minus1Min(time(Elmt(*Q, i)));
+            if (!isZeroTIME(expired(Elmt(*Q, i)))) {
+                PrevMenit(&expired(Elmt(*Q, i)));
             } else {
-                time(Elmt(*Q, i)) = 0;
+                CreateTime (&zeroTime, 0, 0, 0);
+                expired(Elmt(*Q, i)) = zeroTime;
             }
-            */
         }
     }
 }
@@ -238,16 +245,17 @@ void updateNMin(PrioQueue *Q, int N) {
 /* F.S. Waktu kedaluarsa tiap Makanan di Q berkurang 1 menit. Jika ada yang awalnya waktu kedaluarsanya < N menit, waktu kedaluarsa akan menjadi nol (expired) */
     /* KAMUS LOKAL */
     address i;
+    TIME zeroTime;
 
     /* ALGORITMA */
         if(!IsEmpty(*Q)) {
         for (i = Head(*Q); i <= Tail(*Q); i++) {
-            /* if (TGT(time(Elmt(*Q, i)), minToTime(N))) {
-                time(Elmt(*Q, i)) = minusNMin(time(Elmt(*Q, i)));
+            if (TGT(expired(Elmt(*Q, i)), MenitToTIME(N))) {
+                PrevNMenit(&expired(Elmt(*Q, i)), N);
             } else {
-                time(Elmt(*Q, i)) = 0;
+                CreateTime (&zeroTime, 0, 0, 0);
+                expired(Elmt(*Q, i)) = zeroTime;
             }
-            */
         }
     }
 }
@@ -256,16 +264,14 @@ void cleanKedaluarsa (PrioQueue *Q) {
 /* I.S. Q terdefinisi, Q mungkin kosong */
 /* F.S. Elemen yang expired (waktu kedaluarsanya nol) terhapus dari Q */
     /* KAMUS LOKAL */
-    address i;
     infotype temp;
 
     /* ALGORITMA */
-    /* if (!IsEmpty(*Q)) {
-        i = 0;
-        while (isZeroTime(time(InfoHead(*Q)))) {
+    if (!IsEmpty(*Q)) {
+        while (isZeroTIME(expired(InfoHead(*Q)))) {
             Dequeue(Q, &temp);
         }
-    } */
+    }
 }
 
 /* LAIN-LAIN: PERLAKUAN SEPERTI ARRAY */
@@ -342,7 +348,7 @@ void setElmt(PrioQueue * Q, address idx, infotype X) {
 }
 
 /* Delete */
-void deleteAt(PrioQueue *Q, address idx, infotype *X) {
+void deleteAtAdr(PrioQueue *Q, address idx, infotype *X) {
 /* I.S. Q terdefinisi, Q tidak kosong, idx adalah address yang valid untuk PrioQueue Q */
 /* F.S. Elemen di address i terhapus */
     /* KAMUS LOKAL */
@@ -352,14 +358,18 @@ void deleteAt(PrioQueue *Q, address idx, infotype *X) {
     if (idx == 0) {
         Dequeue(Q, X);
     } else {
-        *X = Elmt(*Q, idx);
+        id(*X) = id(Elmt(*Q, idx));
+        nama(*X) = nama(Elmt(*Q, idx));
+        expired(*X) = expired(Elmt(*Q, idx));
+        delivery(*X) = delivery(Elmt(*Q, idx));
+        aksi(*X) = aksi(Elmt(*Q, idx));
+
         for (i = idx + 1; i <= Tail(*Q); i++) {
             setElmt(Q, i - 1, Elmt(*Q, i));
         }
 
         Tail(*Q)--;
     }
-
 }
 
 void deleteElmt(PrioQueue *Q, Word name, infotype *X) {
@@ -370,7 +380,7 @@ void deleteElmt(PrioQueue *Q, Word name, infotype *X) {
 
     /* ALGORITMA */
     i = indexOfName(*Q, name);
-    if (!(i == Nil)) {
-        deleteAt(Q, i, X);
+    if (i != Nil) {
+        deleteAtAdr(Q, i, X);
     }
 }

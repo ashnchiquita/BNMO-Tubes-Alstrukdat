@@ -24,6 +24,8 @@ void BacaTIME (TIME * T)
     }
     CreateTime(T,HH,JJ,MM);
 }
+
+/* Variasi Print */
 void TulisTIME (TIME T){
     printf("%d %d %d",Hari(T),Jam(T),Menit(T));
 };
@@ -31,6 +33,36 @@ void TulisTIME (TIME T){
 /* F.S. : Nilai T ditulis dg format HH:MM:SS */
 /* Proses : menulis nilai setiap komponen T ke layar dalam format HH:MM:SS
    tanpa karakter apa pun di depan atau belakangnya, termasuk spasi, enter, dll.*/ 
+void TulisJam (TIME T) {
+/* I.S. T terdefinisi */
+/* F.S. Nilai T ditulis dengan format JJ.MM */
+    /* KAMUS LOKAL */
+
+    /* ALGORITMA */
+    printf("%02d.%02d",Jam(T),Menit(T));
+}
+void PrintKalimatDurasi (TIME T) {
+/* I.S. T terdefinisi, T merupakan suatu TIME yang dianggap sebagai durasi, T bukan durasi nol */
+/* F.S. Nilai T ditulis dengan format <x> hari <y> jam <z> menit */
+    /* KAMUS LOKAL */
+
+    /* ALGORITMA */
+    if (Hari(T) != 0) {
+        printf("%d hari", Hari(T));
+    }
+    if (Hari(T) != 0 && Jam(T) != 0) {
+        printf(" ");
+    }
+    if (Jam(T) != 0) {
+        printf("%d jam", Jam(T));
+    }
+    if (Menit(T) != 0 && Jam(T) != 0) {
+        printf(" ");
+    }    
+    if (Menit(T) != 0) {
+        printf("%d menit", Menit(T));
+    }
+}
 
 /* ***************************************************************** */
 /* KELOMPOK KONVERSI TERHADAP TYPE                                   */
@@ -49,6 +81,27 @@ TIME MenitToTIME (int menit){
 /* ***************************************************************** */
 /* KELOMPOK OPERASI TERHADAP TYPE                                    */
 /* ***************************************************************** */
+/* *** Kelompok Operator Relational *** */
+boolean TEQ (TIME T1, TIME T2) {
+/* Mengirimkan true jika T1=T2, false jika tidak */
+    return (Hari(T1) == Hari(T2) && Jam(T1) == Jam(T2) && Menit(T1) == Menit(T2));
+}
+boolean TNEQ (TIME T1, TIME T2) {
+/* Mengirimkan true jika T1 tidak sama dengan T2 */
+    return !(TEQ(T1, T2));
+}
+boolean TLT (TIME T1, TIME T2) {
+/* Mengirimkan true jika T1<T2, false jika tidak */
+    return TIMEToMenit(T1) < TIMEToMenit(T2);
+}
+boolean TGT (TIME T1, TIME T2) {
+/* Mengirimkan true jika T1>T2, false jika tidak */
+    return TIMEToMenit(T1) > TIMEToMenit(T2);
+}
+boolean isZeroTIME (TIME T) {
+/* Mengirimkan true jika T = 00:00:00, false jika tidak */
+    return (Hari(T) == 0 && Jam(T) == 0 && Menit(T) == 0);
+}
 
 /* *** Operator aritmatika TIME *** */
 void NextMenit (TIME *T){

@@ -52,11 +52,18 @@ void BacaTIME (TIME * T);
    1 3 4
    --> akan terbentuk TIME <1,3,4> */
 
+/* Variasi Print */
 void TulisTIME (TIME T);
 /* I.S. : T sembarang */
 /* F.S. : Nilai T ditulis dg format HH:MM:SS */
 /* Proses : menulis nilai setiap komponen T ke layar dalam format HH:MM:SS
    tanpa karakter apa pun di depan atau belakangnya, termasuk spasi, enter, dll.*/ 
+void TulisJam (TIME T);
+/* I.S. T terdefinisi */
+/* F.S. Nilai T ditulis dengan format JJ.MM */
+void PrintKalimatDurasi (TIME T);
+/* I.S. T terdefinisi, T merupakan suatu TIME yang dianggap sebagai durasi, T bukan durasi nol */
+/* F.S. Nilai T ditulis dengan format <x> hari <y> jam <z> menit */
 
 /* ***************************************************************** */
 /* KELOMPOK KONVERSI TERHADAP TYPE                                   */
@@ -73,6 +80,20 @@ TIME MenitToTIME (int menit);
    N1 = N mod 86400, baru N1 dikonversi menjadi TIME */
 
 /* ***************************************************************** */
+/* KELOMPOK OPERASI TERHADAP TYPE                                    */
+/* ***************************************************************** */
+/* *** Kelompok Operator Relational *** */
+boolean TEQ (TIME T1, TIME T2);
+/* Mengirimkan true jika T1=T2, false jika tidak */
+boolean TNEQ (TIME T1, TIME T2);
+/* Mengirimkan true jika T1 tidak sama dengan T2 */
+boolean TLT (TIME T1, TIME T2);
+/* Mengirimkan true jika T1<T2, false jika tidak */
+boolean TGT (TIME T1, TIME T2);
+/* Mengirimkan true jika T1>T2, false jika tidak */
+boolean isZeroTIME (TIME T);
+/* Mengirimkan true jika T = 00:00:00, false jika tidak */
+
 /* *** Operator aritmatika TIME *** */
 void NextMenit (TIME *T);
 /* Mengirim 1 detik setelah T dalam bentuk TIME */
