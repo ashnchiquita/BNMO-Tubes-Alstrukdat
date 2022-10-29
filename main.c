@@ -3,7 +3,7 @@
 #include "./adt/simulator.h"
 #include "./adt/time.h"
 #include "./adt/point.h"
-#include "./adt/iohandling.h"
+#include "./adt/prioqueue.h"
 
 void tampilanLayar(Simulator pemain, TIME waktuMain){
     printWord(namaPemain(pemain));
@@ -11,171 +11,262 @@ void tampilanLayar(Simulator pemain, TIME waktuMain){
     TulisPOINT(lokasiPemain(pemain));
     printf("\n");
     printf("Waktu : %d.%d\n",Jam(waktuMain),Menit(waktuMain));
+    /* tampilkan notifikasi dan peta kalo udah ada */
 }
 
 int main() {
     /* KAMUS */
-    boolean started;
-    Sentence command;
+    boolean started, valid;
     int waitX, waitY;
     Word moveDirection, nama, pilihan;
     Simulator pemain;
     TIME waktuGame;
+    boolean changeTime;
     ListMakanan listMakanan, buy;
     POINT lokasiPemain;
     Makanan temp;
-
+    PrioQueue Delivery, Inventory;
     /* ALGORITMA */
-    createSentence(&command);
 
     /* splash screen nyusul */
 
     printf("Silakan masukkan command (START/EXIT): ");
-    command = takeInput();
-    while (!(isSentenceEq(command, strToSentence("START")) || isSentenceEq(command, strToSentence("EXIT")))) {
-        printf("Silakan masukkan command yang valid.\n");
-        command = takeInput();
+    STARTWORD();
+
+    if (EndWord) {
+        valid = false;
+    } else {
+        valid = wordEqual(currentWord, strToWord("START")) || wordEqual(currentWord, strToWord("EXIT"));
     }
 
-    if (isSentenceEq(command, strToSentence("START"))) {
+    while (!valid) {
+        printf("Silakan masukkan command yang valid.\n");
+        STARTWORD();
+
+        if (EndWord) {
+            valid = false;
+        } else {
+            valid = wordEqual(currentWord, strToWord("START")) || wordEqual(currentWord, strToWord("EXIT"));
+        }
+    }
+
+    if (wordEqual(currentWord, strToWord("START"))) {
         started = true;
-        
+
         /*Kalau udah config peta, tolong disimpen di lokasiPemain*/
         /*createPoint(&lokasiPemain,x,y)*/
-
         listMakanan = configMakanan();
+        MakeEmptyQ(&Delivery,100,true);
+        MakeEmptyQ(&Inventory,100,false);
         printf("Masukkan nama pertama anda : \n");
-        /* validasi nama dulu harusnya */
-        nama = (takeInput()).T[0];
-        createSimulator(&pemain, lokasiPemain, nama);
-        CreateTime(&waktuGame,0,0,0);
+        STARTINPUT();
+        createSimulator(&pemain,lokasiPemain, currentWord);
+        CreateTime(&waktuGame, 0, 0, 0);
         printf("Konfigurasi selesai, selamat bermain ");
         printWord(namaPemain(pemain));
         printf("!\n");
-    } else if (isSentenceEq(command, strToSentence("EXIT"))) {
+        tampilanLayar(pemain,waktuGame);
+    } else if (wordEqual(currentWord, strToWord("EXIT"))) {
         started = false;
     }
 
     while (started) {
         tampilanLayar(pemain,waktuGame);
-
-        /* tampilkan peta kalo udah ada */
-
         printf("Enter Command: ");
-        command = takeInput();
-        if (!isEmptySentence(command)) {
+        STARTWORD();
+        if (!EndWord) {
+            changeTime = false;
             /* Handling input normal */
-            if (isSentenceEq(command, strToSentence("MIX"))) {
-                NextMenit(&waktuGame);
-
-                /* CODE MIX */
-
-            } else if (isSentenceEq(command, strToSentence("CHOP"))) {
-                NextMenit(&waktuGame);
-
-                /* CODE CHOP */
-
-            } else if (isSentenceEq(command, strToSentence("FRY"))) {
-                NextMenit(&waktuGame);
-
-                /* CODE FRY */
-
-                printMakanan(pengelompokanMakanan(listMakanan, strToWord("Fry")));
-            } else if (isSentenceEq(command, strToSentence("BOIL"))) {
-                NextMenit(&waktuGame);
-
-                /* CODE BOIL */
-
-                printMakanan(pengelompokanMakanan(listMakanan, strToWord("Boil")));
-            } else if (isSentenceEq(command, strToSentence("UNDO"))) {
-                
-                /* CODE UNDO */
-            
-            } else if (isSentenceEq(command, strToSentence("REDO"))) {
-
-                /* CODE REDO */
-            
-            } else if (isSentenceEq(command, strToSentence("CATALOG"))) {
-
-                /* CODE CATALOG */
-            
-            } else if (isSentenceEq(command, strToSentence("COOKBOOK"))) {
-
-                /* CODE COOKBOOK */
-            
-            } else if (isSentenceEq(command, strToSentence("BUY"))) {
-                NextMenit(&waktuGame);
-
-                /* CODE BUY */
-
-                buy = pengelompokanMakanan(listMakanan, strToWord("Buy"));
-                printCommand(buy, strToWord("Buy"));
-                printf("Enter command: \n");
-                pilihan = (takeInput()).T[0];
-
-                while(!isFound(buy, wordToInt(pilihan) - 1) && wordToInt(pilihan) != 0){
-                    printf("Nomor makanan tidak terdapat, silakan masukan input lagi\n");
-                    printCommand(buy, strToWord("Buy"));
-                    printf("Enter command: \n");
-                    pilihan = (takeInput()).T[0];
-                }
-
-                if (isFound(buy, wordToInt(pilihan) - 1)){
-                    temp = ELMT(buy, wordToInt(pilihan) - 1);
-                    printf("dapet");
+            if (wordEqual(currentWord, strToWord("MIX"))) {
+                ADVWORD();
+                if (EndWord) {
                     NextMenit(&waktuGame);
 
-                    /* Push ke dalam delivery list (lagi nunggu kelar) */
-
-                }
-                
-            } else if (isSentenceEq(command, strToSentence("DELIVERY"))) {
-                NextMenit(&waktuGame);
-
-                /* CODE DELIVERY */
-
-            
-            /* Handling input berargumen */
-            } else if (isSentenceEq(command, strToSentence("MOVE NORTH")) || isSentenceEq(command, strToSentence("MOVE WEST")) || isSentenceEq(command, strToSentence("MOVE EAST")) || isSentenceEq(command, strToSentence("MOVE SOUTH"))) {
-                moveDirection = command.T[1];
-                NextMenit(&waktuGame);
-
-                /* CODE MOVE */
-
-                if (isWordEq(moveDirection, strToWord("NORTH"))) {
-                    
-                    /* MOVE NORTH */
-
-                } else if (isWordEq(moveDirection, strToWord("WEST"))) {
-                    
-                    /* MOVE WEST */
-                    
-                } else if (isWordEq(moveDirection, strToWord("EAST"))) {
-                    
-                    /* MOVE EAST */
-                    
-                } else if (isWordEq(moveDirection, strToWord("SOUTH"))) {
-                    
-                    /* MOVE SOUTH */
-                    
-                }
-                
-            } else if (isWordEq(command.T[0], strToWord("WAIT")) && command.Length == 3) {
-                if (isWordInt(command.T[1]) && isWordInt(command.T[2])) {
-                    waitX = wordToInt(command.T[1]);
-                    waitY = wordToInt(command.T[2]);
-
-                    /* CODE WAIT */
+                    /* CODE MIX */
 
                 } else {
-                    printf("Silakan masukkan command yang valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.");
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("CHOP"))) {
+                ADVWORD();
+                if (EndWord) {
+                    NextMenit(&waktuGame);
+
+                    /* CODE CHOP */
+
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("FRY"))) {
+                ADVWORD();
+                if (EndWord) {
+                    NextMenit(&waktuGame);
+                    printMakanan(pengelompokanMakanan(listMakanan, strToWord("Fry")));
+
+                    /* CODE FRY */
+
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("BOIL"))) {
+                ADVWORD();
+                if (EndWord) {
+                    NextMenit(&waktuGame);
+                    printMakanan(pengelompokanMakanan(listMakanan, strToWord("Boil")));
+
+                    /* CODE BOIL */
+
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("UNDO"))) {
+                ADVWORD();
+                if (EndWord) {
+
+                    /* CODE UNDO */
+
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("REDO"))) {
+                ADVWORD();
+                if (EndWord) {
+
+                    /* CODE REDO */
+
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("CATALOG"))) {
+                ADVWORD();
+                if (EndWord) {
+
+                    /* CODE CATALOG */
+
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("COOKBOOK"))) {
+                ADVWORD();
+                if (EndWord) {
+
+                    /* CODE COOKBOOK */
+
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("BUY"))) {
+                ADVWORD();
+
+                /*Harus tambahin validasi lokasi dia dimana */
+
+                if (EndWord) {                 
+                    
+                    /*Mencari makanan yang memiliki aksi Buy dan menampilkan listnya ke layar*/
+                    buy = pengelompokanMakanan(listMakanan, strToWord("Buy"));
+                    printCommand(buy, strToWord("Buy"));
+
+                    /*Meminta input user untuk makanan mana yang mau dibeli*/
+                    printf("Enter command: \n");
+                    STARTWORD();
+
+                    /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
+                    handleFoodCommand(buy);
+
+                    /* Jika input user benar, maka makanan akan masuk ke delivery list dan waktu game bertambah 1 menit */
+                    if(isFound(buy,wordToInt(currentWord)-1)){
+                        changeTime = true;
+                        temp = ELMT(buy,wordToInt(currentWord) - 1);
+
+                        /*Menampilkan notifikasi bahwa pembelian berhasil */
+                        notifikasiPembelian(temp);
+
+                        /*Menambahkan makanan ke delivery list */
+                        Enqueue(&Delivery,temp);
+                        NextMenit(&waktuGame);
+                    }
+
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("DELIVERY"))) {
+                ADVWORD();
+                if (EndWord) {
+                    PrintPrioQueue(Delivery);
+                    /* CODE DELIVERY */
+                } else {
+                    valid = false;
+                }
+
+            /* Handling input berargumen */
+            } else if (wordEqual(currentWord, strToWord("MOVE"))) {
+                ADVWORD();
+                if (EndWord) {
+                    valid = false;
+                } else {
+                    if (wordEqual(currentWord, strToWord("NORTH")) || wordEqual(currentWord, strToWord("SOUTH")) || wordEqual(currentWord, strToWord("WEST")) || wordEqual(currentWord, strToWord("EAST"))) {
+                        moveDirection = CopyPaste(currentWord);
+
+                        ADVWORD();
+                        if (EndWord) {
+                            NextMenit(&waktuGame);
+
+                            /* CODE MOVE (Arah disimpen di moveDirection) */
+
+                        } else {
+                            valid = false;
+                        }
+                    } else {
+                        valid = false;
+                    }
+                }
+            } else if (wordEqual(currentWord, strToWord("WAIT"))) {
+                ADVWORD();
+                if (EndWord) {
+                    valid = false;
+                } else {
+                    if (isWordInt(currentWord)) {
+
+                        waitX = wordToInt(currentWord);
+                        ADVWORD();
+
+                        if (EndWord) {
+                            valid = false;
+                        } else {
+                            if (isWordInt(currentWord)) {
+
+                                waitY = wordToInt(currentWord);
+                                ADVWORD();
+
+                                if (EndWord) {
+
+                                    /* CODE WAIT (x disimpen di waitX, y disimpen di waitY) */
+                                    handleWait(&waktuGame, waitX, waitY);
+                                } else {
+                                    valid = false;
+                                }
+                            } else {
+                                valid = false;
+                            }
+                        }
+                    } else {
+                        valid = false;
+                    }
                 }
             } else {
-                printf("Silakan masukkan command yang valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.");
+                valid = false;
             }
         } else {
-            printf("Silakan masukkan command yang valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.");
+            valid = false;
         }
+        
+        if (!valid) {
+            printf("Command tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.");
+        }
+
     }
+
+    /* End Screen (congrats, win/lose, stats) */
+
     return 0;
 }

@@ -78,4 +78,16 @@ boolean wordEqual(Word w1, Word w2);
 
 void CopySpasi();
 
+int wordToInt(Word w);
+/* Mengembalikan nilai integer dari Word yang tersusun dari angka-angka */
+/* Prekondisi: isWordInt(w) bernilai true */
+
+boolean isWordInt(Word w);
+/* Mengecek apakah suatu Word merupakan bilangan */
+
+Word strToWord(char s[]);
+/* Mengubah string menjadi Word */
+/* String pasti diakhiri '\0' */
+/* Prekondisi: string tidak mengandung ' ' */
+
 #endif

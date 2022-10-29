@@ -20,8 +20,8 @@ int panjangListMakanan(ListMakanan l){
 
 
 void printMakanan(ListMakanan l){
-    printf("List Makanan\n");
-    printf("nama - durasi kadaluwarsa - aksi yang diperlukan - delivery time\n");
+    printf("===================  List Makanan  =======================\n");
+    printf("Nama - Durasi Kadaluwarsa - Aksi yang Diperlukan - Delivery Time\n");
     int length = panjangListMakanan(l);
     for(int i =0 ; i < length;i++){
         printf("%d. ",i+1);
@@ -96,11 +96,13 @@ void printCommand(ListMakanan l, Word command){
         printf("%d. ",i+1);
         TIME temp = delivery(ELMT(l,i));
         printWord(nama(ELMT(l,i)));
-        printf(" (");
-        Hari(temp) == 0 ? printf(""): printf(" %d hari ", Hari(temp));
-        Jam(temp) == 0 ? printf(""):printf(" %d jam ", Jam(temp));
-        Menit(temp) == 0 ? printf("") : printf(" %d menit ", Menit(temp));
-        printf(")");
+        if(!isZeroTIME(delivery(l.contents[i]))){
+            printf(" (");
+            Hari(temp) == 0 ? printf(""): printf(" %d hari ", Hari(temp));
+            Jam(temp) == 0 ? printf(""):printf(" %d jam ", Jam(temp));
+            Menit(temp) == 0 ? printf("") : printf(" %d menit ", Menit(temp));
+            printf(")");
+        };
         printf("\n");
     }
     printf("Kirim 0 untuk exit");

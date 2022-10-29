@@ -1,7 +1,4 @@
-#include "../boolean.h"
 #include "../prioqueue.h"
-#include "../makanan.h"
-#include "../time.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -39,18 +36,21 @@ int CountElmt (PrioQueue Q){
 }
 
 /* *** Kreator *** */
-void MakeEmpty (PrioQueue * Q, int Max) {
+void MakeEmptyQ (PrioQueue * Q, int Max, boolean sortDeliv) {
 /* I.S. sembarang */
 /* F.S. Sebuah Q kosong terbentuk dan salah satu kondisi sbb: */
 /* Jika alokasi berhasil, Tabel memori dialokasi berukuran Max */
 /* atau : jika alokasi gagal, Q kosong dengan MaxEl = 0 */
+/* Jika sortDeliv true, maka Q adalah delivery queue, jika false maka Q adalah inventory queue */
 /* Proses : Melakukan alokasi, membuat sebuah Q kosong */
     /* KAMUS LOKAL */
     
     /* ALGORITMA */
     Head(*Q) = Nil;
     Tail(*Q) = Nil;
+    SortDeliv(*Q) = sortDeliv;
     (*Q).T = (infotype *) malloc(Max * sizeof(infotype));
+    
 
     if ((*Q).T != NULL) {
         MaxEl(*Q) = Max;
@@ -77,12 +77,14 @@ void DeAlokasi(PrioQueue * Q) {
 
 /* *** Primitif Add/Delete *** */
 void Enqueue (PrioQueue * Q, infotype X) {
-/* Proses: Menambahkan X pada Q dengan aturan priority queue, terurut mengecil berdasarkan waktu kedaluarsa */
+/* Proses: Menambahkan X pada Q dengan aturan priority queue, terurut mengecil berdasarkan: */
+/* 1. Waktu delivery, jika Q adalah delivery queue */
+/* 2. Waktu kealuarsa, jika Q adalah inventory queue  */
 /* I.S. Q mungkin kosong, tabel penampung elemen Q TIDAK penuh */
 /* F.S. X disisipkan pada posisi yang tepat sesuai dengan prioritas, Tail maju */
     /* KAMUS LOKAL */
     address i, idxSisip;
-    boolean found;
+    boolean found, compareTime;
 
     /* ALGORITMA */
     if (IsEmpty(*Q)) {
@@ -92,7 +94,13 @@ void Enqueue (PrioQueue * Q, infotype X) {
     } else {
         found = false;
         for (i =  Head(*Q); i <= Tail(*Q) && !found; i++) {
-            if (TGT(expired(Elmt(*Q, i)), expired(X)) ) {
+            if (SortDeliv(*Q)) {
+                compareTime = TGT(delivery(Elmt(*Q, i)), delivery(X));
+            } else {
+                compareTime = TGT(expired(Elmt(*Q, i)), expired(X));
+            }
+            
+            if (compareTime) {
                 idxSisip = i;
                 found = true;
             }
@@ -139,12 +147,14 @@ void Dequeue (PrioQueue * Q, infotype * X) {
 
 /* Operasi Tambahan */
 void PrintPrioQueue (PrioQueue Q) {
-    /* Mencetak isi queue Q ke layar */
+/* Mencetak isi PrioQueue Q ke layar */
+/* Jika Q adalah delivery queue, waktu yang diprint adalah waktu delivery */
+/* Jika Q adalah inventory queue, waktu yang diprint adalah waktu kedaluarsa */
 /* I.S. Q terdefinisi, mungkin kosong */
 /* F.S. Q tercetak ke layar dengan format:
-    < address + 1 >. < nama makanan > (< waktu kedaluarsa >)
+    < address + 1 >. < nama makanan > (< waktu delivery/kedaluarsa >)
     ...
-    < CountElmt(Q) >. < nama makanan > (< waktu kedaluarsa >)
+    < CountElmt(Q) >. < nama makanan > (< waktu delivery/kedaluarsa >)
     Di akhir terdapat "\n"
 */
     /* KAMUS LOKAL */
@@ -154,10 +164,14 @@ void PrintPrioQueue (PrioQueue Q) {
     if (!IsEmpty(Q)) {
         for (i =  Head(Q); i <= Tail(Q); i++) {
             printf("%d. ", i + 1);
-            // printWord(nama(Elmt(Q, i)));
+            printWord(nama(Elmt(Q, i)));
             printf(" (");
-            PrintKalimatDurasi(expired(Elmt(Q, i)));
-            printf(" )\n");
+            if (SortDeliv(Q)) {
+                PrintKalimatDurasi(delivery(Elmt(Q, i)));
+            } else {
+                PrintKalimatDurasi(expired(Elmt(Q, i)));
+            }
+            printf(")\n");
         }
     } else {
         printf("\n");
@@ -171,7 +185,7 @@ void copyPrioQueue(PrioQueue Q1, PrioQueue * Q2) {
     address i;
 
     /* ALGORITMA */
-    MakeEmpty(Q2, MaxEl(Q1));
+    MakeEmptyQ(Q2, MaxEl(Q1), SortDeliv(Q1));
     
     Head(*Q2) = Head(Q1);
     Tail(*Q2) = Tail(Q1);
@@ -191,12 +205,14 @@ void expandPrioQueue(PrioQueue *Q, int num) {
     /* KAMUS LOKAL */
     PrioQueue temp;
     int prevMaxEl;
+    boolean prevSort;
 
     /* ALGORITMA */
     prevMaxEl = MaxEl(*Q);
+    prevSort = SortDeliv(*Q);
     copyPrioQueue(*Q, &temp);
     DeAlokasi(Q);
-    MakeEmpty(Q, prevMaxEl + num);
+    MakeEmptyQ(Q, prevMaxEl + num, prevSort);
     copyPrioQueue(temp, Q);
     DeAlokasi(&temp);
 }
@@ -208,12 +224,14 @@ void shrinkPrioQueue(PrioQueue *Q, int num) {
     /* KAMUS LOKAL */
     PrioQueue temp;
     int prevMaxEl;
+    boolean prevSort;
 
     /* ALGORITMA */
     prevMaxEl = MaxEl(*Q);
+    prevSort = SortDeliv(*Q);
     copyPrioQueue(*Q, &temp);
     DeAlokasi(Q);
-    MakeEmpty(Q, prevMaxEl - num);
+    MakeEmptyQ(Q, prevMaxEl - num, prevSort);
     copyPrioQueue(temp, Q);
     DeAlokasi(&temp);
 }
@@ -222,7 +240,9 @@ void shrinkPrioQueue(PrioQueue *Q, int num) {
 /* MEKANISME WAKTU */
 void update1Min(PrioQueue *Q) {
 /* I.S. Q terdefinisi, Q mungkin kosong */
-/* F.S. Waktu kedaluarsa tiap Makanan di Q berkurang 1 menit. Jika ada yang awalnya waktu kedaluarsanya < 1 menit, waktu kedaluarsa akan menjadi nol (expired) */
+/* F.S. Jika Q adalah delivery queue, waktu delivery tiap Makanan di Q berkurang 1 menit. Jika ada yang awalnya waktu deliverynya < N menit, waktu delivery akan menjadi nol */
+/* Jika Q adalah inventory queue, waktu kedaluarsa tiap Makanan di Q berkurang 1 menit. Jika ada yang awalnya waktu kedaluarsanya < N menit, waktu kedaluarsa akan menjadi nol (expired) */
+/* BTWW aku masih nanyain, kalo makanan di delivery queue bisa ngurang apa ngga waktu kedaluarsanya, jadi mungkin nanti ada update lagi :D - chi */
     /* KAMUS LOKAL */
     address i;
     TIME zeroTime;
@@ -230,50 +250,78 @@ void update1Min(PrioQueue *Q) {
     /* ALGORITMA */
     if(!IsEmpty(*Q)) {
         for (i = Head(*Q); i <= Tail(*Q); i++) {
-            if (!isZeroTIME(expired(Elmt(*Q, i)))) {
-                PrevMenit(&expired(Elmt(*Q, i)));
+            if (SortDeliv(*Q)) {
+                if (!isZeroTIME(delivery(Elmt(*Q, i)))) {
+                    PrevMenit(&delivery(Elmt(*Q, i)));
+                } else {
+                    CreateTime (&zeroTime, 0, 0, 0);
+                    delivery(Elmt(*Q, i)) = zeroTime;
+                }
             } else {
-                CreateTime (&zeroTime, 0, 0, 0);
-                expired(Elmt(*Q, i)) = zeroTime;
+                if (!isZeroTIME(expired(Elmt(*Q, i)))) {
+                    PrevMenit(&expired(Elmt(*Q, i)));
+                } else {
+                    CreateTime (&zeroTime, 0, 0, 0);
+                    expired(Elmt(*Q, i)) = zeroTime;
+            }
             }
         }
     }
 }
 
-void updateNMin(PrioQueue *Q, int N) {
-/* I.S. Q terdefinisi, Q mungkin kosong */
-/* F.S. Waktu kedaluarsa tiap Makanan di Q berkurang 1 menit. Jika ada yang awalnya waktu kedaluarsanya < N menit, waktu kedaluarsa akan menjadi nol (expired) */
-    /* KAMUS LOKAL */
-    address i;
-    TIME zeroTime;
-
-    /* ALGORITMA */
-        if(!IsEmpty(*Q)) {
-        for (i = Head(*Q); i <= Tail(*Q); i++) {
-            if (TGT(expired(Elmt(*Q, i)), MenitToTIME(N))) {
-                PrevNMenit(&expired(Elmt(*Q, i)), N);
-            } else {
-                CreateTime (&zeroTime, 0, 0, 0);
-                expired(Elmt(*Q, i)) = zeroTime;
-            }
-        }
-    }
-}
-
-void cleanKedaluarsa (PrioQueue *Q) {
-/* I.S. Q terdefinisi, Q mungkin kosong */
-/* F.S. Elemen yang expired (waktu kedaluarsanya nol) terhapus dari Q */
+void cleanKedaluarsa (PrioQueue *inventQ) {
+/* I.S. inventQ terdefinisi, inventQ mungkin kosong, inventQ adalah inventory */
+/* F.S. Elemen yang expired (waktu kedaluarsanya nol) terhapus dari inventQ */
     /* KAMUS LOKAL */
     infotype temp;
+    int count, prevLength;
 
     /* ALGORITMA */
-    if (!IsEmpty(*Q)) {
-        while (isZeroTIME(expired(InfoHead(*Q)))) {
-            Dequeue(Q, &temp);
+    count = 0;
+    prevLength = CountElmt(*inventQ);
+    if (!IsEmpty(*inventQ)) {
+        while (count < prevLength && isZeroTIME(expired(InfoHead(*inventQ)))) {
+            Dequeue(inventQ, &temp);
+            count++;
+            /* add makanan temp ke notif, tipe notif: makanan kedaluarsa */
         }
     }
 }
 
+void finishDelivery (PrioQueue * delivQ, PrioQueue * inventQ) {
+/* I.S. delivQ terdefinisi, delivQ mungkin kosong, delivQ adalah delivery queue, inventQ adalah inventory queue */
+/* F.S. Elemen delivQ yang waktu deliverynya 0 dimasukkan ke inventQ */
+    /* KAMUS LOKAL */
+    infotype temp;
+    int count, prevLength;
+
+    /* ALGORITMA */
+    count = 0;
+    prevLength = CountElmt(*delivQ);
+    if (!IsEmpty(*delivQ)) {
+        while (count < prevLength && isZeroTIME(delivery(InfoHead(*delivQ)))) {
+            Dequeue(delivQ, &temp);
+            Enqueue(inventQ, temp);
+            count++;
+            /* add makanan temp ke notif, tipe notif: makanan sampai */
+        }
+    }
+}
+
+void updateAllQueue(PrioQueue * delivQ, PrioQueue * inventQ, int nMenit) {
+/* I.S. delivQ, inventQ, nMenit terdefinisi */
+/* F.S. delivery queue dan inventory queue terupdate nMenit menit */
+    /* KAMUS LOKAL */
+    int i;
+
+    /* ALGORITMA */
+    for (i = 1; i <= nMenit; i++) {
+        update1Min(delivQ);
+        update1Min(inventQ);
+        cleanKedaluarsa(inventQ);
+        finishDelivery(delivQ, inventQ);
+    }
+}
 /* LAIN-LAIN: PERLAKUAN SEPERTI ARRAY */
 /* Prototype */
 boolean isAdrValid(PrioQueue Q, address i) {
@@ -296,11 +344,11 @@ address indexOfName(PrioQueue Q, Word name) {
     i = 0;
     found = false; 
     while (i <= Tail(Q) && !found) {
-        /* if (isWordEq(nama(Elmt(Q, i)), name)) {
+        if (wordEqual(nama(Elmt(Q, i)), name)) {
             found = true;
         } else {
             i++;
-        }*/
+        }
     }
 
     if (found) {
@@ -322,9 +370,9 @@ int countName (PrioQueue Q, Word name) {
 
     if(!IsEmpty(Q)) {
         for (i = Head(Q); i <= Tail(Q); i++) {
-            /* if (isWordEq(nama(Elmt(Q, i)), name)) {
+            if (wordEqual(nama(Elmt(Q, i)), name)) {
                 count++;
-            }*/
+            }
         }
         
     }
@@ -369,18 +417,5 @@ void deleteAtAdr(PrioQueue *Q, address idx, infotype *X) {
         }
 
         Tail(*Q)--;
-    }
-}
-
-void deleteElmt(PrioQueue *Q, Word name, infotype *X) {
-/* I.S. Q terdefinisi, Q tidak kosong */
-/* F.S. Jika X ada di Q, maka makanan pertama yang bernama name dihapus dari Q, jika tidak, tidak melakukan apa-apa */
-    /* KAMUS LOKAL */
-    address i;
-
-    /* ALGORITMA */
-    i = indexOfName(*Q, name);
-    if (i != Nil) {
-        deleteAtAdr(Q, i, X);
     }
 }

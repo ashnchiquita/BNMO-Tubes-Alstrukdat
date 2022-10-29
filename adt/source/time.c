@@ -58,6 +58,9 @@ void PrintKalimatDurasi (TIME T) {
     }
     if (Menit(T) != 0 && Jam(T) != 0) {
         printf(" ");
+    }
+    if (Hari(T) != 0 && Jam(T) == 0 && Menit(T) != 0) {
+        printf(" ");
     }    
     if (Menit(T) != 0) {
         printf("%d menit", Menit(T));
@@ -126,4 +129,7 @@ void PrevNMenit (TIME *T, int N){
 };
 /* Mengirim N detik sebelum T dalam bentuk TIME */
 /* *** Kelompok Operator Aritmetika *** */
-
+void handleWait(TIME *T, int h, int m){
+    int temp = TIMEToMenit(*T) + h*60 + m;
+    *T = MenitToTIME(temp);
+}
