@@ -1,10 +1,6 @@
 #include "../config.h"
 #include <stdio.h>
 
-<<<<<<< HEAD
-// Mengubah Word ke integer
-=======
->>>>>>> 50ebd83e67b84c734958a090e1e01996979a2c48
 ListMakanan configMakanan(){
     Word temp1;
     Makanan mTemp;

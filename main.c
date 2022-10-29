@@ -68,146 +68,17 @@ int main() {
     }
 
     while (started) {
-        /*Menampilkan waktu dan posisi pemain dan notifikasi */
         tampilanLayar(pemain,waktuGame);
         printf("Enter Command: ");
         STARTWORD();
         if (!EndWord) {
             /* Handling input normal */
-<<<<<<< HEAD
-            if (isSentenceEq(command, strToSentence("MIX"))) {
-                NextMenit(&waktuGame);
-                /* CODE MIX */
-
-            } else if (isSentenceEq(command, strToSentence("CHOP"))) {
-
-                ListMakanan Chop = pengelompokanMakanan(listMakanan,strToWord("CHOP"));
-                /* CODE CHOP */
-
-                /*Menampilkan List Makanan dengan aksi CHOP */
-
-                printCommand(Chop,strToWord("CHOP"));
-                printf("Enter command: \n");
-                pilihan = (takeInput()).T[0];
-
-                handleFoodCommand(Chop,pilihan);
-                if(isFound(Chop,wordToInt(pilihan)-1)){
-                    temp = ELMT(Chop,wordToInt(pilihan)-1);
-                    printf("Dapet\n");
-                    NextMenit(&waktuGame);
-                }
-            } else if (isSentenceEq(command, strToSentence("FRY"))) {
-                /* CODE FRY */
-
-                /* Membuat list makanan yang berisi aksi Fry */
-                ListMakanan fry = pengelompokanMakanan(listMakanan, strToWord("Fry"));
-
-                /* Menampilkan list makanan yang memiliki aksi Buy */
-                printCommand(fry, strToWord("Fry"));
-                printf("Enter command: \n");
-                pilihan = (takeInput()).T[0];
-
-                /* Validasi input makanan yang mau dibuy. Kalau inputnya benar, tambahkan menitnya */
-                handleFoodCommand(fry,pilihan);
-                if (isFound(fry, wordToInt(pilihan) - 1)){
-                    temp = ELMT(fry, wordToInt(pilihan) - 1);
-                    printf("dapet");
-                    NextMenit(&waktuGame);
-                }
-                
-                /* Push ke dalam delivery list (lagi nunggu kelar) */
-            } else if (isSentenceEq(command, strToSentence("BOIL"))) {
-                NextMenit(&waktuGame);
-
-                /* CODE BOIL */
-
-                printMakanan(pengelompokanMakanan(listMakanan, strToWord("Boil")));
-            } else if (isSentenceEq(command, strToSentence("UNDO"))) {
-                
-                /* CODE UNDO */
-            
-            } else if (isSentenceEq(command, strToSentence("REDO"))) {
-
-                /* CODE REDO */
-            
-            } else if (isSentenceEq(command, strToSentence("CATALOG"))) {
-
-                /* CODE CATALOG */
-
-                /*Mencetak List Makanan ke Layar*/
-                printMakanan(listMakanan);
-                
-            
-            } else if (isSentenceEq(command, strToSentence("COOKBOOK"))) {
-
-                /* CODE COOKBOOK */
-            
-            } else if (isSentenceEq(command, strToSentence("BUY"))) {
-
-                /* CODE BUY */
-
-                /* Cari list makanan yang punya aksi buy */
-                buy = pengelompokanMakanan(listMakanan, strToWord("Buy"));
-
-                /* Menampilkan list makanan yang memiliki aksi Buy */
-                printCommand(buy, strToWord("Buy"));
-                printf("Enter command: \n");
-                pilihan = (takeInput()).T[0];
-
-                /* Validasi input makanan yang mau dibuy. Kalau inputnya benar, tambahkan menitnya */
-                handleFoodCommand(buy,pilihan);
-                if (isFound(buy, wordToInt(pilihan) - 1)){
-                    temp = ELMT(buy, wordToInt(pilihan) - 1);
-                    printf("dapet\n");
-                    NextMenit(&waktuGame);
-                    /* Push ke dalam delivery list (lagi nunggu kelar) */
-                }
-            
-            } else if (isSentenceEq(command, strToSentence("DELIVERY"))) {
-                NextMenit(&waktuGame);
-
-                /* CODE DELIVERY */
-
-            
-            /* Handling input berargumen */
-            } else if (isSentenceEq(command, strToSentence("MOVE NORTH")) || isSentenceEq(command, strToSentence("MOVE WEST")) || isSentenceEq(command, strToSentence("MOVE EAST")) || isSentenceEq(command, strToSentence("MOVE SOUTH"))) {
-                moveDirection = command.T[1];
-                NextMenit(&waktuGame);
-
-                /* CODE MOVE */
-
-                if (isWordEq(moveDirection, strToWord("NORTH"))) {
-                    
-                    /* MOVE NORTH */
-
-                } else if (isWordEq(moveDirection, strToWord("WEST"))) {
-                    
-                    /* MOVE WEST */
-                    
-                } else if (isWordEq(moveDirection, strToWord("EAST"))) {
-                    
-                    /* MOVE EAST */
-                    
-                } else if (isWordEq(moveDirection, strToWord("SOUTH"))) {
-                    
-                    /* MOVE SOUTH */
-                    
-                }
-                
-            } else if (isWordEq(command.T[0], strToWord("WAIT")) && command.Length == 3) {
-                if (isWordInt(command.T[1]) && isWordInt(command.T[2])) {
-                    waitX = wordToInt(command.T[1]);
-                    waitY = wordToInt(command.T[2]);
-
-                    /* CODE WAIT */
-=======
             if (wordEqual(currentWord, strToWord("MIX"))) {
                 ADVWORD();
                 if (EndWord) {
                     NextMenit(&waktuGame);
 
                     /* CODE MIX */
->>>>>>> 50ebd83e67b84c734958a090e1e01996979a2c48
 
                 } else {
                     valid = false;
@@ -371,15 +242,8 @@ int main() {
                         valid = false;
                     }
                 }
-<<<<<<< HEAD
-            }else if (isWordEq(command.T[0], strToWord("EXIT"))) {
-                started = false;
-            }else {
-                printf("Silakan masukkan command yang valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.");
-=======
             } else {
                 valid = false;
->>>>>>> 50ebd83e67b84c734958a090e1e01996979a2c48
             }
         } else {
             valid = false;
