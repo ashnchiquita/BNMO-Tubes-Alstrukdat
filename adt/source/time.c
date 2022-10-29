@@ -129,4 +129,7 @@ void PrevNMenit (TIME *T, int N){
 };
 /* Mengirim N detik sebelum T dalam bentuk TIME */
 /* *** Kelompok Operator Aritmetika *** */
-
+void handleWait(TIME *T, int h, int m){
+    int temp = TIMEToMenit(*T) + h*60 + m;
+    *T = MenitToTIME(temp);
+}

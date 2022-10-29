@@ -3,6 +3,7 @@
 #include "./adt/simulator.h"
 #include "./adt/time.h"
 #include "./adt/point.h"
+#include "./adt/prioqueue.h"
 
 void tampilanLayar(Simulator pemain, TIME waktuMain){
     printWord(namaPemain(pemain));
@@ -20,10 +21,11 @@ int main() {
     Word moveDirection, nama, pilihan;
     Simulator pemain;
     TIME waktuGame;
+    boolean changeTime;
     ListMakanan listMakanan, buy;
     POINT lokasiPemain;
     Makanan temp;
-
+    PrioQueue Delivery, Inventory;
     /* ALGORITMA */
 
     /* splash screen nyusul */
@@ -54,7 +56,8 @@ int main() {
         /*Kalau udah config peta, tolong disimpen di lokasiPemain*/
         /*createPoint(&lokasiPemain,x,y)*/
         listMakanan = configMakanan();
-
+        MakeEmptyQ(&Delivery,100,true);
+        MakeEmptyQ(&Inventory,100,false);
         printf("Masukkan nama pertama anda : \n");
         STARTINPUT();
         createSimulator(&pemain,lokasiPemain, currentWord);
@@ -72,6 +75,7 @@ int main() {
         printf("Enter Command: ");
         STARTWORD();
         if (!EndWord) {
+            changeTime = false;
             /* Handling input normal */
             if (wordEqual(currentWord, strToWord("MIX"))) {
                 ADVWORD();
@@ -153,24 +157,33 @@ int main() {
                 }
             } else if (wordEqual(currentWord, strToWord("BUY"))) {
                 ADVWORD();
+
+                /*Harus tambahin validasi lokasi dia dimana */
+
                 if (EndWord) {                 
+                    
+                    /*Mencari makanan yang memiliki aksi Buy dan menampilkan listnya ke layar*/
                     buy = pengelompokanMakanan(listMakanan, strToWord("Buy"));
                     printCommand(buy, strToWord("Buy"));
+
+                    /*Meminta input user untuk makanan mana yang mau dibeli*/
                     printf("Enter command: \n");
                     STARTWORD();
 
-                    while(!isFound(buy, wordToInt(currentWord) - 1) && wordToInt(currentWord) != 0){
-                        printf("Nomor makanan tidak terdapat, silakan masukan input lagi\n");
-                        printCommand(buy, strToWord("Buy"));
-                        printf("Enter command: \n");
-                        STARTWORD();
-                    }
+                    /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
+                    handleFoodCommand(buy);
 
+                    /* Jika input user benar, maka makanan akan masuk ke delivery list dan waktu game bertambah 1 menit */
                     if(isFound(buy,wordToInt(currentWord)-1)){
+                        changeTime = true;
                         temp = ELMT(buy,wordToInt(currentWord) - 1);
-                        printf("dapet");
+
+                        /*Menampilkan notifikasi bahwa pembelian berhasil */
+                        notifikasiPembelian(temp);
+
+                        /*Menambahkan makanan ke delivery list */
+                        Enqueue(&Delivery,temp);
                         NextMenit(&waktuGame);
-                        /* Push ke dalam delivery list (lagi nunggu kelar)*/
                     }
 
                 } else {
@@ -179,10 +192,8 @@ int main() {
             } else if (wordEqual(currentWord, strToWord("DELIVERY"))) {
                 ADVWORD();
                 if (EndWord) {
-                    NextMenit(&waktuGame);
-
+                    PrintPrioQueue(Delivery);
                     /* CODE DELIVERY */
-
                 } else {
                     valid = false;
                 }
@@ -230,7 +241,7 @@ int main() {
                                 if (EndWord) {
 
                                     /* CODE WAIT (x disimpen di waitX, y disimpen di waitY) */
-
+                                    handleWait(&waktuGame, waitX, waitY);
                                 } else {
                                     valid = false;
                                 }
