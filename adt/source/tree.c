@@ -4,8 +4,13 @@
 
 #include "../tree.h"
 
-TreeNode *createTreeNode(TreeNode *parent, Object value) {
-    TreeNode *node = malloc(sizeof(TreeNode));
+Tree *createTreeNode(Tree *parent, Object value) {
+    Tree *node = malloc(sizeof(Tree));
+
+    if (node == NULL) {
+        // allocation fails
+    }
+
     node->value = value;
     node->childArrSize = 8;
     node->children = allocateArr(8);
@@ -15,8 +20,8 @@ TreeNode *createTreeNode(TreeNode *parent, Object value) {
     return node;
 }
 
-TreeNode **allocateArr(int size) {
-    TreeNode **arr = malloc(sizeof(TreeNode*) * size);
+Tree **allocateArr(int size) {
+    Tree **arr = malloc(sizeof(Tree*) * size);
 
     if (arr == NULL) {
         // allocation fails
@@ -25,11 +30,11 @@ TreeNode **allocateArr(int size) {
     return arr;
 }
 
-void addChildren(TreeNode *node, Object value) {
+Tree *addChildren(Tree *node, Object value) {
     if (node->childrenCount == node->childArrSize) {
         int newSize = (node->childrenCount) * (1.5) * sizeof(node);
 
-        TreeNode **newNode = realloc(node->children, newSize);
+        Tree **newNode = realloc(node->children, newSize);
 
         if (newNode == NULL) {
             // allocation fails
@@ -38,8 +43,17 @@ void addChildren(TreeNode *node, Object value) {
         node->children = newNode;
         node->childArrSize = newSize;
     }
-    TreeNode *newNode = createTreeNode(node, value);
+
+    Tree *newNode = createTreeNode(node, value);
     node->children[node->childrenCount] = newNode;
     node->childrenCount += 1;
 
+    return newNode;
+}
+
+ListTree *createListTree() {
+    ListTree *list = malloc(sizeof(ListTree));
+    list->sizeEff = 0;
+
+    return list;
 }

@@ -8,48 +8,63 @@
  * traversing n-ary tree
  * @param treeNode
  */
-void traverseTree(TreeNode *treeNode) {
-    int childrenCount = treeNode->childrenCount;
+void traverseTree_Makanan(Tree treeNode) {
+    int childrenCount = treeNode.childrenCount;
 
-    printf("%d ", treeNode->value);
+    printf("%d ", treeNode.value.makananV.id);
 
     if (childrenCount == 0) {
         return;
     }
 
     for (int i = 0;i < childrenCount; ++i) {
-        traverseTree((treeNode->children)[i]);
+        traverseTree_Makanan(*(treeNode.children[i]));
     }
 }
 
-/**
- *
- * @param treeNode
- * @param found
- * @param valTS
- */
-void searchMakananInTree(TreeNode *treeNode, boolean *found, Object valTS) {
-    int childrenCount = treeNode->childrenCount;
+Makanan *searchMakananByIdIT(Tree *tree, boolean *found, int id) {
+    int childrenCount = tree->childrenCount;
 
     if ((*found) == true) {
-        return;
+        return NULL;
     }
 
-    if ((treeNode->value.makananV.id) == valTS.makananV.id) {
+    if ((tree->value.makananV.id) == id) {
         (*found) = true;
-        return;
+        return &(tree->value.makananV);
     }
 
     if (childrenCount == 0) {
-        return;
+        return NULL;
     }
+
+    Makanan *res;
 
     for (int i = 0;i < childrenCount; ++i) {
-        searchMakananInTree((treeNode->children)[i], found, valTS);
+        res = searchMakananByIdIT((tree->children)[i], found, id);
+        if (res != NULL)
+            return res;
     }
+
+    return NULL;
 }
 
-int getCharIntVal(char word[], int size) {
+Makanan *searchMakananById(Tree tree, int id) {
+    boolean found = false;
+    return searchMakananByIdIT(&tree, &found, id);
+}
+
+Tree *searchRecipeById(ListTree *tree, int id) {
+    for (int i = 0; i < tree->sizeEff; ++i) {
+        if (tree->list[i].value.makananV.id == id) {
+            return &(tree->list[i]);
+        }
+    }
+
+    return NULL;
+}
+
+int getCharIntValue(char word[], int size) {
     int val = 0;
     for (int i = 1;i <= size; ++i) {
         val += (word[size-i] - 48) * pow(10, i-1);
@@ -58,87 +73,146 @@ int getCharIntVal(char word[], int size) {
     return val;
 }
 
-/**
- * not done
- *
- * @return
- */
-TreeNode *populateFromF() {
-    FILE *file;
-    char currentChar, currentW[25], ch;
-    int currentWSize = 0, val = 0;
-  //  ListDin line;
- //   CreateListDin(&line, 100);
+Makanan *searchMakananFromList(ListMakanan *listMakanan, int id) {
+    int i = 0, cId = listMakanan->contents[i].id;
 
-    file = fopen("/home/zidane/kuliah/Semester 3/IF2110 - Algoritma & Struktur Data/praktikum/preparation-tubes/config-r.txt", "r");
-
-    if (file == NULL) {
-
+    while (cId != -1) {
+        if (cId == id) {
+            return &(listMakanan->contents[i]);
+        }
+        ++i;
+        cId = listMakanan->contents[i].id;
     }
 
-    int count = 0;
-    while(count < 1) {
-        currentChar = fgetc(file);
-
-        if (currentChar == -1)
-            count = 1;
-
-        if (!(currentChar >= 48 && currentChar <= 57) && currentChar != 32 && currentChar != -1) {
-            continue;
-        }
-
-        if (currentChar == 32 || count != 0) {
-            if (currentWSize == 0) {
-                continue;
-            }
-
-            val = getCharIntVal(currentW, currentWSize);
-           // insertLast(&line, val);
-            currentWSize = 0;
-            continue;
-        }
-
-        currentW[currentWSize] = currentChar;
-        ++currentWSize;
-    }
-
-   // printList(line);
     return NULL;
 }
 
 /**
- * given a list of values values, search which values is not contained in the tree
+ * populate from file for resep. this function assumes config file is not faulty, hence validations r'nt provided
  *
- * not done. unsatisfied dependency: list dinamik
- *
- * @param node
+ * @return
  */
-/*void check(TreeNode *node, ListDin *valueArr, ListDin *nEArr) {
-    if (node == NULL)
-        return;
+ListTree *populateResepFromFile(ListMakanan *listMakanan, char fileL[]) {
+    FILE *file;
+    file = fopen(fileL, "r");
 
-    int total = node->childrenCount;
+    if (file == NULL) {
+        return NULL;
+    }
 
+    char currentChar, currentWord[25];
+    int currentWordSize = 0, val = 0, currentLine = 0, wordCount = 0;
+    ListTree *listTree = createListTree();
+    boolean stopFCL = false;
+    Object nodeVal;
+
+    while(currentChar != -1) {
+        currentChar = fgetc(file);
+
+        if (currentChar == '\n') {
+            currentLine += 1;
+            wordCount = 0;
+            stopFCL = false;
+            continue;
+        }
+
+        if (currentChar == '#') {
+            stopFCL = true;
+            continue;
+        }
+
+        // after detecting #, stop parsing for numbers
+        if (stopFCL) {
+            continue;
+        }
+
+        if (currentLine == 0 || (!(currentChar >= 48 && currentChar <= 57) && currentChar != 32 && currentChar != -1)) {
+            continue;
+        }
+
+        if (currentChar == 32 || currentChar == -1) {
+            if (currentWordSize == 0) {
+                continue;
+            }
+
+            ++wordCount;
+
+            val = getCharIntValue(currentWord, currentWordSize);
+            if (wordCount == 1) {
+                Makanan *makananRootR = searchMakananFromList(listMakanan, val);
+
+                // makanan not found, config is faulty
+                if (makananRootR == NULL) {
+                    printf("makanan not found\n");
+                    exit(23);
+                }
+
+                nodeVal.makananV = *makananRootR;
+
+                Tree rootNode = *createTreeNode(NULL, nodeVal);
+                listTree->list[listTree->sizeEff] = rootNode;
+                listTree->sizeEff += 1;
+            } else if (wordCount != 2) {
+                Makanan *makananRootR = searchMakananFromList(listMakanan, val);
+
+                // makanan not found, config is faulty
+                if (makananRootR == NULL) {
+                    printf("makanan not found");
+                    exit(23);
+                }
+
+                nodeVal.makananV = *makananRootR;
+                addChildren(&(listTree->list[currentLine-1]), nodeVal);
+            }
+
+            currentWordSize = 0;
+            continue;
+        }
+
+        currentWord[currentWordSize] = currentChar;
+        ++currentWordSize;
+    }
+
+    return listTree;
+}
+
+/**
+ * use getMakananNa.
+ */
+void check(Tree *tree, PrioQueue *inventory, ListMakanan *listNa, int depth, int currentDepth) {
     // search if value exists in the value arr (recipe fulfilled)
     // should be faster and simpler using hashtable (but making such DA surely would be a little complex)
-    boolean notFound = true;
-    int i = 0;
-    while (notFound && i < valueArr->nEff) {
-        if (valueArr->buffer[i] == 0) {
-            break;
+    if (depth == currentDepth) {
+        boolean notFound = true;
+        int i = 0;
+        while (notFound && inventory->TAIL >= i) {
+            if (tree->value.makananV.id == inventory->T[i].id) {
+                notFound = false;
+            }
+            ++i;
         }
 
-        if (node->value==valueArr->buffer[i]) {
-            notFound = false;
+
+        if (notFound) {
+            addMakanan(listNa, tree->value.makananV);
         }
-        ++i;
+
+        return;
     }
 
-    if (notFound) {
-        insertLast(nEArr, node->value);
+    if (depth > currentDepth) {
+        int childrenCount = tree->childrenCount;
+        for (int i = 0; i < childrenCount; i++) {
+            check(tree->children[i], inventory, listNa, depth, currentDepth + 1);
+        }
     }
 
-    for (int i = 0; i < total; i++)
-        check(node->children[i], valueArr, nEArr);
+}
 
-}*/
+ListMakanan *getMakananNa(Tree tree, PrioQueue inventory) {
+    ListMakanan *listMakanan = malloc(sizeof(ListMakanan));
+    CreateListMakanan(listMakanan);
+    check(&tree, &inventory, listMakanan, 1, 0);
+
+    return listMakanan;
+}
