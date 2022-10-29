@@ -145,3 +145,59 @@ void CopySpasi() {
             break;
     }
 }
+
+int wordToInt(Word w) {
+/* Mengembalikan nilai integer dari Word yang tersusun dari angka-angka */
+/* Prekondisi: isWordInt(w) bernilai true */
+    /* KAMUS LOKAL */
+    int bil, i;
+
+    /* ALGORITMA */
+    bil = 0;
+    for(i = 0; i < w.Length; i++) {
+        bil *= 10;
+        bil += (w.TabWord[i] - 48);
+    }
+
+    return bil;
+}
+
+boolean isWordInt(Word w) {
+/* Mengecek apakah suatu Word merupakan bilangan */
+    /* KAMUS LOKAL */
+    boolean num;
+    int i;
+
+    /* ALGORITMA */
+    num = true;
+
+    for (i = 0; i < w.Length && num; i++) {
+        num = (w.TabWord[i] >= 48 && w.TabWord[i] <= 57);
+    }
+
+    if (w.Length == 0) {
+        num = false;
+    }
+
+    return num;
+}
+
+Word strToWord(char s[]) {
+/* Mengubah string menjadi Word */
+/* String pasti diakhiri '\0' */
+/* Prekondisi: string tidak mengandung ' ' */
+    /* KAMUS LOKAL */
+    int i;
+    Word w;
+
+    /* ALGORITMA */
+    i = 0;
+    while (s[i] != '\0') {
+        w.TabWord[i] = s[i];
+        i++;
+    }
+
+    w.Length = i;
+
+    return w;
+}

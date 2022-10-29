@@ -58,6 +58,9 @@ void PrintKalimatDurasi (TIME T) {
     }
     if (Menit(T) != 0 && Jam(T) != 0) {
         printf(" ");
+    }
+    if (Hari(T) != 0 && Jam(T) == 0 && Menit(T) != 0) {
+        printf(" ");
     }    
     if (Menit(T) != 0) {
         printf("%d menit", Menit(T));
