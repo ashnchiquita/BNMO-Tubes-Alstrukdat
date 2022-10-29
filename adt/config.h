@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include "makanan.h"
 
-int wordToInt(Word w);
 ListMakanan configMakanan();
 
 #endif
