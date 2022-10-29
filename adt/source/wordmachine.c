@@ -79,17 +79,6 @@ boolean validateChar(char a){
     return((a>= 65 && a <=90) || (a>= 97 && a <= 122));
 }
 
-void printWord(Word w){
-    for(int i =0; i < w.Length;i++){
-        if(!validateChar(w.TabWord[i])){
-            printf(" ");
-        }else{
-            printf("%c",w.TabWord[i]);
-        }
-        
-    }
-}
-
 void ADVNEWLINE() {
     Word EMPTY = {"", 0};
     currentWord = EMPTY;

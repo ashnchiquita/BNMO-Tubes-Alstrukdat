@@ -57,6 +57,7 @@ int main() {
     }
 
     while (started) {
+        /*Menampilkan waktu dan posisi pemain dan notifikasi */
         tampilanLayar(pemain,waktuGame);
 
         /* tampilkan peta kalo udah ada */
@@ -67,20 +68,45 @@ int main() {
             /* Handling input normal */
             if (isSentenceEq(command, strToSentence("MIX"))) {
                 NextMenit(&waktuGame);
-
                 /* CODE MIX */
 
             } else if (isSentenceEq(command, strToSentence("CHOP"))) {
-                NextMenit(&waktuGame);
 
+                ListMakanan Chop = pengelompokanMakanan(listMakanan,strToWord("CHOP"));
                 /* CODE CHOP */
 
-            } else if (isSentenceEq(command, strToSentence("FRY"))) {
-                NextMenit(&waktuGame);
+                /*Menampilkan List Makanan dengan aksi CHOP */
 
+                printCommand(Chop,strToWord("CHOP"));
+                printf("Enter command: \n");
+                pilihan = (takeInput()).T[0];
+
+                handleFoodCommand(Chop,pilihan);
+                if(isFound(Chop,wordToInt(pilihan)-1)){
+                    temp = ELMT(Chop,wordToInt(pilihan)-1);
+                    printf("Dapet\n");
+                    NextMenit(&waktuGame);
+                }
+            } else if (isSentenceEq(command, strToSentence("FRY"))) {
                 /* CODE FRY */
 
-                printMakanan(pengelompokanMakanan(listMakanan, strToWord("Fry")));
+                /* Membuat list makanan yang berisi aksi Fry */
+                ListMakanan fry = pengelompokanMakanan(listMakanan, strToWord("Fry"));
+
+                /* Menampilkan list makanan yang memiliki aksi Buy */
+                printCommand(fry, strToWord("Fry"));
+                printf("Enter command: \n");
+                pilihan = (takeInput()).T[0];
+
+                /* Validasi input makanan yang mau dibuy. Kalau inputnya benar, tambahkan menitnya */
+                handleFoodCommand(fry,pilihan);
+                if (isFound(fry, wordToInt(pilihan) - 1)){
+                    temp = ELMT(fry, wordToInt(pilihan) - 1);
+                    printf("dapet");
+                    NextMenit(&waktuGame);
+                }
+                
+                /* Push ke dalam delivery list (lagi nunggu kelar) */
             } else if (isSentenceEq(command, strToSentence("BOIL"))) {
                 NextMenit(&waktuGame);
 
@@ -98,37 +124,36 @@ int main() {
             } else if (isSentenceEq(command, strToSentence("CATALOG"))) {
 
                 /* CODE CATALOG */
+
+                /*Mencetak List Makanan ke Layar*/
+                printMakanan(listMakanan);
+                
             
             } else if (isSentenceEq(command, strToSentence("COOKBOOK"))) {
 
                 /* CODE COOKBOOK */
             
             } else if (isSentenceEq(command, strToSentence("BUY"))) {
-                NextMenit(&waktuGame);
 
                 /* CODE BUY */
 
+                /* Cari list makanan yang punya aksi buy */
                 buy = pengelompokanMakanan(listMakanan, strToWord("Buy"));
+
+                /* Menampilkan list makanan yang memiliki aksi Buy */
                 printCommand(buy, strToWord("Buy"));
                 printf("Enter command: \n");
                 pilihan = (takeInput()).T[0];
 
-                while(!isFound(buy, wordToInt(pilihan) - 1) && wordToInt(pilihan) != 0){
-                    printf("Nomor makanan tidak terdapat, silakan masukan input lagi\n");
-                    printCommand(buy, strToWord("Buy"));
-                    printf("Enter command: \n");
-                    pilihan = (takeInput()).T[0];
-                }
-
+                /* Validasi input makanan yang mau dibuy. Kalau inputnya benar, tambahkan menitnya */
+                handleFoodCommand(buy,pilihan);
                 if (isFound(buy, wordToInt(pilihan) - 1)){
                     temp = ELMT(buy, wordToInt(pilihan) - 1);
-                    printf("dapet");
+                    printf("dapet\n");
                     NextMenit(&waktuGame);
-
                     /* Push ke dalam delivery list (lagi nunggu kelar) */
-
                 }
-                
+            
             } else if (isSentenceEq(command, strToSentence("DELIVERY"))) {
                 NextMenit(&waktuGame);
 
@@ -170,7 +195,9 @@ int main() {
                 } else {
                     printf("Silakan masukkan command yang valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.");
                 }
-            } else {
+            }else if (isWordEq(command.T[0], strToWord("EXIT"))) {
+                started = false;
+            }else {
                 printf("Silakan masukkan command yang valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.");
             }
         } else {

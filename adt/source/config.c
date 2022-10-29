@@ -2,14 +2,6 @@
 #include <stdio.h>
 
 // Mengubah Word ke integer
-int wordToInt(Word w){
-    int jumlah = 0; 
-    for(int i = 0; i < w.Length;i++){
-        jumlah = jumlah * 10 + (w.TabWord[i]-48);
-    }
-    return jumlah;
-}
-
 ListMakanan configMakanan(){
     Word temp1;
     Makanan mTemp;
