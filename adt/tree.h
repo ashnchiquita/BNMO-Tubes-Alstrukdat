@@ -52,6 +52,6 @@ ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]);
  * given a resep (in the form of tree) and inventory, search for makanan which r'nt available in the
  * inventory. returns ListMakanan of panjang = 0 if all makanan needed are available in the inventory.
  */
-ListMakanan *getMakananNa(Tree tree, PrioQueue inventory);
+ListMakanan getMakananNa(Tree tree, PrioQueue inventory);
 
 #endif

@@ -79,11 +79,10 @@ int main() {
     printf("---check---\n");
     PrioQueue queue;
     MakeEmptyQ(&queue, 100, false);
-    Enqueue(&queue, m1);
     Enqueue(&queue, m2);
     Enqueue(&queue, m3);
 
-    listMakanan2 = *getMakananNa(*tree, queue);
+    listMakanan2 = getMakananNa(*tree, queue);
     for (int i = 0; i < panjangListMakanan(listMakanan2); ++i) {
         printf("%d ", listMakanan2.contents[i].id);
     }

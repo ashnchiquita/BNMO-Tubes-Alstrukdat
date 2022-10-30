@@ -209,10 +209,10 @@ void check(Tree *tree, PrioQueue *inventory, ListMakanan *listNa, int depth, int
 
 }
 
-ListMakanan *getMakananNa(Tree tree, PrioQueue inventory) {
-    ListMakanan *listMakanan = malloc(sizeof(ListMakanan));
-    CreateListMakanan(listMakanan);
-    check(&tree, &inventory, listMakanan, 1, 0);
+ListMakanan getMakananNa(Tree tree, PrioQueue inventory) {
+    ListMakanan listMakanan;
+    CreateListMakanan(&listMakanan);
+    check(&tree, &inventory, &listMakanan, 1, 0);
 
     return listMakanan;
 }
