@@ -4,6 +4,7 @@
 #include "./adt/time.h"
 #include "./adt/point.h"
 #include "./adt/prioqueue.h"
+#include "adt/tree.h"
 
 void tampilanLayar(Simulator pemain, TIME waktuMain){
     printWord(namaPemain(pemain));
@@ -26,6 +27,7 @@ int main() {
     POINT lokasiPemain;
     Makanan temp;
     PrioQueue Delivery, Inventory;
+    ListTree treeResep;
     /* ALGORITMA */
 
     /* splash screen nyusul */
@@ -62,6 +64,7 @@ int main() {
         STARTINPUT();
         createSimulator(&pemain,lokasiPemain, currentWord);
         CreateTime(&waktuGame, 0, 0, 0);
+        treeResep = *populateResepFromFile(listMakanan, "adt/config-r.txt");
         printf("Konfigurasi selesai, selamat bermain ");
         printWord(namaPemain(pemain));
         printf("!\n");
