@@ -92,7 +92,7 @@ Makanan *searchMakananFromList(ListMakanan *listMakanan, int id) {
  *
  * @return
  */
-ListTree *populateResepFromFile(ListMakanan *listMakanan, char fileL[]) {
+ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]) {
     FILE *file;
     file = fopen(fileL, "r");
 
@@ -139,7 +139,7 @@ ListTree *populateResepFromFile(ListMakanan *listMakanan, char fileL[]) {
 
             val = getCharIntValue(currentWord, currentWordSize);
             if (wordCount == 1) {
-                Makanan *makananRootR = searchMakananFromList(listMakanan, val);
+                Makanan *makananRootR = searchMakananFromList(&listMakanan, val);
 
                 // makanan not found, config is faulty
                 if (makananRootR == NULL) {
@@ -153,7 +153,7 @@ ListTree *populateResepFromFile(ListMakanan *listMakanan, char fileL[]) {
                 listTree->list[listTree->sizeEff] = rootNode;
                 listTree->sizeEff += 1;
             } else if (wordCount != 2) {
-                Makanan *makananRootR = searchMakananFromList(listMakanan, val);
+                Makanan *makananRootR = searchMakananFromList(&listMakanan, val);
 
                 // makanan not found, config is faulty
                 if (makananRootR == NULL) {

@@ -43,7 +43,7 @@ int main() {
     printf("---populate from file testing---\n");
 
     char fileL[] = "/home/zidane/kuliah/Semester 3/IF2110 - Algoritma & Struktur Data/BNMO-Tubes-Alstrukdat/adt/config-r.txt";
-    ListTree listTree = *populateResepFromFile(&listMakanan, fileL);
+    ListTree listTree = *populateResepFromFile(listMakanan, fileL);
 
     for (int i = 0; i < listTree.sizeEff; ++i) {
         printf("root id: %d; ", listTree.list[i].value.makananV.id);
@@ -69,8 +69,7 @@ int main() {
     *c9 = addChildren(c5, o10), *c10 = addChildren(c8, o11);
 
     traverseTree_Makanan(*tree);
-    boolean x = false;
-    Makanan *mk = searchMakananByIdIT(tree, &x, 28);
+    Makanan *mk = searchMakananById(*tree, 28);
 
     if (mk != NULL)
         printf("s: %d", mk->id);
@@ -79,12 +78,12 @@ int main() {
 
     printf("---check---\n");
     PrioQueue queue;
-    MakeEmpty(&queue, 100);
+    MakeEmptyQ(&queue, 100, false);
     Enqueue(&queue, m1);
     Enqueue(&queue, m2);
     Enqueue(&queue, m3);
 
-    printf("%d ", getMakananNa(*tree, queue));
+    listMakanan2 = *getMakananNa(*tree, queue);
     for (int i = 0; i < panjangListMakanan(listMakanan2); ++i) {
         printf("%d ", listMakanan2.contents[i].id);
     }

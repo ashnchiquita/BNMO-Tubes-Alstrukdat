@@ -46,7 +46,7 @@ Tree *searchRecipeById(ListTree *tree, int id);
  * populate resep from config file. returns NULL if it fails to load file.
  *
  * */
-ListTree *populateResepFromFile(ListMakanan *listMakanan, char fileL[]);
+ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]);
 
 /**
  * given a resep (in the form of tree) and inventory, search for makanan which r'nt available in the
