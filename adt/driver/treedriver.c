@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "../prioqueue.h"
+#include "../config.h"
 
 /**
  * driver's main function. caution: machine dependent.
@@ -41,7 +42,7 @@ int main() {
     addMakanan(&listMakanan1, m4);
 
     printf("---populate from file testing---\n");
-
+    listMakanan = *configMakananP();
     char fileL[] = "/home/zidane/kuliah/Semester 3/IF2110 - Algoritma & Struktur Data/BNMO-Tubes-Alstrukdat/adt/config-r.txt";
     ListTree listTree = *populateResepFromFile(listMakanan, fileL);
 

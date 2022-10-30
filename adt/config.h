@@ -8,5 +8,7 @@
 #include "makanan.h"
 
 ListMakanan configMakanan();
+ListMakanan *configMakananP();
+
 
 #endif

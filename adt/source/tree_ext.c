@@ -87,6 +87,49 @@ Makanan *searchMakananFromList(ListMakanan *listMakanan, int id) {
     return NULL;
 }
 
+void addToT(ListTree *listTree, ListMakanan *listMakanan, char currentWord[], int *wordCount, int *currentWordSize,
+            int currentLine) {
+
+    if (*currentWordSize == 0) {
+        return;
+    }
+
+    Object nodeVal;
+
+    (*wordCount) += 1;
+
+    int val = getCharIntValue(currentWord, *currentWordSize);
+    if (*wordCount == 1) {
+        Makanan *makananRootR = searchMakananFromList(listMakanan, val);
+
+        // makanan not found, config is faulty
+        if (makananRootR == NULL) {
+            printf("makanan not found\n");
+            exit(23);
+        }
+
+        nodeVal.makananV = *makananRootR;
+
+        Tree rootNode = *createTreeNode(NULL, nodeVal);
+        listTree->list[listTree->sizeEff] = rootNode;
+        listTree->sizeEff += 1;
+    } else if (*wordCount != 2) {
+        Makanan *makananRootR = searchMakananFromList(listMakanan, val);
+
+        // makanan not found, config is faulty
+        if (makananRootR == NULL) {
+            printf("makanan not found");
+            exit(23);
+        }
+
+        nodeVal.makananV = *makananRootR;
+        addChildren(&(listTree->list[currentLine-1]), nodeVal);
+    }
+
+    *currentWordSize = 0;
+
+}
+
 /**
  * populate from file for resep. this function assumes config file is not faulty, hence validations r'nt provided
  *
@@ -110,9 +153,12 @@ ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]) {
         currentChar = fgetc(file);
 
         if (currentChar == '\n') {
+            if (currentLine != 0)
+                addToT(listTree, &listMakanan, currentWord, &wordCount, &currentWordSize, currentLine);
             currentLine += 1;
             wordCount = 0;
             stopFCL = false;
+
             continue;
         }
 
@@ -131,41 +177,7 @@ ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]) {
         }
 
         if (currentChar == 32 || currentChar == -1) {
-            if (currentWordSize == 0) {
-                continue;
-            }
-
-            ++wordCount;
-
-            val = getCharIntValue(currentWord, currentWordSize);
-            if (wordCount == 1) {
-                Makanan *makananRootR = searchMakananFromList(&listMakanan, val);
-
-                // makanan not found, config is faulty
-                if (makananRootR == NULL) {
-                    printf("makanan not found\n");
-                    exit(23);
-                }
-
-                nodeVal.makananV = *makananRootR;
-
-                Tree rootNode = *createTreeNode(NULL, nodeVal);
-                listTree->list[listTree->sizeEff] = rootNode;
-                listTree->sizeEff += 1;
-            } else if (wordCount != 2) {
-                Makanan *makananRootR = searchMakananFromList(&listMakanan, val);
-
-                // makanan not found, config is faulty
-                if (makananRootR == NULL) {
-                    printf("makanan not found");
-                    exit(23);
-                }
-
-                nodeVal.makananV = *makananRootR;
-                addChildren(&(listTree->list[currentLine-1]), nodeVal);
-            }
-
-            currentWordSize = 0;
+            addToT(listTree, &listMakanan, currentWord, &wordCount, &currentWordSize, currentLine);
             continue;
         }
 
