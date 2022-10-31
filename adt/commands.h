@@ -15,4 +15,7 @@ void handleFoodCommand(ListMakanan l);
 
 void notifikasiPembelian(Makanan l);
 
+void notifikasiGoreng(Makanan m);
+
+void notifikasiGagal(ListMakanan m);
 #endif

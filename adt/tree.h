@@ -54,4 +54,5 @@ ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]);
  */
 ListMakanan getMakananNa(Tree tree, PrioQueue inventory);
 
+ListMakanan getMakanan (Tree tree, PrioQueue inventory);
 #endif

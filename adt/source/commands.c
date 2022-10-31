@@ -19,3 +19,16 @@ void notifikasiPembelian(Makanan m){
     PrintKalimatDurasi(delivery(m));
     printf("\n");
 }
+
+void notifikasiGoreng(Makanan m){
+    printWord(nama(m));
+    printf(" selesai dibuat dan sudah dimasukkan ke inventory");
+}
+
+void notifikasiGagal(ListMakanan m){
+    for(int i = 0; i < panjangListMakanan(m);i++){
+        printf("%d.", i+1);
+        printWord(nama(ELMT(m,i)));
+        printf("\n");
+    }
+}

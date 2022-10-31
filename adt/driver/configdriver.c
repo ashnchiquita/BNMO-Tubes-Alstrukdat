@@ -1,6 +1,7 @@
 #include "../config.h"
 
 int main(){
-    configMakanan();
+    ListMakanan l= configMakanan();
+    printMakanan(l);
     return 0;
 }
