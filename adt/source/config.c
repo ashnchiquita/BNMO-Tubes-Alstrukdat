@@ -163,3 +163,36 @@ ListMakanan *configMakananP(){
     return l;
     // printMakanan(l);
 }
+
+Matrix configPeta(POINT *lokasiPemain) {
+    Matrix peta;
+    STARTFILE("./adt/configPeta.txt");
+    int ncol, nrow;
+    ADVWORD();
+    nrow = wordToInt(currentWord);
+    ADVWORD();
+    ncol = wordToInt(currentWord);
+    CreateMatrix(nrow, ncol, &peta);
+    ADVNEWLINE();
+
+
+    int j = 0;
+    ADVWORD();
+    while(!EndWord) {
+        for (int i = 0; i < currentWord.Length; i++) {
+            KOOR(peta, j, i) = currentWord.TabWord[i];
+            if (KOOR(peta, j, i) == 'S') {
+                CreatePoint(lokasiPemain, i, j);
+            }
+        }
+
+        if (j != nrow - 1) {
+            ADVNEWLINE();
+            ADVWORD();
+        } else {
+            ADVWORD();
+        }
+        j++;
+    }
+    return peta;
+}

@@ -6,9 +6,11 @@
 #include "time.h"
 #include <stdio.h>
 #include "makanan.h"
+#include "matrix.h"
 
 ListMakanan configMakanan();
 ListMakanan *configMakananP();
+Matrix configPeta(POINT *lokasiPemain);
 
 
 #endif

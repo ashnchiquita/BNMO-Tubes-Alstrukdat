@@ -28,6 +28,7 @@ int main() {
     Makanan temp;
     PrioQueue Delivery, Inventory;
     ListTree treeResep;
+    Matrix peta;
     /* ALGORITMA */
 
     /* splash screen nyusul */
@@ -59,6 +60,7 @@ int main() {
         listMakanan = *configMakananP();
         MakeEmptyQ(&Delivery,100,true);
         MakeEmptyQ(&Inventory,100,false);
+        peta = configPeta(&lokasiPemain);
         printf("Masukkan nama pertama anda : \n");
         STARTINPUT();
         createSimulator(&pemain,lokasiPemain, currentWord);
@@ -75,6 +77,7 @@ int main() {
         command = false;
         finishDelivery(&Delivery,&Inventory);
         tampilanLayar(pemain,waktuGame);
+        displayPeta(peta);
         printf("Enter Command: ");
         STARTWORD();
         if (!EndWord) {
@@ -264,9 +267,17 @@ int main() {
 
                         ADVWORD();
                         if (EndWord) {
-                            NextMenit(&waktuGame);
 
                             /* CODE MOVE (Arah disimpen di moveDirection) */
+                            if (moveDirection.TabWord[0] == 'N') {
+                                moveNorth(&peta, &pemain, &command);
+                            } else if (moveDirection.TabWord[0] == 'S') {
+                                moveSouth(&peta, &pemain, &command);
+                            } else if (moveDirection.TabWord[0] == 'W') {
+                                moveWest(&peta, &pemain, &command);
+                            } else if (moveDirection.TabWord[0] == 'E') {
+                                moveEast(&peta, &pemain, &command);
+                            }
 
                         } else {
                             valid = false;
