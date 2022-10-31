@@ -55,7 +55,6 @@ Makanan *searchMakananById(Tree tree, int id) {
 }
 
 Tree *searchRecipeById(ListTree *tree, int id) {
-    printf("%d\n",id);
     for (int i = 0; i < tree->sizeEff; ++i) {
         if (tree->list[i].value.makananV.id == id) {
             return &(tree->list[i]);

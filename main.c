@@ -22,7 +22,7 @@ int main() {
     Word moveDirection, nama, pilihan;
     Simulator pemain;
     TIME waktuGame;
-    boolean changeTime;
+    boolean command;
     ListMakanan listMakanan, buy;
     POINT lokasiPemain;
     Makanan temp;
@@ -72,20 +72,33 @@ int main() {
     }
 
     while (started) {
+        command = false;
         finishDelivery(&Delivery,&Inventory);
-        PrintPrioQueue(Inventory);
         tampilanLayar(pemain,waktuGame);
         printf("Enter Command: ");
         STARTWORD();
         if (!EndWord) {
-            changeTime = false;
             /* Handling input normal */
             if (wordEqual(currentWord, strToWord("MIX"))) {
                 ADVWORD();
                 if (EndWord) {
-                    NextMenit(&waktuGame);
+                    ListMakanan Mix = pengelompokanMakanan(listMakanan, strToWord("Mix"));
+                    printCommand(Mix,strToWord("Mix"));
 
-                    /* CODE MIX */
+                    /* CODE FRY */
+                    printf("Enter command: \n");
+                    STARTWORD();
+
+                     /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
+                    handleFoodCommand(Mix);
+
+                    /* CODE Mix */
+                    /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
+                    if(isFound(Mix,wordToInt(currentWord)-1)){
+                        temp = ELMT(Mix,wordToInt(currentWord) - 1);
+
+                        handleFoodAction(treeResep,Inventory,&command,temp);
+                    };
 
                 } else {
                     valid = false;
@@ -93,7 +106,6 @@ int main() {
             } else if (wordEqual(currentWord, strToWord("CHOP"))) {
                 ADVWORD();
                 if (EndWord) {
-                    NextMenit(&waktuGame);
 
                     /* CODE CHOP */
                     ListMakanan Chop = pengelompokanMakanan(listMakanan, strToWord("Chop"));
@@ -107,30 +119,7 @@ int main() {
                     if(isFound(Chop,wordToInt(currentWord)-1)){
                         temp = ELMT(Chop,wordToInt(currentWord) - 1);
 
-                        /*Memastikan ada resep untuk makanan yang diinginakan di dalam tree recipe*/
-                        Tree fryRecipe = *searchRecipeById(&treeResep,id(temp));
-
-                        /*ListMakanan completed adalah bahan - bahan makanan yang dibutuhkan dalam resep dan dimiliki inventory*/
-                        ListMakanan completed = getMakanan(fryRecipe,Inventory);
-
-                        /*ListMakanan missed adalah bahan - bahan makanan yang dibutuhkan dalam resep, tpi tidak dimiliki inventory*/
-                        ListMakanan missed = getMakananNa(fryRecipe,Inventory);
-
-                        /*Jika panjang list missed adalah 0, berarti semua makanan dimiliki, dan aksi menggoreng dapat dilakukan*/
-                        if(panjangListMakanan(missed) == 0){
-                            notifikasiGoreng(temp);
-                            /*Memasukkan barang yang sudah digoreng ke dalam Inventory*/
-                            Enqueue(&Inventory,temp);
-                            NextMenit(&waktuGame);
-                        }else{
-                            /*Jika panjang list makanan tidak sama dengan 0, berarti akan ada minimal satu item yang tidak dimiliki inventory*/
-                            printf("Gagal membuat ");
-                            printWord(nama(temp));
-
-                            /*Menampilkan list makanan yang diperlukan, tapi tidak dimiliki */
-                            printf(" karena kamu tidak memiliki bahan berikut : \n");
-                            notifikasiGagal(missed);
-                        }
+                        handleFoodAction(treeResep,Inventory,&command,temp);
                     };
 
                 } else {
@@ -155,31 +144,7 @@ int main() {
                     if(isFound(Fry,wordToInt(currentWord)-1)){
                         temp = ELMT(Fry,wordToInt(currentWord) - 1);
 
-                        /*Memastikan ada resep untuk makanan yang diinginakan di dalam tree recipe*/
-                        Tree fryRecipe = *searchRecipeById(&treeResep,id(temp));
-
-                        /*ListMakanan completed adalah bahan - bahan makanan yang dibutuhkan dalam resep dan dimiliki inventory*/
-                        ListMakanan completed = getMakanan(fryRecipe,Inventory);
-
-                        /*ListMakanan missed adalah bahan - bahan makanan yang dibutuhkan dalam resep, tpi tidak dimiliki inventory*/
-                        ListMakanan missed = getMakananNa(fryRecipe,Inventory);
-
-                        /*Jika panjang list missed adalah 0, berarti semua makanan dimiliki, dan aksi menggoreng dapat dilakukan*/
-                        if(panjangListMakanan(missed) == 0){
-                            notifikasiGoreng(temp);
-                            printMakanan(completed);
-                            /*Memasukkan barang yang sudah digoreng ke dalam Inventory*/
-                            Enqueue(&Inventory,temp);
-                            NextMenit(&waktuGame);
-                        }else{
-                            /*Jika panjang list makanan tidak sama dengan 0, berarti akan ada minimal satu item yang tidak dimiliki inventory*/
-                            printf("Gagal membuat ");
-                            printWord(nama(temp));
-
-                            /*Menampilkan list makanan yang diperlukan, tapi tidak dimiliki */
-                            printf(" karena kamu tidak memiliki bahan berikut : \n");
-                            notifikasiGagal(missed);
-                        }
+                        handleFoodAction(treeResep,Inventory,&command,temp);
                     };
 
                 } else {
@@ -188,11 +153,24 @@ int main() {
             } else if (wordEqual(currentWord, strToWord("BOIL"))) {
                 ADVWORD();
                 if (EndWord) {
-                    NextMenit(&waktuGame);
-                    printMakanan(pengelompokanMakanan(listMakanan, strToWord("Boil")));
+                    /*Mencari list makanan yang memiliki aksi Fry */
+                    ListMakanan Boil = pengelompokanMakanan(listMakanan, strToWord("Boil"));
+                    printCommand(Boil,strToWord("Boil"));
+
+                    /* CODE FRY */
+                    printf("Enter command: \n");
+                    STARTWORD();
+
+                     /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
+                    handleFoodCommand(Boil);
 
                     /* CODE BOIL */
+                    /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
+                    if(isFound(Boil,wordToInt(currentWord)-1)){
+                        temp = ELMT(Boil,wordToInt(currentWord) - 1);
 
+                        handleFoodAction(treeResep,Inventory,&command,temp);
+                    };
                 } else {
                     valid = false;
                 }
@@ -253,7 +231,6 @@ int main() {
 
                     /* Jika input user benar, maka makanan akan masuk ke delivery list dan waktu game bertambah 1 menit */
                     if(isFound(buy,wordToInt(currentWord)-1)){
-                        changeTime = true;
                         temp = ELMT(buy,wordToInt(currentWord) - 1);
 
                         /*Menampilkan notifikasi bahwa pembelian berhasil */
@@ -261,7 +238,7 @@ int main() {
 
                         /*Menambahkan makanan ke delivery list */
                         Enqueue(&Delivery,temp);
-                        NextMenit(&waktuGame);
+                        command = true;
                     }
 
                 } else {
@@ -332,7 +309,7 @@ int main() {
                         valid = false;
                     }
                 }
-            } else {
+            }else {
                 valid = false;
             }
         } else {
@@ -343,6 +320,13 @@ int main() {
             printf("Command tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.");
         }
 
+        /*Kalau misalnya commandnya valid, update 1 menit ke delivery, inventory, dan waktu game*/
+        if(command){
+            update1Min(&Delivery);
+            update1Min(&Inventory);
+            NextMenit(&waktuGame);
+        }
+        
     }
 
     /* End Screen (congrats, win/lose, stats) */

@@ -43,10 +43,11 @@ void addMakanan(ListMakanan *l,Makanan m){
 
 
 ListMakanan pengelompokanMakanan(ListMakanan l,Word w){
-    Word Buy = {"BUY",3};
+    Word Buy = {"Buy",3};
     Word Chop = {"Chop",4};
     Word Fry = {"Fry",3};
     Word Boil = {"Boil",4};
+    Word Mix = {"Mix",3};
     ListMakanan lResult;
     CreateListMakanan(&lResult);
     if(wordEqual(w,Buy)){
@@ -70,6 +71,13 @@ ListMakanan pengelompokanMakanan(ListMakanan l,Word w){
     }else if(wordEqual(w,Boil)){
         for(int i =0 ; i < panjangListMakanan(l);i++){
             if(wordEqual(aksi(l.contents[i]),Boil)){
+                addMakanan(&lResult,l.contents[i]);
+            }
+        }
+    }
+    else if(wordEqual(w,Mix)){
+        for(int i =0 ; i < panjangListMakanan(l);i++){
+            if(wordEqual(aksi(l.contents[i]),Mix)){
                 addMakanan(&lResult,l.contents[i]);
             }
         }

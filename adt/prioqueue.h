@@ -157,4 +157,5 @@ void deleteAtAdr(PrioQueue *Q, address idx, infotype *X);
 /* I.S. Q terdefinisi, Q tidak kosong, idx adalah address yang valid untuk PrioQueue Q */
 /* F.S. Elemen di address i terhapus */
 
+
 #endif
