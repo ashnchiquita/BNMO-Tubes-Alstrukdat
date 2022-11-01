@@ -33,7 +33,20 @@ int main() {
     Stack state,redo;
     /* ALGORITMA */
 
-    /* splash screen nyusul */
+    printf("\n               +-++-++-++-++-++-++-+ +-++-+\n");
+    printf("               |w||e||l||c||o||m||e| |t||o|\n");
+    printf("               +-++-++-++-++-++-++-+ +-++-+\n");
+    printf("\n");           
+    printf("               .-._                 ___       _,.---._     \n");
+    printf("    _..---.   /==/ \\  .-._   .-._ .'=.'\\    ,-.' , -  `.   \n");
+    printf("  .' .'.-. \\  |==|, \\/ /, / /==/ \\|==|  |  /==/_,  ,  - \\  \n");
+    printf(" /==/- '=' /  |==|-  \\|  |  |==|,|  / - | |==|   .=.     | \n");
+    printf(" |==|-,   '   |==| ,  | -|  |==|  \\/  , | |==|_ : ;=:  - | \n");
+    printf(" |==|  .=. \\  |==| -   _ |  |==|- ,   _ | |==| , '='     | \n");
+    printf(" /==/- '=' ,| |==|  /\\ , |  |==| _ /\\   |  \\==\\ -    ,_ /  \n");
+    printf("|==|   -   /  /==/, | |- |  /==/  / / , /   '.='. -   .'   \n");
+    printf("`-._`.___,'   `--`./  `--`  `--`./  `--`      `--`--''     \n");
+    printf("\n            ---* Cooking Game Simulator *---\n\n");
 
     printf("Silakan masukkan command (START/EXIT): ");
     STARTWORD();
@@ -273,13 +286,26 @@ int main() {
             } else if(wordEqual(currentWord, strToWord("INVENTORY"))){
                 ADVWORD();
                 if(EndWord){
-                    PrintPrioQueue(Inventory);
+                    if (!IsEmpty(Inventory)) {
+                        printf("\nList Makanan di Inventory\n");
+                        printf("(nama - waktu sisa kedaluarsa)\n");
+                        PrintPrioQueue(Inventory);
+                        printf("\n");
+                    } else {
+                        printf("\nTidak ada makanan di Inventory\n\n");
+                    }
                 }
-            }else if (wordEqual(currentWord, strToWord("DELIVERY"))) {
+            } else if (wordEqual(currentWord, strToWord("DELIVERY"))) {
                 ADVWORD();
                 if (EndWord) {
-                    PrintPrioQueue(Delivery);
-                    /* CODE DELIVERY */
+                    if (!IsEmpty(Delivery)) {
+                        printf("\nList Makanan di Perjalanan\n");
+                        printf("(nama - waktu sisa delivery)\n");
+                        PrintPrioQueue(Delivery);
+                        printf("\n");
+                    } else {
+                        printf("\nTidak ada makanan di perjalanan\n\n");
+                    }
                 } else {
                     valid = false;
                 }
@@ -378,7 +404,19 @@ int main() {
         
     }
 
-    /* End Screen (congrats, win/lose, stats) */
+    if (!started) {
+        printf("\n                    THANKS FOR USING\n");
+        printf("               .-._                 ___       _,.---._     \n");
+        printf("    _..---.   /==/ \\  .-._   .-._ .'=.'\\    ,-.' , -  `.   \n");
+        printf("  .' .'.-. \\  |==|, \\/ /, / /==/ \\|==|  |  /==/_,  ,  - \\  \n");
+        printf(" /==/- '=' /  |==|-  \\|  |  |==|,|  / - | |==|   .=.     | \n");
+        printf(" |==|-,   '   |==| ,  | -|  |==|  \\/  , | |==|_ : ;=:  - | \n");
+        printf(" |==|  .=. \\  |==| -   _ |  |==|- ,   _ | |==| , '='     | \n");
+        printf(" /==/- '=' ,| |==|  /\\ , |  |==| _ /\\   |  \\==\\ -    ,_ /  \n");
+        printf("|==|   -   /  /==/, | |- |  /==/  / / , /   '.='. -   .'   \n");
+        printf("`-._`.___,'   `--`./  `--`  `--`./  `--`      `--`--''     \n");
+        printf("\n            ---* Cooking Game Simulator *---\n\n");
+    }
 
     return 0;
 }

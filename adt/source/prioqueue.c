@@ -242,7 +242,6 @@ void update1Min(PrioQueue *Q) {
 /* I.S. Q terdefinisi, Q mungkin kosong */
 /* F.S. Jika Q adalah delivery queue, waktu delivery tiap Makanan di Q berkurang 1 menit. Jika ada yang awalnya waktu deliverynya < N menit, waktu delivery akan menjadi nol */
 /* Jika Q adalah inventory queue, waktu kedaluarsa tiap Makanan di Q berkurang 1 menit. Jika ada yang awalnya waktu kedaluarsanya < N menit, waktu kedaluarsa akan menjadi nol (expired) */
-/* BTWW aku masih nanyain, kalo makanan di delivery queue bisa ngurang apa ngga waktu kedaluarsanya, jadi mungkin nanti ada update lagi :D - chi */
     /* KAMUS LOKAL */
     address i;
     TIME zeroTime;
