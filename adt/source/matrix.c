@@ -125,3 +125,23 @@ void moveSouth(Matrix *m, Simulator *S, boolean *command) {
         *command = true;
     }
 }
+
+void getPosition(Matrix m, POINT *position){
+    for(int i =0; i < ROW_EFF(m);i++){
+        for(int j = 0; j < COL_EFF(m);j++){
+            if(KOOR(m,j,i) == 'S'){
+                Absis(*position) = i;
+                Ordinat(*position) = j;
+            }
+        }
+    }
+}
+
+void fixedDisplay(Matrix *m, Simulator S){
+    POINT temp;
+    if(KOOR(*m,(S.lokasi.Y),(S.lokasi.X)) != 'S'){
+        getPosition(*m,&temp);
+        KOOR(*m,(S.lokasi.Y),(S.lokasi.X)) = 'S';
+        KOOR(*m,Ordinat(temp),Absis(temp)) = '#';
+    }
+}

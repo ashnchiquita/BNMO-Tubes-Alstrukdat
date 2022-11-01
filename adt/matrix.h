@@ -77,6 +77,6 @@ void moveWest(Matrix *m, Simulator *S, boolean *command);
 void moveSouth(Matrix *m, Simulator *S, boolean *command);
 /* I.S. m terdefinisi, S terdefinisi, command sembarang*/
 /* F.S. Nilai ordinat dari S bertambah 1 (S bergerak ke arah selatan sebanyak satu petak)*/
-
+void fixedDisplay(Matrix *m, Simulator S);
 
 #endif

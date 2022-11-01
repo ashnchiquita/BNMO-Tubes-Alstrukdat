@@ -5,6 +5,7 @@
 #include "./adt/point.h"
 #include "./adt/prioqueue.h"
 #include "adt/tree.h"
+#include "adt/stack.h"
 
 void tampilanLayar(Simulator pemain, TIME waktuMain){
     printWord(namaPemain(pemain));
@@ -22,13 +23,14 @@ int main() {
     Word moveDirection, nama, pilihan;
     Simulator pemain;
     TIME waktuGame;
-    boolean command;
+    boolean command,wait;
     ListMakanan listMakanan, buy;
     POINT lokasiPemain;
     Makanan temp;
     PrioQueue Delivery, Inventory;
     ListTree treeResep;
     Matrix peta;
+    Stack state,redo;
     /* ALGORITMA */
 
     /* splash screen nyusul */
@@ -65,6 +67,11 @@ int main() {
         STARTINPUT();
         createSimulator(&pemain,lokasiPemain, currentWord);
         CreateTime(&waktuGame, 0, 0, 0);
+        CreateEmptyStack(&state);
+        CreateEmptyStack(&redo);
+        TulisPOINT(lokasiPemain);
+        states init = {waktuGame,lokasiPemain,Delivery,Inventory};
+        PushStack(&state,init);
         treeResep = *populateResepFromFile(listMakanan, "./adt/config-r.txt");
         printf("Konfigurasi selesai, selamat bermain ");
         printWord(namaPemain(pemain));
@@ -75,8 +82,8 @@ int main() {
 
     while (started) {
         command = false;
+        wait = false;
         valid = true;
-        finishDelivery(&Delivery,&Inventory);
         tampilanLayar(pemain,waktuGame);
         displayPeta(peta);
         printf("Enter Command: ");
@@ -194,7 +201,9 @@ int main() {
                 if (EndWord) {
 
                     /* CODE UNDO */
-
+                    UNDO(&state,redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory);
+                    fixedDisplay(&peta,pemain);
+                    
                 } else {
                     valid = false;
                 }
@@ -326,6 +335,7 @@ int main() {
                                 if (EndWord) {
 
                                     /* CODE WAIT (x disimpen di waitX, y disimpen di waitY) */
+                                    wait = true;
                                     handleWait(&waktuGame, waitX, waitY);
                                     updateAllQueue(&Delivery,&Inventory,(waitX*60 + waitY));
                                 } else {
@@ -355,6 +365,15 @@ int main() {
             update1Min(&Delivery);
             update1Min(&Inventory);
             NextMenit(&waktuGame);
+            finishDelivery(&Delivery,&Inventory);
+            cleanKedaluarsa(&Inventory);
+            states temp = {waktuGame,pemain.lokasi,Delivery,Inventory};
+            PushStack(&state,temp);
+        }else if(wait){
+            finishDelivery(&Delivery,&Inventory);
+            cleanKedaluarsa(&Inventory);
+            states temp = {waktuGame,pemain.lokasi,Delivery,Inventory};
+            PushStack(&state,temp);
         }
         
     }
