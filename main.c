@@ -75,6 +75,7 @@ int main() {
 
     while (started) {
         command = false;
+        valid = true;
         finishDelivery(&Delivery,&Inventory);
         tampilanLayar(pemain,waktuGame);
         displayPeta(peta);
@@ -85,95 +86,106 @@ int main() {
             if (wordEqual(currentWord, strToWord("MIX"))) {
                 ADVWORD();
                 if (EndWord) {
-                    ListMakanan Mix = pengelompokanMakanan(listMakanan, strToWord("Mix"));
-                    printCommand(Mix,strToWord("Mix"));
+                    if(isLocAdjacent(peta,pemain,'M')){
+                        ListMakanan Mix = pengelompokanMakanan(listMakanan, strToWord("Mix"));
+                        printCommand(Mix,strToWord("Mix"));
 
-                    /* CODE FRY */
-                    printf("Enter command: \n");
-                    STARTWORD();
+                        /* CODE FRY */
+                        printf("Enter command: \n");
+                        STARTWORD();
 
-                     /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
-                    handleFoodCommand(Mix);
+                        /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
+                        handleFoodCommand(Mix);
 
-                    /* CODE Mix */
-                    /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
-                    if(isFound(Mix,wordToInt(currentWord)-1)){
-                        temp = ELMT(Mix,wordToInt(currentWord) - 1);
+                        /* CODE Mix */
+                        /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
+                        if(isFound(Mix,wordToInt(currentWord)-1)){
+                            temp = ELMT(Mix,wordToInt(currentWord) - 1);
 
-                        handleFoodAction(treeResep,Inventory,&command,temp);
-                    };
-
+                            handleFoodAction(treeResep,Inventory,&command,temp);
+                        };
+                    }else{
+                        printf("BNMO tidak berada di area Mix");
+                    }
                 } else {
                     valid = false;
                 }
             } else if (wordEqual(currentWord, strToWord("CHOP"))) {
                 ADVWORD();
                 if (EndWord) {
+                    if(isLocAdjacent(peta,pemain,'C')){
+                        /* CODE CHOP */
+                        ListMakanan Chop = pengelompokanMakanan(listMakanan, strToWord("Chop"));
+                        printCommand(Chop,strToWord("Chop"));
 
-                    /* CODE CHOP */
-                    ListMakanan Chop = pengelompokanMakanan(listMakanan, strToWord("Chop"));
-                    printCommand(Chop,strToWord("Chop"));
+                        printf("Enter command : \n");
+                        STARTWORD();
 
-                    printf("Enter command : \n");
-                    STARTWORD();
+                        handleFoodCommand(Chop);
 
-                    handleFoodCommand(Chop);
+                        if(isFound(Chop,wordToInt(currentWord)-1)){
+                            temp = ELMT(Chop,wordToInt(currentWord) - 1);
 
-                    if(isFound(Chop,wordToInt(currentWord)-1)){
-                        temp = ELMT(Chop,wordToInt(currentWord) - 1);
-
-                        handleFoodAction(treeResep,Inventory,&command,temp);
-                    };
-
+                            handleFoodAction(treeResep,Inventory,&command,temp);
+                        };
+                    }else{
+                        printf("BNMO tidak berada di area Chop");
+                    }
                 } else {
                     valid = false;
                 }
             } else if (wordEqual(currentWord, strToWord("FRY"))) {
                 ADVWORD();
                 if (EndWord) {
+                    if(isLocAdjacent(peta,pemain,'F')){
+                        /*Mencari list makanan yang memiliki aksi Fry */
+                        ListMakanan Fry = pengelompokanMakanan(listMakanan, strToWord("Fry"));
+                        printCommand(Fry,strToWord("Fry"));
 
-                    /*Mencari list makanan yang memiliki aksi Fry */
-                    ListMakanan Fry = pengelompokanMakanan(listMakanan, strToWord("Fry"));
-                    printCommand(Fry,strToWord("Fry"));
+                        /* CODE FRY */
+                        printf("Enter command: \n");
+                        STARTWORD();
 
-                    /* CODE FRY */
-                    printf("Enter command: \n");
-                    STARTWORD();
+                        /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
+                        handleFoodCommand(Fry);
 
-                     /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
-                    handleFoodCommand(Fry);
+                        /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
+                        if(isFound(Fry,wordToInt(currentWord)-1)){
+                            temp = ELMT(Fry,wordToInt(currentWord) - 1);
 
-                    /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
-                    if(isFound(Fry,wordToInt(currentWord)-1)){
-                        temp = ELMT(Fry,wordToInt(currentWord) - 1);
-
-                        handleFoodAction(treeResep,Inventory,&command,temp);
-                    };
-
+                            handleFoodAction(treeResep,Inventory,&command,temp);
+                        };
+                    }else{
+                        printf("BNMO tidak berada di area Fry");
+                    }
+                    
                 } else {
                     valid = false;
                 }
             } else if (wordEqual(currentWord, strToWord("BOIL"))) {
                 ADVWORD();
                 if (EndWord) {
-                    /*Mencari list makanan yang memiliki aksi Fry */
-                    ListMakanan Boil = pengelompokanMakanan(listMakanan, strToWord("Boil"));
-                    printCommand(Boil,strToWord("Boil"));
+                    if(isLocAdjacent(peta,pemain,'B')){
+                        ListMakanan Boil = pengelompokanMakanan(listMakanan, strToWord("Boil"));
+                        printCommand(Boil,strToWord("Boil"));
 
-                    /* CODE FRY */
-                    printf("Enter command: \n");
-                    STARTWORD();
+                        /* CODE FRY */
+                        printf("Enter command: \n");
+                        STARTWORD();
 
-                     /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
-                    handleFoodCommand(Boil);
+                        /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
+                        handleFoodCommand(Boil);
 
-                    /* CODE BOIL */
-                    /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
-                    if(isFound(Boil,wordToInt(currentWord)-1)){
-                        temp = ELMT(Boil,wordToInt(currentWord) - 1);
+                        /* CODE BOIL */
+                        /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
+                        if(isFound(Boil,wordToInt(currentWord)-1)){
+                            temp = ELMT(Boil,wordToInt(currentWord) - 1);
 
-                        handleFoodAction(treeResep,Inventory,&command,temp);
-                    };
+                            handleFoodAction(treeResep,Inventory,&command,temp);
+                        };
+                    }else{
+                        printf("BNMO tidak berada di area BOIL");
+                    }
                 } else {
                     valid = false;
                 }
@@ -220,34 +232,41 @@ int main() {
                 /*Harus tambahin validasi lokasi dia dimana */
 
                 if (EndWord) {                 
-                    
-                    /*Mencari makanan yang memiliki aksi Buy dan menampilkan listnya ke layar*/
-                    buy = pengelompokanMakanan(listMakanan, strToWord("Buy"));
-                    printCommand(buy, strToWord("Buy"));
+                    if(isLocAdjacent(peta,pemain,'T')){
+                        /*Mencari makanan yang memiliki aksi Buy dan menampilkan listnya ke layar*/
+                        buy = pengelompokanMakanan(listMakanan, strToWord("Buy"));
+                        printCommand(buy, strToWord("Buy"));
 
-                    /*Meminta input user untuk makanan mana yang mau dibeli*/
-                    printf("Enter command: \n");
-                    STARTWORD();
+                        /*Meminta input user untuk makanan mana yang mau dibeli*/
+                        printf("Enter command: \n");
+                        STARTWORD();
 
-                    /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
-                    handleFoodCommand(buy);
+                        /* Memvalidasi input user mengenai makanan mana yang mau dibeli */
+                        handleFoodCommand(buy);
 
-                    /* Jika input user benar, maka makanan akan masuk ke delivery list dan waktu game bertambah 1 menit */
-                    if(isFound(buy,wordToInt(currentWord)-1)){
-                        temp = ELMT(buy,wordToInt(currentWord) - 1);
+                        /* Jika input user benar, maka makanan akan masuk ke delivery list dan waktu game bertambah 1 menit */
+                        if(isFound(buy,wordToInt(currentWord)-1)){
+                            temp = ELMT(buy,wordToInt(currentWord) - 1);
 
-                        /*Menampilkan notifikasi bahwa pembelian berhasil */
-                        notifikasiPembelian(temp);
+                            /*Menampilkan notifikasi bahwa pembelian berhasil */
+                            notifikasiPembelian(temp);
 
-                        /*Menambahkan makanan ke delivery list */
-                        Enqueue(&Delivery,temp);
-                        command = true;
+                            /*Menambahkan makanan ke delivery list */
+                            Enqueue(&Delivery,temp);
+                            command = true;
+                        }
+                    }else{
+                        printf("BNMO tidak berada di area telepon!");
                     }
-
                 } else {
                     valid = false;
                 }
-            } else if (wordEqual(currentWord, strToWord("DELIVERY"))) {
+            } else if(wordEqual(currentWord, strToWord("INVENTORY"))){
+                ADVWORD();
+                if(EndWord){
+                    PrintPrioQueue(Inventory);
+                }
+            }else if (wordEqual(currentWord, strToWord("DELIVERY"))) {
                 ADVWORD();
                 if (EndWord) {
                     PrintPrioQueue(Delivery);

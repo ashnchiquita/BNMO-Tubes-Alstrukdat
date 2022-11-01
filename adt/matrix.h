@@ -64,6 +64,7 @@ void displayPeta(Matrix m);
 /* FUNGSI-FUNGSI PADA PETA */
 boolean isLocAdjacent(Matrix m, Simulator S, char loc);
 // Mengirimkan true jika suatu alat/lokasi masak adjacent (berada di samping) dengan Simulator
+
 void moveNorth(Matrix *m, Simulator *S, boolean *command);
 /* I.S. m terdefinisi, S terdefinisi, command sembarang*/
 /* F.S. Nilai ordinat dari S berkurang 1 (S bergerak ke arah utara sebanyak satu petak)*/
