@@ -47,22 +47,64 @@ void PopStack(Stack * S, states* X){
 /* Menghapus X dari Stack S. */
 /* I.S. S  tidak mungkin kosong */
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
-void UNDO(Stack *stackCommand, Stack redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory){
+void UNDO(Stack *stackCommand, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory){
     states top;
     states temp;
-    PopStack(stackCommand,&top);
-    PrintPrioQueue(top.delivery);
-    PushStack(&redo,top); 
-    if(!IsEmptyStack(*stackCommand)){
+    if(stackLength(*stackCommand) > 1){
         PopStack(stackCommand,&top);
-        PrintPrioQueue(top.delivery);
+        PushStack(redo,top); 
+        *waktuMain = InfoTopStack(*stackCommand).waktuMain;
+        *lokasi = InfoTopStack(*stackCommand).posisiPemain;
+        *delivery = InfoTopStack(*stackCommand).delivery;
+        *inventory = InfoTopStack(*stackCommand).inventory;
+    }else{
+        printf("BNMO sudah berada pada keadaan semula, tidak bisa UNDO!\n");
+    }
+    
+};
+void REDO(Stack *stackCommand, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory){
+    states top; 
+    states temp;
+    
+    if(!IsEmptyStack(*redo)){
+        PopStack(redo,&top);
+        PushStack(stackCommand,top);
         *waktuMain = top.waktuMain;
         *lokasi = top.posisiPemain;
         *delivery = top.delivery;
         *inventory = top.inventory;
     }else{
-        printf("Stack kosong");
+        printf("Tidak ada command yang bisa di-redo!\n");
     }
+}
+void printState(states temp){
+    printf("====Waktu game ===\n");
+    TulisTIME(temp.waktuMain);
+    printf("\n====Delivery====\n");
+    PrintPrioQueue(temp.delivery);
+    printf("=====inventory========\n");
+    PrintPrioQueue(temp.inventory);
+    printf("=====lokasi pemain====\n");
+    TulisPOINT(temp.posisiPemain);
+}
+
+void printStack(Stack S){
+    states temp;
+    while(!IsEmptyStack(S)){
+        printf("\n==============GANTI STATE============\n");
+        PopStack(&S,&temp);
+        printState(temp);
+    }
+}
+
+int stackLength(Stack S){
+    int count = 0; 
+    states temp;
+    while (!IsEmptyStack(S))
+    {
+        PopStack(&S,&temp);
+        count++;
+    }
+    return count;
     
-    
-};
+}

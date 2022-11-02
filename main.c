@@ -19,7 +19,7 @@ void tampilanLayar(Simulator pemain, TIME waktuMain){
 int main() {
     /* KAMUS */
     boolean started, valid;
-    int waitX, waitY;
+    int waitX, waitY,updateMenit;
     Word moveDirection, nama, pilihan;
     Simulator pemain;
     TIME waktuGame;
@@ -72,21 +72,28 @@ int main() {
 
     if (wordEqual(currentWord, strToWord("START"))) {
         started = true;
-        /*Kalau udah config peta, tolong disimpen di lokasiPemain*/
-        /*createPoint(&lokasiPemain,x,y)*/
+        /* Memulai konfigurasi dengan membaca file */
         listMakanan = *configMakananP();
+        peta = configPeta(&lokasiPemain);
+        treeResep = *populateResepFromFile(listMakanan, "./adt/config-r.txt");
+
+        /* Membuat list delivery dan list inventory yang menggunakan priority Queue*/
         MakeEmptyQ(&Delivery,100,true);
         MakeEmptyQ(&Inventory,100,false);
-        peta = configPeta(&lokasiPemain);
+        
+        /*Membuat stack yang mencatat semua state ketika program berhasil */
+        CreateEmptyStack(&state);
+        CreateEmptyStack(&redo);
+        
+        /*Meminta input nama user untuk disimpan dalam simulator */
         printf("Masukkan nama pertama anda : \n");
         STARTINPUT();
         createSimulator(&pemain,lokasiPemain, currentWord);
         CreateTime(&waktuGame, 0, 0, 0);
-        CreateEmptyStack(&state);
-        CreateEmptyStack(&redo);
         states init = {waktuGame,lokasiPemain,Delivery,Inventory};
         PushStack(&state,init);
-        treeResep = *populateResepFromFile(listMakanan, "./adt/config-r.txt");
+    
+        /*Ucapan selamat bermain untuk peserta */
         printf("Konfigurasi selesai, selamat bermain ");
         printWord(namaPemain(pemain));
         printf("!\n");
@@ -98,8 +105,11 @@ int main() {
         command = false;
         wait = false;
         valid = true;
+        /*Selalu menampilkan peta, lokasi pemain, waktu game, dan notifikasi ke layaar*/
         tampilanLayar(pemain,waktuGame);
         displayPeta(peta);
+        
+        /*Meminta input user */
         printf("Enter Command: ");
         STARTWORD();
         if (!EndWord) {
@@ -215,7 +225,7 @@ int main() {
                 if (EndWord) {
 
                     /* CODE UNDO */
-                    UNDO(&state,redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory);
+                    UNDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory);
                     fixedDisplay(&peta,pemain);
                     
                 } else {
@@ -226,7 +236,8 @@ int main() {
                 if (EndWord) {
 
                     /* CODE REDO */
-
+                    REDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory);
+                    fixedDisplay(&peta,pemain);
                 } else {
                     valid = false;
                 }
@@ -237,45 +248,6 @@ int main() {
                     /* CODE CATALOG */
                     printMakanan(listMakanan);
 
-                } else {
-                    valid = false;
-                }
-            } else if (wordEqual(currentWord, strToWord("EXIT"))) {
-                ADVWORD();
-                if (EndWord) {
-                    started = false;
-                } else {
-                    valid = false;
-                }
-            } else if (wordEqual(currentWord, strToWord("HELP"))) {
-                ADVWORD();
-                if (EndWord) {
-                    printf("\n\n-------------------- *** : : ---* Guide Commands *--- : : *** --------------------");
-                    printf("\n|                                                                                |");
-                    printf("\n|  START       : Memulai game                                                    |");
-                    printf("\n|  BUY         : Memesan bahan makanan                                           |");
-                    printf("\n|  MIX         : Mencampurkan dua atau lebih makanan menjadi satu makanan        |");
-                    printf("\n|  CHOP        : Memotong satu bahan makanan menjadi bahan yang sudah terpotong  |");
-                    printf("\n|  FRY         : Menggoreng satu atau lebih bahan makanan                        |");
-                    printf("\n|  BOIL        : Merebus satu bahan makanan                                      |");
-                    printf("\n|  MOVE NORTH  : Menggerakkan simulator BNMO satu satuan ke arah utara           |");
-                    printf("\n|  MOVE SOUTH  : Menggerakkan simulator BNMO satu satuan ke arah selatan         |");
-                    printf("\n|  MOVE EAST   : Menggerakkan simulator BNMO satu satuan ke arah timur           |");
-                    printf("\n|  MOVE WEST   : Menggerakkan simulator BNMO satu satuan ke arah barat           |");
-                    printf("\n|  WAIT x y    : Menunggu selama x jam dan y menit tanpa melakukan apa-apa       |");
-                    printf("\n|  CATALOG     : Menampilkan bahan dan makanan yang tersedia pada aplikasi       |");
-                    printf("\n|  COOKBOOK    : Menampilkan resep-resep yang tersedia pada sistem               |");
-                    printf("\n|  INVENTORY   : Menampilkan inventory makanan milik pengguna                    |");
-                    printf("\n|  DELIVERY    : Menampilkan delivery list                                       |");
-                    printf("\n|  UNDO        : Membatalkan command yang dilakukan sebelumnya                   |");
-                    printf("\n|  REDO        : Membatalkan command UNDO                                        |");
-                    printf("\n|  HELP        : Menampilkan guide command kepada pengguna                       |");
-                    printf("\n|  KULKAS      : Menyimpan makanan di kulkas                                     |");
-                    printf("\n|  REKOMENDASI : Menampilkan rekomendasi makanan yang dapat dibuat               |");
-                    printf("\n|  AUTO BNMO   : Memainkan BNMO secara otomatis                                  |");
-                    printf("\n|  EXIT        : Keluar dari game                                                |");
-                    printf("\n|                                                                                |");
-                    printf("\n----------------------------------------------------------------------------------\n\n");
                 } else {
                     valid = false;
                 }
@@ -326,26 +298,13 @@ int main() {
             } else if(wordEqual(currentWord, strToWord("INVENTORY"))){
                 ADVWORD();
                 if(EndWord){
-                    if (!IsEmpty(Inventory)) {
-                        printf("\nList Makanan di Inventory\n");
-                        printf("(nama - waktu sisa kedaluarsa)\n");
-                        PrintPrioQueue(Inventory);
-                        printf("\n");
-                    } else {
-                        printf("\nTidak ada makanan di Inventory\n\n");
-                    }
+                    PrintPrioQueue(Inventory);
                 }
-            } else if (wordEqual(currentWord, strToWord("DELIVERY"))) {
+            }else if (wordEqual(currentWord, strToWord("DELIVERY"))) {
                 ADVWORD();
                 if (EndWord) {
-                    if (!IsEmpty(Delivery)) {
-                        printf("\nList Makanan di Perjalanan\n");
-                        printf("(nama - waktu sisa delivery)\n");
-                        PrintPrioQueue(Delivery);
-                        printf("\n");
-                    } else {
-                        printf("\nTidak ada makanan di perjalanan\n\n");
-                    }
+                    PrintPrioQueue(Delivery);
+                    /* CODE DELIVERY */
                 } else {
                     valid = false;
                 }
@@ -380,6 +339,8 @@ int main() {
                         valid = false;
                     }
                 }
+            }else if(wordEqual(currentWord,strToWord("EXIT"))){
+                started = false;
             } else if (wordEqual(currentWord, strToWord("WAIT"))) {
                 ADVWORD();
                 if (EndWord) {
@@ -402,8 +363,9 @@ int main() {
 
                                     /* CODE WAIT (x disimpen di waitX, y disimpen di waitY) */
                                     wait = true;
-                                    handleWait(&waktuGame, waitX, waitY);
-                                    updateAllQueue(&Delivery,&Inventory,(waitX*60 + waitY));
+                                    updateMenit = waitX * 60 + waitY;
+                                    // waktuGame =  MenitToTIME( TIMEToMenit(waktuGame) + waitX*60 + waitY);
+                                   
                                 } else {
                                     valid = false;
                                 }
@@ -436,14 +398,28 @@ int main() {
             states temp = {waktuGame,pemain.lokasi,Delivery,Inventory};
             PushStack(&state,temp);
         }else if(wait){
-            finishDelivery(&Delivery,&Inventory);
-            cleanKedaluarsa(&Inventory);
-            states temp = {waktuGame,pemain.lokasi,Delivery,Inventory};
+            PrioQueue temp1;
+            PrioQueue temp2; 
+
+            /*Mengcopy Delivery dan Inventory ke temp1 dan temp2*/
+            copyPrioQueue(Delivery,&temp1);
+            copyPrioQueue(Inventory,&temp2);
+
+            /*Mengupdate waktu sesuai menit yang di wait*/
+            updateAllQueue(&temp1,&temp2,updateMenit);
+
+            /*Mengcopy kembali temp1 ke delivery dan temp2 ke inventory*/
+            copyPrioQueue(temp1,&Delivery);
+            copyPrioQueue(temp2,&Inventory);
+
+            /* Menambahkan N menit waktu ke dalam waktu game */
+            NextNMenit(&waktuGame,updateMenit);
+            states temp = {waktuGame,pemain.lokasi,temp1,temp2};
+            /* Push States ke dalam stack */
             PushStack(&state,temp);
         }
         
     }
-
     if (!started) {
         printf("\n                    THANKS FOR USING\n");
         printf("               .-._                 ___       _,.---._     \n");

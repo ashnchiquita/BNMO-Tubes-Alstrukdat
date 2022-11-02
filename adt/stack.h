@@ -67,6 +67,27 @@ void PopStack(Stack * S, states* X);
 /* I.S. S  tidak mungkin kosong */
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
 
-void UNDO(Stack *states, Stack redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory);
+void UNDO(Stack *states, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory);
+/* Mengembalikan state ke sebelumnya */
+/* I.S. *waktuMain, *lokasi, *delivery, dan *inventory terdefinisi */
+/* F.S. Meng-assign nilai state sebelumnya ke dalam masing - masing variabel */
+
+void REDO(Stack *states, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory);
+/* Mengembalikan state ke keadaan sebelum procedure UNDO dipanggil */
+/* I.S. *waktuMain, *lokasi, *delivery, dan *inventory terdefinisi */
+/* F.S. Meng-assign nilai state sebelum UNDO ke dalam masing - masing variabel */
+
+void printState(states temp);
+/*Menampilkan states ke layar */
+/* I.S. States temp terdefinisi */
+/* F.S. Menampilkan waktu permainan, lokasi pemain, list delivery, dan list inventory ke layar */
+
+void printStack(Stack S);
+/* Menampilkan Stack ke layar */
+/* I.S. Stack S terdefinisi dan mungkin kosong */
+/* F.S. Menampilkan semua states dalam S ke layar */
+
+int stackLength (Stack S);
+/* Mengembalikan banyaknya states dalam sebuah Stack */
 
 #endif
