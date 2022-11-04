@@ -8,6 +8,7 @@
 #include "time.h"
 #include "makanan.h"
 #include "tree.h"
+#include "notif.h"
 
 void handleFoodCommand(ListMakanan l);
 /* Menampilkan list makanan yang memiliki aksi sesuai dengan permintaan */
@@ -20,6 +21,6 @@ void notifikasiGoreng(Makanan m);
 
 void notifikasiGagal(ListMakanan m);
 
-void handleFoodAction(ListTree treeResep, PrioQueue Inventory, boolean *command,Makanan temp);
+void handleFoodAction(ListTree treeResep, PrioQueue * Inventory, boolean *command,Makanan temp, WordList * act, stateNotif * sn);
 
 #endif

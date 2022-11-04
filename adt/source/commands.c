@@ -33,14 +33,14 @@ void notifikasiGagal(ListMakanan m){
         printf("\n");
     }
 }
-void handleFoodAction(ListTree treeResep, PrioQueue Inventory,boolean *command, Makanan temp){
+void handleFoodAction(ListTree treeResep, PrioQueue * Inventory,boolean *command, Makanan temp, WordList * act, stateNotif * sn){
     Tree TempRecipe = *searchRecipeById(&treeResep,id(temp)); 
 
     /*ListMakanan completed adalah bahan - bahan makanan yang dibutuhkan dalam resep dan dimiliki inventory*/
-    ListMakanan completed = getMakanan(TempRecipe,Inventory);
+    ListMakanan completed = getMakanan(TempRecipe,* Inventory);
 
     /*ListMakanan missed adalah bahan - bahan makanan yang dibutuhkan dalam resep, tpi tidak dimiliki inventory*/
-    ListMakanan missed = getMakananNa(TempRecipe,Inventory);
+    ListMakanan missed = getMakananNa(TempRecipe,* Inventory);
 
     /*Jika panjang list missed adalah 0, berarti semua makanan dimiliki, dan aksi menggoreng dapat dilakukan*/
     if(panjangListMakanan(missed) == 0){
@@ -49,10 +49,12 @@ void handleFoodAction(ListTree treeResep, PrioQueue Inventory,boolean *command, 
         /*Memasukkan barang yang sudah digoreng ke dalam Inventory*/
         for(int i = 0; i < panjangListMakanan(completed);i++){
             Makanan temp;
-            address food = indexOfName(Inventory,nama(ELMT(completed,i)));
-            deleteAtAdr(&Inventory,food,&temp);
+            address food = indexOfName(* Inventory,nama(ELMT(completed,i)));
+            deleteAtAdr(Inventory,food,&temp);
+            appendWL(nama(temp), act);
         }
-        Enqueue(&Inventory,temp);
+        setCommandArgs(sn, * act);
+        Enqueue(Inventory,temp);
         *command = true;
     }else{
         /*Jika panjang list makanan tidak sama dengan 0, berarti akan ada minimal satu item yang tidak dimiliki inventory*/

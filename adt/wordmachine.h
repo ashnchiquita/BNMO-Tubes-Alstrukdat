@@ -63,6 +63,8 @@ void printWord(Word w);
 /* I.S. : word W terdfinisi*/
 /* F.S : word W tercetak ke dalam layar  */
 
+void printWordAlt(Word w);
+
 void ADVNEWLINE();
 /* Mengabaikan '\n */
 /* I.S. : currentChar = MARK dan EndWord bernilai true  */

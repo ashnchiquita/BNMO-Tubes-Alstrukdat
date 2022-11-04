@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "boolean.h": "c",
-        "notif.h": "c"
+        "notif.h": "c",
+        "wordmachine.h": "c"
     }
 }

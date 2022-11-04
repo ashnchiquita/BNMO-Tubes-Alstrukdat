@@ -90,6 +90,12 @@ void printWord(Word w){
     }
 }
 
+void printWordAlt(Word w) {
+    for(int i =0; i < w.Length;i++){
+        printf("%c",w.TabWord[i]);    
+    }
+}
+
 void ADVNEWLINE() {
     Word EMPTY = {"", 0};
     currentWord = EMPTY;
@@ -228,7 +234,7 @@ void appendWL(Word w, WordList * wl) {
 void printWL(WordList wl, char splitter[]) {
    int i;
    for (i = 0; i < wl.Length; i++) {
-      printWord(wl.contents[i]);
+      printWordAlt(wl.contents[i]);
       if (i != wl.Length - 1) {
          printf("%s", splitter);
       }

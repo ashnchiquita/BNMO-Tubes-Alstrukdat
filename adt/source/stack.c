@@ -51,13 +51,13 @@ void UNDO(Stack *stackCommand, Stack *redo, TIME *waktuMain, POINT *lokasi, Prio
     states top;
     states temp;
     if(stackLength(*stackCommand) > 1){
+        *sn = copySN(InfoTopStack(*stackCommand).sn);
         PopStack(stackCommand,&top);
         PushStack(redo,top); 
         *waktuMain = InfoTopStack(*stackCommand).waktuMain;
         *lokasi = InfoTopStack(*stackCommand).posisiPemain;
         *delivery = InfoTopStack(*stackCommand).delivery;
         *inventory = InfoTopStack(*stackCommand).inventory;
-        *sn = InfoTopStack(*stackCommand).sn;
     }else{
         printf("BNMO sudah berada pada keadaan semula, tidak bisa UNDO!\n");
     }

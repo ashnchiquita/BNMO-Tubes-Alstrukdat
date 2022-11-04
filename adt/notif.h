@@ -10,6 +10,8 @@ typedef struct {
     WordList deliv;
 } stateNotif;
 
+boolean isEmptySN(stateNotif sn);
+
 void createEmptySN(stateNotif * sn); 
 
 void printNotif(stateNotif sn, int mode);
@@ -22,6 +24,6 @@ void addExpNotif(stateNotif * sn, Word expFoodName);
 
 void addDelivNotif(stateNotif * sn, Word delivFoodName);
 
-stateNotif copySN(WordList wl);
+stateNotif copySN(stateNotif sn);
 
 #endif

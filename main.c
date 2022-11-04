@@ -8,19 +8,20 @@
 #include "adt/stack.h"
 #include "adt/notif.h"
 
-void tampilanLayar(Simulator pemain, TIME waktuMain){
+void tampilanLayar(Simulator pemain, TIME waktuMain, stateNotif sn, int mode){
+    printf("\n");
     printWord(namaPemain(pemain));
     printf(" di posisi : ");
     TulisPOINT(lokasiPemain(pemain));
     printf("\n");
     printf("Waktu : %d.%d\n",Jam(waktuMain),Menit(waktuMain));
-    /* tampilkan notifikasi dan peta kalo udah ada */
+    printNotif(sn, mode);
 }
 
 int main() {
     /* KAMUS */
-    boolean started, valid;
-    int waitX, waitY,updateMenit;
+    boolean started, valid, unredo;
+    int waitX, waitY,updateMenit, modeNotif;
     Word moveDirection, nama, pilihan;
     Simulator pemain;
     TIME waktuGame;
@@ -33,7 +34,7 @@ int main() {
     Matrix peta;
     Stack state,redo;
     WordList act;
-    stateNotif sn;
+    stateNotif sn, snUndo, snRedo;
 
     /* ALGORITMA */
 
@@ -103,21 +104,21 @@ int main() {
         printf("Konfigurasi selesai, selamat bermain ");
         printWord(namaPemain(pemain));
         printf("!\n");
+
     } else if (wordEqual(currentWord, strToWord("EXIT"))) {
         started = false;
     }
+    createEmptySN(&sn);
+    createWL(&act);
+    modeNotif = 1;
+    /*Selalu menampilkan peta, lokasi pemain, waktu game, dan notifikasi ke layaar*/
+    tampilanLayar(pemain,waktuGame, sn, modeNotif);
+    displayPeta(peta);
 
     while (started) {
         command = false;
         wait = false;
         valid = true;
-
-        createEmptySN(&sn);
-        createWL(&act);
-        
-        /*Selalu menampilkan peta, lokasi pemain, waktu game, dan notifikasi ke layaar*/
-        tampilanLayar(pemain,waktuGame);
-        displayPeta(peta);
         
         /*Meminta input user */
         printf("Enter Command: ");
@@ -125,7 +126,7 @@ int main() {
         if (!EndWord) {
             /* Handling input normal */
             if (wordEqual(currentWord, strToWord("MIX"))) {
-                //appendWL(currentWord, &act);
+                appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
                 if (EndWord) {
                     if(isLocAdjacent(peta,pemain,'M')){
@@ -144,15 +145,17 @@ int main() {
                         if(isFound(Mix,wordToInt(currentWord)-1)){
                             temp = ELMT(Mix,wordToInt(currentWord) - 1);
 
-                            handleFoodAction(treeResep,Inventory,&command,temp);
+                            handleFoodAction(treeResep,&Inventory,&command,temp, &act, &sn);
+                            setCommandArgs(&sn, act);
                         };
                     }else{
-                        printf("BNMO tidak berada di area Mix");
+                        printf("BNMO tidak berada di area Mix\n");
                     }
                 } else {
                     valid = false;
                 }
             } else if (wordEqual(currentWord, strToWord("CHOP"))) {
+                appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
                 if (EndWord) {
                     if(isLocAdjacent(peta,pemain,'C')){
@@ -168,15 +171,17 @@ int main() {
                         if(isFound(Chop,wordToInt(currentWord)-1)){
                             temp = ELMT(Chop,wordToInt(currentWord) - 1);
 
-                            handleFoodAction(treeResep,Inventory,&command,temp);
+                            handleFoodAction(treeResep,&Inventory,&command,temp, &act, &sn);
+                            setCommandArgs(&sn, act);
                         };
                     }else{
-                        printf("BNMO tidak berada di area Chop");
+                        printf("BNMO tidak berada di area Chop\n");
                     }
                 } else {
                     valid = false;
                 }
             } else if (wordEqual(currentWord, strToWord("FRY"))) {
+                appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
                 if (EndWord) {
                     if(isLocAdjacent(peta,pemain,'F')){
@@ -195,16 +200,18 @@ int main() {
                         if(isFound(Fry,wordToInt(currentWord)-1)){
                             temp = ELMT(Fry,wordToInt(currentWord) - 1);
 
-                            handleFoodAction(treeResep,Inventory,&command,temp);
+                            handleFoodAction(treeResep,&Inventory,&command,temp, &act, &sn);
+                            setCommandArgs(&sn, act);
                         };
                     }else{
-                        printf("BNMO tidak berada di area Fry");
+                        printf("BNMO tidak berada di area Fry\n");
                     }
                     
                 } else {
                     valid = false;
                 }
             } else if (wordEqual(currentWord, strToWord("BOIL"))) {
+                appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
                 if (EndWord) {
                     if(isLocAdjacent(peta,pemain,'B')){
@@ -223,10 +230,11 @@ int main() {
                         if(isFound(Boil,wordToInt(currentWord)-1)){
                             temp = ELMT(Boil,wordToInt(currentWord) - 1);
 
-                            handleFoodAction(treeResep,Inventory,&command,temp);
+                            handleFoodAction(treeResep,&Inventory,&command,temp, &act, &sn);
+                            setCommandArgs(&sn, act);
                         };
                     }else{
-                        printf("BNMO tidak berada di area BOIL");
+                        printf("BNMO tidak berada di area BOIL\n");
                     }
                 } else {
                     valid = false;
@@ -238,6 +246,8 @@ int main() {
                     /* CODE UNDO */
                     UNDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory, &sn);
                     fixedDisplay(&peta,pemain);
+                    modeNotif = 2;
+                    unredo = true;
                     
                 } else {
                     valid = false;
@@ -249,6 +259,8 @@ int main() {
                     /* CODE REDO */
                     REDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory, &sn);
                     fixedDisplay(&peta,pemain);
+                    modeNotif = 3;
+                    unredo = true;
                 } else {
                     valid = false;
                 }
@@ -272,6 +284,7 @@ int main() {
                     valid = false;
                 }
             } else if (wordEqual(currentWord, strToWord("BUY"))) {
+                appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
 
                 /*Harus tambahin validasi lokasi dia dimana */
@@ -292,16 +305,17 @@ int main() {
                         /* Jika input user benar, maka makanan akan masuk ke delivery list dan waktu game bertambah 1 menit */
                         if(isFound(buy,wordToInt(currentWord)-1)){
                             temp = ELMT(buy,wordToInt(currentWord) - 1);
-
+                            appendWL(CopyPaste(nama(temp)), &act);
                             /*Menampilkan notifikasi bahwa pembelian berhasil */
                             notifikasiPembelian(temp);
-
+                            setCommandArgs(&sn, act);
                             /*Menambahkan makanan ke delivery list */
                             Enqueue(&Delivery,temp);
+                            
                             command = true;
                         }
                     }else{
-                        printf("BNMO tidak berada di area telepon!");
+                        printf("BNMO tidak berada di area telepon!\n");
                     }
                 } else {
                     valid = false;
@@ -320,18 +334,18 @@ int main() {
                     valid = false;
                 }
             } else if (wordEqual(currentWord, strToWord("MOVE"))) {
+                appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
                 if (EndWord) {
                     valid = false;
                 } else {
-                    appendWL(CopyPaste(currentWord), &act);
                     if (wordEqual(currentWord, strToWord("NORTH")) || wordEqual(currentWord, strToWord("SOUTH")) || wordEqual(currentWord, strToWord("WEST")) || wordEqual(currentWord, strToWord("EAST"))) {
                         moveDirection = CopyPaste(currentWord);
                         appendWL(CopyPaste(currentWord), &act);
 
                         ADVWORD();
                         if (EndWord) {
-
+                            setCommandArgs(&sn, act);
                             /* CODE MOVE (Arah disimpen di moveDirection) */
                             if (moveDirection.TabWord[0] == 'N') {
                                 moveNorth(&peta, &pemain, &command);
@@ -390,12 +404,13 @@ int main() {
                     valid = false;
                 }
             } else if (wordEqual(currentWord, strToWord("WAIT"))) {
+                appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
                 if (EndWord) {
                     valid = false;
                 } else {
                     if (isWordInt(currentWord)) {
-
+                        appendWL(CopyPaste(currentWord), &act);
                         waitX = wordToInt(currentWord);
                         ADVWORD();
 
@@ -405,6 +420,7 @@ int main() {
                             if (isWordInt(currentWord)) {
 
                                 waitY = wordToInt(currentWord);
+                                appendWL(CopyPaste(currentWord), &act);
                                 ADVWORD();
 
                                 if (EndWord) {
@@ -412,6 +428,7 @@ int main() {
                                     /* CODE WAIT (x disimpen di waitX, y disimpen di waitY) */
                                     wait = true;
                                     updateMenit = waitX * 60 + waitY;
+                                    setCommandArgs(&sn, act);
                                     // waktuGame =  MenitToTIME( TIMEToMenit(waktuGame) + waitX*60 + waitY);
                                    
                                 } else {
@@ -445,7 +462,6 @@ int main() {
             finishDelivery(&Delivery,&Inventory, &sn);
             cleanKedaluarsa(&Inventory, &sn);
             states temp = {waktuGame,pemain.lokasi,Delivery,Inventory, sn};
-            printNotif(sn, 3);
             PushStack(&state,temp);
         }else if(wait){
             PrioQueue temp1;
@@ -468,7 +484,16 @@ int main() {
             /* Push States ke dalam stack */
             PushStack(&state,temp);
         }
-        
+        /*Selalu menampilkan peta, lokasi pemain, waktu game, dan notifikasi ke layaar*/
+        if (started) {
+            tampilanLayar(pemain,waktuGame, sn, modeNotif);
+            displayPeta(peta);
+            modeNotif = 1;
+            if (command || wait || unredo) {
+                createEmptySN(&sn);
+                createWL(&act);
+            }
+        }
     }
     if (!started) {
         printf("\n                    THANKS FOR USING\n");
