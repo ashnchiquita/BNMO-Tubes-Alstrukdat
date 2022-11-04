@@ -49,7 +49,7 @@ int main() {
     printf("\n             ---* Cooking Game Simulator *---\n");
     printf("\n           Created by Kelompok H Kelas K2 IF'21\n\n");
 
-    printf("Silakan masukkan command (START/EXIT): ");
+    printf("Enter Command (START/EXIT): ");
     STARTWORD();
 
     if (EndWord) {
@@ -60,7 +60,7 @@ int main() {
 
     while (!valid) {
         printf("Silakan masukkan command yang valid.\n");
-        printf("Silakan masukkan command (START/EXIT): ");
+        printf("Enter Command (START/EXIT): ");
         STARTWORD();
 
         if (EndWord) {
@@ -308,8 +308,6 @@ int main() {
                 } else {
                     valid = false;
                 }
-
-            /* Handling input berargumen */
             } else if (wordEqual(currentWord, strToWord("MOVE"))) {
                 ADVWORD();
                 if (EndWord) {
@@ -339,8 +337,45 @@ int main() {
                         valid = false;
                     }
                 }
-            }else if(wordEqual(currentWord,strToWord("EXIT"))){
-                started = false;
+            } else if (wordEqual(currentWord, strToWord("EXIT"))) {
+                ADVWORD();
+                if (EndWord) {
+                    started = false;
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("HELP"))) {
+                ADVWORD();
+                if (EndWord) {
+                    printf("\n\n-------------------- *** : : ---* Guide Commands *--- : : *** --------------------");
+                    printf("\n|                                                                                |");
+                    printf("\n|  START       : Memulai game                                                    |");
+                    printf("\n|  BUY         : Memesan bahan makanan                                           |");
+                    printf("\n|  MIX         : Mencampurkan dua atau lebih makanan menjadi satu makanan        |");
+                    printf("\n|  CHOP        : Memotong satu bahan makanan menjadi bahan yang sudah terpotong  |");
+                    printf("\n|  FRY         : Menggoreng satu atau lebih bahan makanan                        |");
+                    printf("\n|  BOIL        : Merebus satu bahan makanan                                      |");
+                    printf("\n|  MOVE NORTH  : Menggerakkan simulator BNMO satu satuan ke arah utara           |");
+                    printf("\n|  MOVE SOUTH  : Menggerakkan simulator BNMO satu satuan ke arah selatan         |");
+                    printf("\n|  MOVE EAST   : Menggerakkan simulator BNMO satu satuan ke arah timur           |");
+                    printf("\n|  MOVE WEST   : Menggerakkan simulator BNMO satu satuan ke arah barat           |");
+                    printf("\n|  WAIT x y    : Menunggu selama x jam dan y menit tanpa melakukan apa-apa       |");
+                    printf("\n|  CATALOG     : Menampilkan bahan dan makanan yang tersedia pada aplikasi       |");
+                    printf("\n|  COOKBOOK    : Menampilkan resep-resep yang tersedia pada sistem               |");
+                    printf("\n|  INVENTORY   : Menampilkan inventory makanan milik pengguna                    |");
+                    printf("\n|  DELIVERY    : Menampilkan delivery list                                       |");
+                    printf("\n|  UNDO        : Membatalkan command yang dilakukan sebelumnya                   |");
+                    printf("\n|  REDO        : Membatalkan command UNDO                                        |");
+                    printf("\n|  HELP        : Menampilkan guide command kepada pengguna                       |");
+                    printf("\n|  KULKAS      : Menyimpan makanan di kulkas                                     |");
+                    printf("\n|  REKOMENDASI : Menampilkan rekomendasi makanan yang dapat dibuat               |");
+                    printf("\n|  AUTO BNMO   : Memainkan BNMO secara otomatis                                  |");
+                    printf("\n|  EXIT        : Keluar dari game                                                |");
+                    printf("\n|                                                                                |");
+                    printf("\n----------------------------------------------------------------------------------\n\n");
+                } else {
+                    valid = false;
+                }
             } else if (wordEqual(currentWord, strToWord("WAIT"))) {
                 ADVWORD();
                 if (EndWord) {
