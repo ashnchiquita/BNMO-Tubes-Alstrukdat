@@ -10,6 +10,7 @@
 #include "prioqueue.h"
 #include "time.h"
 #include "point.h"
+#include "notif.h"
 
 #define Nil -1
 #define MaxStack 100
@@ -21,6 +22,7 @@ typedef struct states
     POINT posisiPemain; 
     PrioQueue delivery;
     PrioQueue inventory;
+    stateNotif sn;
 }states;
 
 typedef int address;   /* indeks tabel */
@@ -67,12 +69,12 @@ void PopStack(Stack * S, states* X);
 /* I.S. S  tidak mungkin kosong */
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
 
-void UNDO(Stack *states, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory);
+void UNDO(Stack *states, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory, stateNotif * sn);
 /* Mengembalikan state ke sebelumnya */
 /* I.S. *waktuMain, *lokasi, *delivery, dan *inventory terdefinisi */
 /* F.S. Meng-assign nilai state sebelumnya ke dalam masing - masing variabel */
 
-void REDO(Stack *states, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory);
+void REDO(Stack *states, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory, stateNotif * sn);
 /* Mengembalikan state ke keadaan sebelum procedure UNDO dipanggil */
 /* I.S. *waktuMain, *lokasi, *delivery, dan *inventory terdefinisi */
 /* F.S. Meng-assign nilai state sebelum UNDO ke dalam masing - masing variabel */

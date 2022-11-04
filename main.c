@@ -6,6 +6,7 @@
 #include "./adt/prioqueue.h"
 #include "adt/tree.h"
 #include "adt/stack.h"
+#include "adt/notif.h"
 
 void tampilanLayar(Simulator pemain, TIME waktuMain){
     printWord(namaPemain(pemain));
@@ -31,6 +32,9 @@ int main() {
     ListTree treeResep;
     Matrix peta;
     Stack state,redo;
+    WordList act;
+    stateNotif sn;
+
     /* ALGORITMA */
 
     printf("\n               +-++-++-++-++-++-++-+ +-++-+\n");
@@ -90,7 +94,9 @@ int main() {
         STARTINPUT();
         createSimulator(&pemain,lokasiPemain, currentWord);
         CreateTime(&waktuGame, 0, 0, 0);
-        states init = {waktuGame,lokasiPemain,Delivery,Inventory};
+        createEmptySN(&sn);
+
+        states init = {waktuGame,lokasiPemain,Delivery,Inventory,sn};
         PushStack(&state,init);
     
         /*Ucapan selamat bermain untuk peserta */
@@ -105,6 +111,10 @@ int main() {
         command = false;
         wait = false;
         valid = true;
+
+        createEmptySN(&sn);
+        createWL(&act);
+        
         /*Selalu menampilkan peta, lokasi pemain, waktu game, dan notifikasi ke layaar*/
         tampilanLayar(pemain,waktuGame);
         displayPeta(peta);
@@ -115,6 +125,7 @@ int main() {
         if (!EndWord) {
             /* Handling input normal */
             if (wordEqual(currentWord, strToWord("MIX"))) {
+                //appendWL(currentWord, &act);
                 ADVWORD();
                 if (EndWord) {
                     if(isLocAdjacent(peta,pemain,'M')){
@@ -225,7 +236,7 @@ int main() {
                 if (EndWord) {
 
                     /* CODE UNDO */
-                    UNDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory);
+                    UNDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory, &sn);
                     fixedDisplay(&peta,pemain);
                     
                 } else {
@@ -236,7 +247,7 @@ int main() {
                 if (EndWord) {
 
                     /* CODE REDO */
-                    REDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory);
+                    REDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory, &sn);
                     fixedDisplay(&peta,pemain);
                 } else {
                     valid = false;
@@ -313,8 +324,10 @@ int main() {
                 if (EndWord) {
                     valid = false;
                 } else {
+                    appendWL(CopyPaste(currentWord), &act);
                     if (wordEqual(currentWord, strToWord("NORTH")) || wordEqual(currentWord, strToWord("SOUTH")) || wordEqual(currentWord, strToWord("WEST")) || wordEqual(currentWord, strToWord("EAST"))) {
                         moveDirection = CopyPaste(currentWord);
+                        appendWL(CopyPaste(currentWord), &act);
 
                         ADVWORD();
                         if (EndWord) {
@@ -428,9 +441,11 @@ int main() {
             update1Min(&Delivery);
             update1Min(&Inventory);
             NextMenit(&waktuGame);
-            finishDelivery(&Delivery,&Inventory);
-            cleanKedaluarsa(&Inventory);
-            states temp = {waktuGame,pemain.lokasi,Delivery,Inventory};
+            setCommandArgs(&sn, act);
+            finishDelivery(&Delivery,&Inventory, &sn);
+            cleanKedaluarsa(&Inventory, &sn);
+            states temp = {waktuGame,pemain.lokasi,Delivery,Inventory, sn};
+            printNotif(sn, 3);
             PushStack(&state,temp);
         }else if(wait){
             PrioQueue temp1;
@@ -441,7 +456,7 @@ int main() {
             copyPrioQueue(Inventory,&temp2);
 
             /*Mengupdate waktu sesuai menit yang di wait*/
-            updateAllQueue(&temp1,&temp2,updateMenit);
+            updateAllQueue(&temp1,&temp2,updateMenit, &sn);
 
             /*Mengcopy kembali temp1 ke delivery dan temp2 ke inventory*/
             copyPrioQueue(temp1,&Delivery);
@@ -449,7 +464,7 @@ int main() {
 
             /* Menambahkan N menit waktu ke dalam waktu game */
             NextNMenit(&waktuGame,updateMenit);
-            states temp = {waktuGame,pemain.lokasi,temp1,temp2};
+            states temp = {waktuGame,pemain.lokasi,temp1,temp2, sn};
             /* Push States ke dalam stack */
             PushStack(&state,temp);
         }

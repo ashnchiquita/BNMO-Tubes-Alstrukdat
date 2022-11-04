@@ -268,7 +268,7 @@ void update1Min(PrioQueue *Q) {
     }
 }
 
-void cleanKedaluarsa (PrioQueue *inventQ) {
+void cleanKedaluarsa (PrioQueue *inventQ, stateNotif * sn) {
 /* I.S. inventQ terdefinisi, inventQ mungkin kosong, inventQ adalah inventory */
 /* F.S. Elemen yang expired (waktu kedaluarsanya nol) terhapus dari inventQ */
     /* KAMUS LOKAL */
@@ -282,12 +282,12 @@ void cleanKedaluarsa (PrioQueue *inventQ) {
         while (count < prevLength && isZeroTIME(expired(InfoHead(*inventQ)))) {
             Dequeue(inventQ, &temp);
             count++;
-            /* add makanan temp ke notif, tipe notif: makanan kedaluarsa */
+            addExpNotif(sn, nama(temp));
         }
     }
 }
 
-void finishDelivery (PrioQueue * delivQ, PrioQueue * inventQ) {
+void finishDelivery (PrioQueue * delivQ, PrioQueue * inventQ, stateNotif * sn) {
 /* I.S. delivQ terdefinisi, delivQ mungkin kosong, delivQ adalah delivery queue, inventQ adalah inventory queue */
 /* F.S. Elemen delivQ yang waktu deliverynya 0 dimasukkan ke inventQ */
     /* KAMUS LOKAL */
@@ -302,12 +302,12 @@ void finishDelivery (PrioQueue * delivQ, PrioQueue * inventQ) {
             Dequeue(delivQ, &temp);
             Enqueue(inventQ, temp);
             count++;
-            /* add makanan temp ke notif, tipe notif: makanan sampai */
+            addDelivNotif(sn, nama(temp));
         }
     }
 }
 
-void updateAllQueue(PrioQueue * delivQ, PrioQueue * inventQ, int nMenit) {
+void updateAllQueue(PrioQueue * delivQ, PrioQueue * inventQ, int nMenit, stateNotif * sn) {
 /* I.S. delivQ, inventQ, nMenit terdefinisi */
 /* F.S. delivery queue dan inventory queue terupdate nMenit menit */
     /* KAMUS LOKAL */
@@ -317,8 +317,8 @@ void updateAllQueue(PrioQueue * delivQ, PrioQueue * inventQ, int nMenit) {
     for (i = 1; i <= nMenit; i++) {
         update1Min(delivQ);
         update1Min(inventQ);
-        cleanKedaluarsa(inventQ);
-        finishDelivery(delivQ, inventQ);
+        cleanKedaluarsa(inventQ, sn);
+        finishDelivery(delivQ, inventQ, sn);
     }
 }
 /* LAIN-LAIN: PERLAKUAN SEPERTI ARRAY */
