@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "boolean.h"
-#include "tree.h"
+#include "../boolean.h"
+#include "../tree.h"
 
 /**
  * traversing n-ary tree
@@ -60,7 +60,6 @@ Tree *searchRecipeById(ListTree *tree, int id) {
             return &(tree->list[i]);
         }
     }
-
     return NULL;
 }
 
@@ -236,10 +235,47 @@ void check(Tree *tree, PrioQueue *inventory, ListMakanan *listNa, int depth, int
 
 }
 
+void haveFood(Tree *tree, PrioQueue *inventory, ListMakanan *listNa, int depth, int currentDepth) {
+    // search if value exists in the value arr (recipe fulfilled)
+    // should be faster and simpler using hashtable (but making such DA surely would be a little complex)
+    if (depth == currentDepth) {
+        boolean notFound = true;
+        int i = 0;
+        while (notFound && inventory->TAIL >= i) {
+            if (tree->value.makananV.id == inventory->T[i].id) {
+                notFound = false;
+            }
+            ++i;
+        }
+
+
+        if (!notFound) {
+            addMakanan(listNa, tree->value.makananV);
+        }
+
+        return;
+    }
+
+    if (depth > currentDepth) {
+        int childrenCount = tree->childrenCount;
+        for (int i = 0; i < childrenCount; i++) {
+            haveFood(tree->children[i], inventory, listNa, depth, currentDepth + 1);
+        }
+    }
+
+}
+
+
 ListMakanan getMakananNa(Tree tree, PrioQueue inventory) {
     ListMakanan listMakanan;
     CreateListMakanan(&listMakanan);
     check(&tree, &inventory, &listMakanan, 1, 0);
-
     return listMakanan;
 }
+
+ListMakanan getMakanan (Tree tree, PrioQueue inventory){
+    ListMakanan listMakanan;
+    CreateListMakanan(&listMakanan);
+    haveFood(&tree,&inventory,&listMakanan,1,0);
+    return listMakanan;
+};

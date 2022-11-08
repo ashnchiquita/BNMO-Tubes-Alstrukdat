@@ -25,6 +25,9 @@ void START()
 
 void STARTFILE(char *str){
        pita = fopen(str,"r");
+       if(pita == NULL){
+              printf("Not found");
+       }
        ADV();
 }
 

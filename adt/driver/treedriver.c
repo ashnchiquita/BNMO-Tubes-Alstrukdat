@@ -174,7 +174,7 @@ int main() {
 
     printf("---populate from file testing---\n");
     listMakanan = *configMakananP();
-    char fileL[] = "/home/zidane/kuliah/Semester 3/IF2110 - Algoritma & Struktur Data/BNMO-Tubes-Alstrukdat/adt/config-r.txt";
+    char fileL[] = "../config-r.txt";
     ListTree listTree = *populateResepFromFile(listMakanan, fileL);
 
     for (int i = 0; i < listTree.sizeEff; ++i) {

@@ -9,6 +9,7 @@
 #include "makanan.h"
 #include "time.h"
 #include "wordmachine.h"
+#include "notif.h"
 
 /* Konstanta untuk mendefinisikan address tak terdefinisi */
 #define Nil -1
@@ -117,15 +118,15 @@ void update1Min(PrioQueue *Q);
 /* F.S. Jika Q adalah delivery queue, waktu delivery tiap Makanan di Q berkurang 1 menit. Jika ada yang awalnya waktu deliverynya < N menit, waktu delivery akan menjadi nol */
 /* Jika Q adalah inventory queue, waktu kedaluarsa tiap Makanan di Q berkurang 1 menit. Jika ada yang awalnya waktu kedaluarsanya < N menit, waktu kedaluarsa akan menjadi nol (expired) */
 
-void cleanKedaluarsa (PrioQueue *inventQ);
+void cleanKedaluarsa (PrioQueue *inventQ, stateNotif * sn);
 /* I.S. inventQ terdefinisi, inventQ mungkin kosong, inventQ adalah inventory */
 /* F.S. Elemen yang expired (waktu kedaluarsanya nol) terhapus dari inventQ */
 
-void finishDelivery (PrioQueue * delivQ, PrioQueue * inventQ);
+void finishDelivery (PrioQueue * delivQ, PrioQueue * inventQ, stateNotif * sn);
 /* I.S. delivQ terdefinisi, delivQ mungkin kosong, delivQ adalah delivery queue, inventQ adalah inventory queue */
 /* F.S. Elemen delivQ yang waktu deliverynya 0 dimasukkan ke inventQ */
 
-void updateAllQueue(PrioQueue * delivQ, PrioQueue * inventQ, int nMenit);
+void updateAllQueue(PrioQueue * delivQ, PrioQueue * inventQ, int nMenit, stateNotif * sn);
 /* I.S. delivQ, inventQ, nMenit terdefinisi */
 /* F.S. delivery queue dan inventory queue terupdate nMenit menit */
 
@@ -156,5 +157,6 @@ void setElmt(PrioQueue * Q, address idx, infotype X);
 void deleteAtAdr(PrioQueue *Q, address idx, infotype *X);
 /* I.S. Q terdefinisi, Q tidak kosong, idx adalah address yang valid untuk PrioQueue Q */
 /* F.S. Elemen di address i terhapus */
+
 
 #endif

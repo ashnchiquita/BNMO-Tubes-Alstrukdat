@@ -20,7 +20,8 @@ typedef struct
 typedef struct 
 {
    Word contents[NMax];
-}WordList;
+   int Length;
+} WordList;
 
 
 /* State Mesin Word */
@@ -62,6 +63,8 @@ void printWord(Word w);
 /* I.S. : word W terdfinisi*/
 /* F.S : word W tercetak ke dalam layar  */
 
+void printWordAlt(Word w);
+
 void ADVNEWLINE();
 /* Mengabaikan '\n */
 /* I.S. : currentChar = MARK dan EndWord bernilai true  */
@@ -89,5 +92,15 @@ Word strToWord(char s[]);
 /* Mengubah string menjadi Word */
 /* String pasti diakhiri '\0' */
 /* Prekondisi: string tidak mengandung ' ' */
+
+boolean isEmptyWL(WordList wl);
+
+void createWL(WordList * wl);
+
+void appendWL(Word w, WordList * wl);
+
+void printWL(WordList wl, char splitter[]);
+
+WordList copyWL (WordList wl);
 
 #endif

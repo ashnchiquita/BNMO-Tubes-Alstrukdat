@@ -90,6 +90,12 @@ void printWord(Word w){
     }
 }
 
+void printWordAlt(Word w) {
+    for(int i =0; i < w.Length;i++){
+        printf("%c",w.TabWord[i]);    
+    }
+}
+
 void ADVNEWLINE() {
     Word EMPTY = {"", 0};
     currentWord = EMPTY;
@@ -211,4 +217,36 @@ Word strToWord(char s[]) {
     w.Length = i;
 
     return w;
+}
+
+boolean isEmptyWL(WordList wl) {
+    return (wl.Length == 0);
+}
+void createWL(WordList * wl) {
+    (*wl).Length = 0;
+}
+
+void appendWL(Word w, WordList * wl) {
+  (*wl).contents[(*wl).Length] = w;
+  (*wl).Length++;
+}
+
+void printWL(WordList wl, char splitter[]) {
+   int i;
+   for (i = 0; i < wl.Length; i++) {
+      printWordAlt(wl.contents[i]);
+      if (i != wl.Length - 1) {
+         printf("%s", splitter);
+      }
+   }
+}
+
+WordList copyWL (WordList wl) {
+    WordList copy;
+    int i;
+    copy.Length = wl.Length;
+    for (i = 0; i < wl.Length; i++) {
+        copy.contents[i] = CopyPaste(wl.contents[i]);
+    }
+    return copy;
 }

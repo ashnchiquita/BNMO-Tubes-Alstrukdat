@@ -6,14 +6,12 @@ ListMakanan configMakanan(){
     Word temp1;
     Makanan mTemp;
     int HH,JJ,MM;
-    
-    STARTFILE("./adt/configMakanan.txt");
+    STARTFILE("../configMakanan.txt");
     // Mendapatkan banyaknya data makanan yang akan diberikan
     ADVWORD();
     int n = wordToInt(currentWord);
     int i = 0; 
     ADVNEWLINE();
-
     // Membuat ListMakanan untuk menampung semua makanan yang ada 
     ListMakanan l;
     CreateListMakanan(&l);
@@ -27,6 +25,7 @@ ListMakanan configMakanan(){
         ADVSPASI();
         Word nama = currentWord;
         ADVNEWLINE();
+        printWord(currentWord);
 
         // Mendapatkan Waktu Expired makanan
         ADVWORD();
@@ -81,15 +80,14 @@ ListMakanan configMakanan(){
         i++;
     }
     return l;
-    // printMakanan(l);
+    printMakanan(l);
 }
 
 ListMakanan *configMakananP(){
     Word temp1;
     Makanan mTemp;
     int HH,JJ,MM;
-
-    STARTFILE("/home/zidane/kuliah/Semester 3/IF2110 - Algoritma & Struktur Data/BNMO-Tubes-Alstrukdat/adt/configMakanan.txt");
+    STARTFILE("./adt/configMakanan.txt");
     // Mendapatkan banyaknya data makanan yang akan diberikan
     ADVWORD();
     int n = wordToInt(currentWord);
@@ -164,4 +162,37 @@ ListMakanan *configMakananP(){
     }
     return l;
     // printMakanan(l);
+}
+
+Matrix configPeta(POINT *lokasiPemain) {
+    Matrix peta;
+    STARTFILE("./adt/configPeta.txt");
+    int ncol, nrow;
+    ADVWORD();
+    nrow = wordToInt(currentWord);
+    ADVWORD();
+    ncol = wordToInt(currentWord);
+    CreateMatrix(nrow, ncol, &peta);
+    ADVNEWLINE();
+
+
+    int j = 0;
+    ADVWORD();
+    while(!EndWord) {
+        for (int i = 0; i < currentWord.Length; i++) {
+            KOOR(peta, j, i) = currentWord.TabWord[i];
+            if (KOOR(peta, j, i) == 'S') {
+                CreatePoint(lokasiPemain, i, j);
+            }
+        }
+
+        if (j != nrow - 1) {
+            ADVNEWLINE();
+            ADVWORD();
+        } else {
+            ADVWORD();
+        }
+        j++;
+    }
+    return peta;
 }
