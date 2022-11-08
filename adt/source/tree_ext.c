@@ -185,6 +185,21 @@ ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]) {
         ++currentWordSize;
     }
 
+    int childC, childId;
+    Tree *cTree = NULL;
+
+    for (int i = 0; i < listTree->sizeEff; ++i) {
+        childC = listTree->list[i].childrenCount;
+        for (int j = 0; j < childC; ++j) {
+            childId = listTree->list[i].children[j]->value.makananV.id;
+            cTree = searchRecipeById(listTree, childId);
+            if (cTree != NULL) {
+                listTree->list[i].children[j] = cTree;
+            }
+        }
+    }
+
+
     return listTree;
 }
 
