@@ -11,15 +11,17 @@
 void traverseTree_Makanan(Tree treeNode) {
     int childrenCount = treeNode.childrenCount;
 
-    printf("%d ", treeNode.value.makananV.id);
-
-    if (childrenCount == 0) {
-        return;
-    }
-
-    for (int i = 0;i < childrenCount; ++i) {
+    for (int i = 0;i < childrenCount - 1; ++i) {
         traverseTree_Makanan(*(treeNode.children[i]));
     }
+
+    printf("%d ", treeNode.value.makananV.id);
+
+    if (childrenCount != 0) {
+        traverseTree_Makanan(*(treeNode.children[childrenCount-1]));
+
+    }
+
 }
 
 Makanan *searchMakananByIdIT(Tree *tree, boolean *found, int id) {
@@ -265,7 +267,6 @@ void haveFood(Tree *tree, PrioQueue *inventory, ListMakanan *listNa, int depth, 
 
 }
 
-
 ListMakanan getMakananNa(Tree tree, PrioQueue inventory) {
     ListMakanan listMakanan;
     CreateListMakanan(&listMakanan);
@@ -278,4 +279,117 @@ ListMakanan getMakanan (Tree tree, PrioQueue inventory){
     CreateListMakanan(&listMakanan);
     haveFood(&tree,&inventory,&listMakanan,1,0);
     return listMakanan;
-};
+}
+
+void displayCookBook(ListTree listTree) {
+    int listTreeLen = listTree.sizeEff, treeCLen;
+    Tree currentTree;
+    Makanan cMakanan;
+    printf("List Resep\n"
+           "(aksi yang diperlukan - bahan...)\n");
+
+    for (int i = 0; i < listTreeLen; ++i) {
+        currentTree = listTree.list[i]; treeCLen = currentTree.childrenCount;
+        cMakanan = currentTree.value.makananV;
+        printf("%d. ", i+1);
+        printWord(cMakanan.aksi);
+        printf("\n");
+        printWord(cMakanan.namaMakanan);
+
+        for (int j = 0; j < treeCLen; ++j) {
+            cMakanan = currentTree.children[j]->value.makananV;
+            printf(" - ");
+            printWord(cMakanan.namaMakanan);
+        }
+        printf("\n");
+
+    }
+}
+
+boolean searchInventory(PrioQueue inventory, int id) {
+    int len = CountElmt(inventory);
+
+    for (int i = 0; i < len; ++i) {
+        if (inventory.T[i].id == id)
+            return true;
+    }
+
+    return false;
+}
+
+ListMakanan checkNonExisting(Tree resep, PrioQueue inventory) {
+    int itemC = resep.childrenCount;
+    ListMakanan listMakanan;
+    CreateListMakanan(&listMakanan);
+
+    for (int i = 0; i < itemC; ++i) {
+        if (searchInventory(inventory, resep.children[i]->value.makananV.id) == false)
+            addMakanan(&listMakanan, resep.children[i]->value.makananV);
+    }
+    return listMakanan;
+}
+
+
+ListMakanan getRecommendation(ListTree listTree, PrioQueue inventory) {
+    int lenListM = listTree.sizeEff, lenListNa, lenLa = 0;
+    ListMakanan listNa, listRekomendasi;
+    Tree treeTemp, treeToC, *treeNaU, **listAll = malloc(sizeof(Tree*) * listTree.sizeEff);
+
+    CreateListMakanan(&listRekomendasi);
+
+    for (int i = 0; i < lenListM; ++i) {
+        // 1. check subset direct children from tree,
+        treeToC = listTree.list[i];
+        Object obj;
+        obj.makananV = treeToC.value.makananV;
+        int lenNaC;
+        boolean expandedFc = true;
+
+        while (expandedFc) {
+            listNa = checkNonExisting(treeToC, inventory);
+            lenListNa = panjangListMakanan(listNa);
+
+            if (lenListNa == 0) {
+                addMakanan(&listRekomendasi, obj.makananV);
+                break;
+            }
+
+            // add non existing makanan to tree temp
+            listAll[lenLa] = createTreeNode(NULL, obj);
+            treeTemp = *listAll[lenLa];
+            ++lenLa;
+            expandedFc = false;
+
+            for (int j = 0; j < lenListNa; ++j) {
+                treeNaU = searchRecipeById(&listTree, listNa.contents[j].id);
+
+                if (treeNaU == NULL) {
+                    expandedFc = false;
+                    continue;
+                }
+
+                lenNaC = treeNaU->childrenCount;
+                for (int k = 0; k < lenNaC; ++k) {
+                    Object childTemp;
+                    childTemp.makananV = treeNaU->children[k]->value.makananV;
+                    addChildren(&treeTemp, childTemp);
+                    expandedFc = true;
+                }
+
+            }
+
+            treeToC = treeTemp;
+
+        }
+
+    }
+
+    // free the heap
+    for (int i = 0; i < lenLa; ++i) {
+        free(listAll[i]);
+    }
+
+    free(listAll);
+
+    return listRekomendasi;
+}

@@ -132,8 +132,6 @@ void path_finding() {
             visited[cur.row][cur.col + 1] = true;
         }
     }
-
-
 }
 
 /**
@@ -174,7 +172,7 @@ int main() {
 
     printf("---populate from file testing---\n");
     listMakanan = *configMakananP();
-    char fileL[] = "../config-r.txt";
+    char fileL[] = "/home/zidane/kuliah/Semester 3/IF2110 - Algoritma & Struktur Data/BNMO-Tubes-Alstrukdat/adt/config-r.txt";
     ListTree listTree = *populateResepFromFile(listMakanan, fileL);
 
     for (int i = 0; i < listTree.sizeEff; ++i) {
@@ -220,9 +218,34 @@ int main() {
     }
     printf("\n---end---\n");
 
-    for (int i = 0; i < listTree.sizeEff; ++i) {
-        traverseTree_Makanan(listTree.list[i]);
-        printf("\n");
-    }
+    printf("\n--- Test CookBook ---\n");
+
+    displayCookBook(listTree);
+
+    printf("\n---end---\n");
+
+//    ListMakanan listMakanan = *configMakananP();
+//    char fileL[] = "/home/zidane/kuliah/Semester 3/IF2110 - Algoritma & Struktur Data/BNMO-Tubes-Alstrukdat/adt/config-r.txt";
+
+//    PrioQueue inventory;
+//    MakeEmptyQ(&inventory, 12, false);
+   // ListTree listTree = *populateResepFromFile(listMakanan, fileL);
+   // Makanan mi = {37,nama,T1,T2,aksi};
+    Makanan mi1 = {10,nama,T1,T2,aksi};
+    Makanan mi2 = {14,nama,T1,T2,aksi};
+    Makanan mi3 = {11,nama,T1,T2,aksi};
+
+
+
+ //   Enqueue(&inventory, mi);
+//    Enqueue(&inventory, mi1);
+//    Enqueue(&inventory, mi2);
+//    Enqueue(&inventory, mi3);
+//    ListMakanan rekomendasi = getRecommendation(listTree, inventory);
+//
+//    for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
+//        printf("%d ", rekomendasi.contents[i].id);
+//    }
+
 
 }
