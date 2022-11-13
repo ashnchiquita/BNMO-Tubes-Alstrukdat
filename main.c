@@ -117,6 +117,7 @@ int main() {
         }
         if (!valid) {
             printf("Silakan masukkan command yang valid.\n");
+            untilEndWord();
         }
     } while (!valid);
 
@@ -369,13 +370,13 @@ int main() {
                         if (EndWord) {
                             setCommandArgs(&sn, act);
                             /* CODE MOVE (Arah disimpen di moveDirection) */
-                            if (moveDirection.TabWord[0] == 'N') {
+                            if (moveDirection.TabWord[0] == 'N' || moveDirection.TabWord[0] == 'n') {
                                 moveNorth(&peta, &pemain, &command);
-                            } else if (moveDirection.TabWord[0] == 'S') {
+                            } else if (moveDirection.TabWord[0] == 'S' || moveDirection.TabWord[0] == 's') {
                                 moveSouth(&peta, &pemain, &command);
-                            } else if (moveDirection.TabWord[0] == 'W') {
+                            } else if (moveDirection.TabWord[0] == 'W'|| moveDirection.TabWord[0] == 'w') {
                                 moveWest(&peta, &pemain, &command);
-                            } else if (moveDirection.TabWord[0] == 'E') {
+                            } else if (moveDirection.TabWord[0] == 'E' || moveDirection.TabWord[0] == 'e') {
                                 moveEast(&peta, &pemain, &command);
                             }
 
@@ -476,6 +477,7 @@ int main() {
         
         if (!valid) {
             printf("Command tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.\n");
+            untilEndWord();
         }
 
         /*Kalau misalnya commandnya valid, update 1 menit ke delivery, inventory, dan waktu game*/
