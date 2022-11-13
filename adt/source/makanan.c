@@ -106,15 +106,12 @@ void printCommand(ListMakanan l, Word command){
         printWord(nama(ELMT(l,i)));
         if(!isZeroTIME(delivery(l.contents[i]))){
             printf(" (");
-            Hari(temp) == 0 ? printf(""): printf(" %d hari ", Hari(temp));
-            Jam(temp) == 0 ? printf(""):printf(" %d jam ", Jam(temp));
-            Menit(temp) == 0 ? printf("") : printf(" %d menit ", Menit(temp));
+            PrintKalimatDurasi(temp);
             printf(")");
         };
         printf("\n");
     }
-    printf("Kirim 0 untuk exit");
-    printf("\n");
+    printf("Masukkan 0 untuk kembali ke Menu\n");
 }
 
 boolean isFound(ListMakanan l, int idx){

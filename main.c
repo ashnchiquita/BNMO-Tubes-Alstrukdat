@@ -20,23 +20,24 @@ void tampilanLayar(Simulator pemain, TIME waktuMain, stateNotif sn, int mode){
 
 int main() {
     /* KAMUS */
-    boolean started, valid, unredo;
-    int waitX, waitY,updateMenit, modeNotif;
+    boolean started, valid, unredo, command, wait;
+    int waitX, waitY, updateMenit, modeNotif;
     Word moveDirection, nama, pilihan;
     Simulator pemain;
     TIME waktuGame;
-    boolean command,wait;
     ListMakanan listMakanan, buy;
     POINT lokasiPemain;
     Makanan temp;
-    PrioQueue Delivery, Inventory;
+    PrioQueue Delivery, Inventory, tempQueue1, tempQueue2; 
     ListTree treeResep;
     Matrix peta;
     Stack state,redo;
     WordList act;
-    stateNotif sn, snUndo, snRedo;
+    stateNotif sn;
 
     /* ALGORITMA */
+
+    /* Splash Screen Intro */
 
     printf("\n               +-++-++-++-++-++-++-+ +-++-+\n");
     printf("               |w||e||l||c||o||m||e| |t||o|\n");
@@ -53,78 +54,82 @@ int main() {
     printf("`-._`.___,'   `--`./  `--`  `--`./  `--`      `--`--''     \n");
     printf("\n             ---* Cooking Game Simulator *---\n");
     printf("\n           Created by Kelompok H Kelas K2 IF'21\n\n");
-
-    printf("Enter Command (START/EXIT): ");
-    STARTWORD();
-
-    if (EndWord) {
-        valid = false;
-    } else {
-        valid = wordEqual(currentWord, strToWord("START")) || wordEqual(currentWord, strToWord("EXIT"));
-    }
-
-    while (!valid) {
-        printf("Silakan masukkan command yang valid.\n");
+    
+    /* Validasi Input Pertama */
+    do {
+        valid = true;
         printf("Enter Command (START/EXIT): ");
         STARTWORD();
+        if (!EndWord) {
+            if (wordEqual(currentWord, strToWord("START"))) {
+                ADVWORD();
+                if (EndWord) {
+                    started = true;
 
-        if (EndWord) {
-            valid = false;
+                    /* Memulai konfigurasi dengan membaca file */
+                    listMakanan = *configMakananP();
+                    peta = configPeta(&lokasiPemain);
+                    treeResep = *populateResepFromFile(listMakanan, "./adt/config-r.txt");
+
+                    /* Membuat list delivery dan list inventory yang menggunakan priority Queue*/
+                    MakeEmptyQ(&Delivery,100,true);
+                    MakeEmptyQ(&Inventory,100,false);
+                    
+                    /*Membuat stack yang mencatat semua state ketika program berhasil */
+                    CreateEmptyStack(&state);
+                    CreateEmptyStack(&redo);
+                    
+                    /*Meminta input nama user untuk disimpan dalam simulator */
+                    printf("Masukkan nama pertama anda : \n");
+                    STARTINPUT();
+                    createSimulator(&pemain,lokasiPemain, currentWord);
+                    CreateTime(&waktuGame, 0, 0, 0);
+                    createEmptySN(&sn);
+                    createWL(&act);
+                    modeNotif = 1;
+
+                    states init = {waktuGame,lokasiPemain,Delivery,Inventory,sn};
+                    PushStack(&state,init);
+                
+                    /*Ucapan selamat bermain untuk peserta */
+                    printf("Konfigurasi selesai, selamat bermain ");
+                    printWord(namaPemain(pemain));
+                    printf("!\n");
+
+                    /*Selalu menampilkan peta, lokasi pemain, waktu game, dan notifikasi ke layaar*/
+                    tampilanLayar(pemain,waktuGame, sn, modeNotif);
+                    displayPeta(peta);
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("EXIT"))) {
+                ADVWORD();
+                if (EndWord) {
+                    started = false;
+                } else {
+                    valid = false;
+                }
+            } else {
+                valid = false;
+            }
         } else {
-            valid = wordEqual(currentWord, strToWord("START")) || wordEqual(currentWord, strToWord("EXIT"));
+            valid = false;
         }
-    }
+        if (!valid) {
+            printf("Silakan masukkan command yang valid.\n");
+        }
+    } while (!valid);
 
-    if (wordEqual(currentWord, strToWord("START"))) {
-        started = true;
-        /* Memulai konfigurasi dengan membaca file */
-        listMakanan = *configMakananP();
-        peta = configPeta(&lokasiPemain);
-        treeResep = *populateResepFromFile(listMakanan, "./adt/config-r.txt");
-
-        /* Membuat list delivery dan list inventory yang menggunakan priority Queue*/
-        MakeEmptyQ(&Delivery,100,true);
-        MakeEmptyQ(&Inventory,100,false);
-        
-        /*Membuat stack yang mencatat semua state ketika program berhasil */
-        CreateEmptyStack(&state);
-        CreateEmptyStack(&redo);
-        
-        /*Meminta input nama user untuk disimpan dalam simulator */
-        printf("Masukkan nama pertama anda : \n");
-        STARTINPUT();
-        createSimulator(&pemain,lokasiPemain, currentWord);
-        CreateTime(&waktuGame, 0, 0, 0);
-        createEmptySN(&sn);
-
-        states init = {waktuGame,lokasiPemain,Delivery,Inventory,sn};
-        PushStack(&state,init);
-    
-        /*Ucapan selamat bermain untuk peserta */
-        printf("Konfigurasi selesai, selamat bermain ");
-        printWord(namaPemain(pemain));
-        printf("!\n");
-
-    } else if (wordEqual(currentWord, strToWord("EXIT"))) {
-        started = false;
-    }
-    createEmptySN(&sn);
-    createWL(&act);
-    modeNotif = 1;
-    /*Selalu menampilkan peta, lokasi pemain, waktu game, dan notifikasi ke layaar*/
-    tampilanLayar(pemain,waktuGame, sn, modeNotif);
-    displayPeta(peta);
-
+    /* Commands Game */
     while (started) {
         command = false;
         wait = false;
         valid = true;
         
-        /*Meminta input user */
         printf("Enter Command: ");
         STARTWORD();
         if (!EndWord) {
-            /* Handling input normal */
+            /* MIX */
             if (wordEqual(currentWord, strToWord("MIX"))) {
                 appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
@@ -133,7 +138,6 @@ int main() {
                         ListMakanan Mix = pengelompokanMakanan(listMakanan, strToWord("Mix"));
                         printCommand(Mix,strToWord("Mix"));
 
-                        /* CODE FRY */
                         printf("Enter command: \n");
                         STARTWORD();
 
@@ -154,12 +158,13 @@ int main() {
                 } else {
                     valid = false;
                 }
+            
+            /* CHOP */
             } else if (wordEqual(currentWord, strToWord("CHOP"))) {
                 appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
                 if (EndWord) {
                     if(isLocAdjacent(peta,pemain,'C')){
-                        /* CODE CHOP */
                         ListMakanan Chop = pengelompokanMakanan(listMakanan, strToWord("Chop"));
                         printCommand(Chop,strToWord("Chop"));
 
@@ -180,6 +185,8 @@ int main() {
                 } else {
                     valid = false;
                 }
+
+            /* FRY */
             } else if (wordEqual(currentWord, strToWord("FRY"))) {
                 appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
@@ -189,7 +196,6 @@ int main() {
                         ListMakanan Fry = pengelompokanMakanan(listMakanan, strToWord("Fry"));
                         printCommand(Fry,strToWord("Fry"));
 
-                        /* CODE FRY */
                         printf("Enter command: \n");
                         STARTWORD();
 
@@ -210,6 +216,8 @@ int main() {
                 } else {
                     valid = false;
                 }
+
+            /* BOIL */
             } else if (wordEqual(currentWord, strToWord("BOIL"))) {
                 appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
@@ -218,7 +226,6 @@ int main() {
                         ListMakanan Boil = pengelompokanMakanan(listMakanan, strToWord("Boil"));
                         printCommand(Boil,strToWord("Boil"));
 
-                        /* CODE FRY */
                         printf("Enter command: \n");
                         STARTWORD();
 
@@ -239,11 +246,10 @@ int main() {
                 } else {
                     valid = false;
                 }
+            /* UNDO */
             } else if (wordEqual(currentWord, strToWord("UNDO"))) {
                 ADVWORD();
                 if (EndWord) {
-
-                    /* CODE UNDO */
                     UNDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory, &sn);
                     fixedDisplay(&peta,pemain);
                     modeNotif = 2;
@@ -252,11 +258,11 @@ int main() {
                 } else {
                     valid = false;
                 }
+
+            /* REDO */
             } else if (wordEqual(currentWord, strToWord("REDO"))) {
                 ADVWORD();
                 if (EndWord) {
-
-                    /* CODE REDO */
                     REDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory, &sn);
                     fixedDisplay(&peta,pemain);
                     modeNotif = 3;
@@ -264,16 +270,17 @@ int main() {
                 } else {
                     valid = false;
                 }
+
+            /* CATALOG */
             } else if (wordEqual(currentWord, strToWord("CATALOG"))) {
                 ADVWORD();
                 if (EndWord) {
-
-                    /* CODE CATALOG */
                     printMakanan(listMakanan);
-
                 } else {
                     valid = false;
                 }
+
+            /* COOKBOOK */
             } else if (wordEqual(currentWord, strToWord("COOKBOOK"))) {
                 ADVWORD();
                 if (EndWord) {
@@ -283,11 +290,11 @@ int main() {
                 } else {
                     valid = false;
                 }
+            
+            /* BUY */
             } else if (wordEqual(currentWord, strToWord("BUY"))) {
                 appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
-
-                /*Harus tambahin validasi lokasi dia dimana */
 
                 if (EndWord) {                 
                     if(isLocAdjacent(peta,pemain,'T')){
@@ -320,19 +327,34 @@ int main() {
                 } else {
                     valid = false;
                 }
+
+            /* INVENTORY */
             } else if(wordEqual(currentWord, strToWord("INVENTORY"))){
                 ADVWORD();
                 if(EndWord){
-                    PrintPrioQueue(Inventory);
+                    if (IsEmpty(Inventory)) {
+                        printf("Tidak ada makanan di inventory\n");
+                    } else {
+                        printf("List Makanan di Inventory\n(nama - waktu sisa kedaluarsa)\n");
+                        PrintPrioQueue(Inventory);
+                    }
                 }
-            }else if (wordEqual(currentWord, strToWord("DELIVERY"))) {
+
+            /* DELIVERY */
+            } else if (wordEqual(currentWord, strToWord("DELIVERY"))) {
                 ADVWORD();
                 if (EndWord) {
-                    PrintPrioQueue(Delivery);
-                    /* CODE DELIVERY */
+                    if (IsEmpty(Delivery)) {
+                        printf("Tidak ada makanan di perjalanan\n");
+                    } else {
+                        printf("List Makanan di Perjalanan\n(nama - waktu sisa delivery)\n");
+                        PrintPrioQueue(Delivery);
+                    }
                 } else {
                     valid = false;
                 }
+
+            /* MOVE */
             } else if (wordEqual(currentWord, strToWord("MOVE"))) {
                 appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
@@ -364,6 +386,8 @@ int main() {
                         valid = false;
                     }
                 }
+            
+            /* EXIT */
             } else if (wordEqual(currentWord, strToWord("EXIT"))) {
                 ADVWORD();
                 if (EndWord) {
@@ -371,6 +395,8 @@ int main() {
                 } else {
                     valid = false;
                 }
+            
+            /* HELP */
             } else if (wordEqual(currentWord, strToWord("HELP"))) {
                 ADVWORD();
                 if (EndWord) {
@@ -403,6 +429,8 @@ int main() {
                 } else {
                     valid = false;
                 }
+            
+            /* WAIT */
             } else if (wordEqual(currentWord, strToWord("WAIT"))) {
                 appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
@@ -424,12 +452,9 @@ int main() {
                                 ADVWORD();
 
                                 if (EndWord) {
-
-                                    /* CODE WAIT (x disimpen di waitX, y disimpen di waitY) */
                                     wait = true;
                                     updateMenit = waitX * 60 + waitY;
                                     setCommandArgs(&sn, act);
-                                    // waktuGame =  MenitToTIME( TIMEToMenit(waktuGame) + waitX*60 + waitY);
                                    
                                 } else {
                                     valid = false;
@@ -450,7 +475,7 @@ int main() {
         }
         
         if (!valid) {
-            printf("Command tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.");
+            printf("Command tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.\n");
         }
 
         /*Kalau misalnya commandnya valid, update 1 menit ke delivery, inventory, dan waktu game*/
@@ -461,32 +486,29 @@ int main() {
             setCommandArgs(&sn, act);
             finishDelivery(&Delivery,&Inventory, &sn);
             cleanKedaluarsa(&Inventory, &sn);
-            states temp = {waktuGame,pemain.lokasi,Delivery,Inventory, sn};
-            PushStack(&state,temp);
+            states tempState = {waktuGame,pemain.lokasi,Delivery,Inventory, sn};
+            PushStack(&state,tempState);
         }else if(wait){
-            PrioQueue temp1;
-            PrioQueue temp2; 
-
             /*Mengcopy Delivery dan Inventory ke temp1 dan temp2*/
-            copyPrioQueue(Delivery,&temp1);
-            copyPrioQueue(Inventory,&temp2);
+            copyPrioQueue(Delivery,&tempQueue1);
+            copyPrioQueue(Inventory,&tempQueue2);
 
             /*Mengupdate waktu sesuai menit yang di wait*/
-            updateAllQueue(&temp1,&temp2,updateMenit, &sn);
+            updateAllQueue(&tempQueue1,&tempQueue2,updateMenit, &sn);
 
             /*Mengcopy kembali temp1 ke delivery dan temp2 ke inventory*/
-            copyPrioQueue(temp1,&Delivery);
-            copyPrioQueue(temp2,&Inventory);
+            copyPrioQueue(tempQueue1,&Delivery);
+            copyPrioQueue(tempQueue2,&Inventory);
 
             /* Menambahkan N menit waktu ke dalam waktu game */
             NextNMenit(&waktuGame,updateMenit);
-            states temp = {waktuGame,pemain.lokasi,temp1,temp2, sn};
+            states tempState = {waktuGame,pemain.lokasi,tempQueue1,tempQueue2, sn};
             /* Push States ke dalam stack */
-            PushStack(&state,temp);
+            PushStack(&state,tempState);
         }
         /*Selalu menampilkan peta, lokasi pemain, waktu game, dan notifikasi ke layaar*/
         if (started) {
-            tampilanLayar(pemain,waktuGame, sn, modeNotif);
+            tampilanLayar(pemain, waktuGame, sn, modeNotif);
             displayPeta(peta);
             modeNotif = 1;
             if (command || wait || unredo) {
@@ -495,6 +517,8 @@ int main() {
             }
         }
     }
+
+    /* Splash Screen Outro */
     if (!started) {
         printf("\n                    THANKS FOR USING\n");
         printf("               .-._                 ___       _,.---._     \n");

@@ -152,9 +152,9 @@ void PrintPrioQueue (PrioQueue Q) {
 /* Jika Q adalah inventory queue, waktu yang diprint adalah waktu kedaluarsa */
 /* I.S. Q terdefinisi, mungkin kosong */
 /* F.S. Q tercetak ke layar dengan format:
-    < address + 1 >. < nama makanan > (< waktu delivery/kedaluarsa >)
+    < address + 1 >. < nama makanan > - < waktu delivery/kedaluarsa >
     ...
-    < CountElmt(Q) >. < nama makanan > (< waktu delivery/kedaluarsa >)
+    < CountElmt(Q) >. < nama makanan > - < waktu delivery/kedaluarsa >
     Di akhir terdapat "\n"
 */
     /* KAMUS LOKAL */
@@ -165,13 +165,13 @@ void PrintPrioQueue (PrioQueue Q) {
         for (i =  Head(Q); i <= Tail(Q); i++) {
             printf("%d. ", i + 1);
             printWord(nama(Elmt(Q, i)));
-            printf(" (");
+            printf(" - ");
             if (SortDeliv(Q)) {
                 PrintKalimatDurasi(delivery(Elmt(Q, i)));
             } else {
                 PrintKalimatDurasi(expired(Elmt(Q, i)));
             }
-            printf(")\n");
+            printf("\n");
         }
     } else {
         printf("\n");

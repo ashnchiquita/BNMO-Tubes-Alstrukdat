@@ -58,7 +58,7 @@ void handleFoodAction(ListTree treeResep, PrioQueue * Inventory,boolean *command
         *command = true;
     }else{
         /*Jika panjang list makanan tidak sama dengan 0, berarti akan ada minimal satu item yang tidak dimiliki inventory*/
-        printf("Gagal membuat ");
+        printf("\nGagal membuat ");
         printWord(nama(temp));
 
         /*Menampilkan list makanan yang diperlukan, tapi tidak dimiliki */
