@@ -21,12 +21,6 @@ typedef struct nAryNodeList {
     Tree list[TREE_LIST_MAX];
 } ListTree;
 
-// the set is implemented as an n-ary tree
-// has the same form as union find path compression
-typedef struct treeSet {
-    Tree imnRoot;
-} Set;
-
 Tree *createTreeNode(Tree *parent, Object value);
 Tree **allocateArr(int size);
 Tree *addChildren(Tree *node, Object value);
