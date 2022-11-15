@@ -103,4 +103,7 @@ void printWL(WordList wl, char splitter[]);
 
 WordList copyWL (WordList wl);
 
+void untilEndWord();
+/* Meng-adv current word sampai habis (untuk handling error input yang tidak valid tabrakan) */
+
 #endif

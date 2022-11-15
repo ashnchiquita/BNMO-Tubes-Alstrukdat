@@ -250,3 +250,10 @@ WordList copyWL (WordList wl) {
     }
     return copy;
 }
+
+void untilEndWord() {
+/* Meng-adv current word sampai habis (untuk handling error input yang tidak valid tabrakan) */
+    while (!EndWord) {
+        ADVWORD();
+    }
+}

@@ -11,7 +11,7 @@ void CreatePoint(POINT * P,int x, int y)
 }
 
 void TulisPOINT(POINT P){
-    printf("(%d,%d)", Absis(P), Ordinat(P));
+    printf("(%d,%d)", Ordinat(P), Absis(P));
 }
 
 boolean IsOrigin(POINT P){
