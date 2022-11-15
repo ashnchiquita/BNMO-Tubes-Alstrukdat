@@ -48,3 +48,14 @@ void ADV()
        //        fclose(pita);
        // }
 }
+
+void STARTFILE_R(char *str){
+    pita = fopen(str,"r");
+    if(pita == NULL){
+        printf("Not found");
+    }
+}
+
+void ADV_R() {
+    currentChar = fgetc(pita);
+}
