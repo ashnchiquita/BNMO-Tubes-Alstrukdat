@@ -3,6 +3,7 @@
 
 #include "../boolean.h"
 #include "../tree.h"
+#include "charmachine.h"
 
 /**
  * traversing n-ary tree
@@ -137,21 +138,18 @@ void addToT(ListTree *listTree, ListMakanan *listMakanan, char currentWord[], in
  * @return
  */
 ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]) {
-    FILE *file;
-    file = fopen(fileL, "r");
 
-    if (file == NULL) {
-        return NULL;
-    }
-
-    char currentChar, currentWord[25];
+    char currentWord[25];
     int currentWordSize = 0, val = 0, currentLine = 0, wordCount = 0;
     ListTree *listTree = createListTree();
     boolean stopFCL = false;
     Object nodeVal;
 
+    STARTFILE_R(fileL);
+    currentChar = 999;
+
     while(currentChar != -1) {
-        currentChar = fgetc(file);
+        ADV_R();
 
         if (currentChar == '\n') {
             if (currentLine != 0)
@@ -159,7 +157,6 @@ ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]) {
             currentLine += 1;
             wordCount = 0;
             stopFCL = false;
-
             continue;
         }
 
@@ -184,6 +181,7 @@ ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]) {
 
         currentWord[currentWordSize] = currentChar;
         ++currentWordSize;
+
     }
 
     int childC, childId;
@@ -360,6 +358,7 @@ ListMakanan getRecommendation(ListTree listTree, PrioQueue inventory) {
             ++lenLa;
             expandedFc = false;
 
+            // lenListNa > 0 -> not subset
             for (int j = 0; j < lenListNa; ++j) {
                 treeNaU = searchRecipeById(&listTree, listNa.contents[j].id);
 
