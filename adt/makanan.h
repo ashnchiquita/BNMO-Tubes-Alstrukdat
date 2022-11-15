@@ -11,7 +11,7 @@ typedef struct{
     int id; 
     Word namaMakanan;
     TIME expired;
-    TIME delivery;
+    TIME actionTime;
     Word aksi;
 }Makanan;
 
@@ -23,7 +23,7 @@ typedef struct
 #define id(e) (e).id
 #define nama(e) (e).namaMakanan
 #define expired(e) (e).expired
-#define delivery(e) (e).delivery
+#define actionTime(e) (e).actionTime
 #define aksi(e) (e).aksi
 #define makanan(m,i) (m).contents[(i)]
 
@@ -50,8 +50,10 @@ ListMakanan pengelompokanMakanan(ListMakanan l,Word w);
 /* Mengelompokkan makanan berdasarkan kategori aksi yang dimiliki makanan*/
 
 int getIdx(ListMakanan l, int id);
+/* Mengembalikan index makanan dengan id tertentu yang berada dalam list makanan */
 
 void printCommand(ListMakanan l, Word command);
 
 boolean isFound(ListMakanan l, int id);
+/* Mengembalikan nilai true jika ada makanan dengan id yang diminta, di dalam list makanan */
 #endif

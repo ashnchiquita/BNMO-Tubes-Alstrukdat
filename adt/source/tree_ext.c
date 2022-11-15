@@ -3,8 +3,8 @@
 
 #include "../boolean.h"
 #include "../tree.h"
-#include "charmachine.h"
-#include "set.h"
+#include "../charmachine.h"
+#include "../set.h"
 
 /**
  * traversing n-ary tree

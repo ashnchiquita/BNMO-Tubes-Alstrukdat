@@ -20,8 +20,8 @@ void tampilanLayar(Simulator pemain, TIME waktuMain, stateNotif sn, int mode){
 
 int main() {
     /* KAMUS */
-    boolean started, valid, unredo, command, wait;
-    int waitX, waitY, updateMenit, modeNotif;
+    boolean started, valid, unredo, command, wait,action;
+    int waitX, waitY, updateMenit, modeNotif, actionDuration;
     Word moveDirection, nama, pilihan;
     Simulator pemain;
     TIME waktuGame;
@@ -126,7 +126,8 @@ int main() {
         command = false;
         wait = false;
         valid = true;
-        
+        action = false;
+
         printf("Enter Command: ");
         STARTWORD();
         if (!EndWord) {
@@ -149,8 +150,9 @@ int main() {
                         /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
                         if(isFound(Mix,wordToInt(currentWord)-1)){
                             temp = ELMT(Mix,wordToInt(currentWord) - 1);
-
-                            handleFoodAction(treeResep,&Inventory,&command,temp, &act, &sn);
+                            
+                            // TulisTIME(actionTime(temp));
+                            handleFoodAction(treeResep,&Inventory,&action,temp);
                             setCommandArgs(&sn, act);
                         };
                     }else{
@@ -176,9 +178,10 @@ int main() {
 
                         if(isFound(Chop,wordToInt(currentWord)-1)){
                             temp = ELMT(Chop,wordToInt(currentWord) - 1);
-
-                            handleFoodAction(treeResep,&Inventory,&command,temp, &act, &sn);
+                            
+                            handleFoodAction(treeResep,&Inventory,&action,temp);
                             setCommandArgs(&sn, act);
+                            updateMenit = TIMEToMenit(actionTime(temp));  
                         };
                     }else{
                         printf("BNMO tidak berada di area Chop\n");
@@ -207,7 +210,7 @@ int main() {
                         if(isFound(Fry,wordToInt(currentWord)-1)){
                             temp = ELMT(Fry,wordToInt(currentWord) - 1);
 
-                            handleFoodAction(treeResep,&Inventory,&command,temp, &act, &sn);
+                            handleFoodAction(treeResep,&Inventory,&action,temp);
                             setCommandArgs(&sn, act);
                         };
                     }else{
@@ -238,7 +241,7 @@ int main() {
                         if(isFound(Boil,wordToInt(currentWord)-1)){
                             temp = ELMT(Boil,wordToInt(currentWord) - 1);
 
-                            handleFoodAction(treeResep,&Inventory,&command,temp, &act, &sn);
+                            handleFoodAction(treeResep,&Inventory,&action,temp);
                             setCommandArgs(&sn, act);
                         };
                     }else{
@@ -507,7 +510,30 @@ int main() {
             states tempState = {waktuGame,pemain.lokasi,tempQueue1,tempQueue2, sn};
             /* Push States ke dalam stack */
             PushStack(&state,tempState);
-        }
+
+        }else if(action){
+            
+            /*Mengcopy Delivery dan Inventory ke temp1 dan temp2*/
+            copyPrioQueue(Delivery,&tempQueue1);
+            copyPrioQueue(Inventory,&tempQueue2);
+            
+            /*Mengupdate waktu sesuai menit yang di wait*/
+            updateAllQueue(&tempQueue1,&tempQueue2,updateMenit, &sn);
+
+            /* Menambahkan makanan yang sudah dibuat ke dalam inventory */
+            addingFood(temp,&tempQueue2,treeResep,&act,&sn);
+            setCommandArgs(&sn, act);
+
+            /*Mengcopy kembali temp1 ke delivery dan temp2 ke inventory*/
+            copyPrioQueue(tempQueue1,&Delivery);
+            copyPrioQueue(tempQueue2,&Inventory);
+
+            /* Menambahkan N menit waktu ke dalam waktu game */
+            NextNMenit(&waktuGame,updateMenit);
+            states tempState = {waktuGame,pemain.lokasi,tempQueue1,tempQueue2, sn};
+            /* Push States ke dalam stack */
+            PushStack(&state,tempState);
+        }   
         /*Selalu menampilkan peta, lokasi pemain, waktu game, dan notifikasi ke layaar*/
         if (started) {
             tampilanLayar(pemain, waktuGame, sn, modeNotif);
@@ -538,3 +564,4 @@ int main() {
 
     return 0;
 }
+

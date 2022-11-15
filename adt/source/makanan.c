@@ -24,14 +24,14 @@ void printMakanan(ListMakanan l){
     printf("Nama - Durasi Kadaluwarsa - Aksi yang Diperlukan - Delivery Time\n");
     int length = panjangListMakanan(l);
     for(int i =0 ; i < length;i++){
-        printf("%d. ",i+1);
+        printf("%d.   ",i+1);
         printWord(nama(l.contents[i]));
         printf(" - ");
         TulisTIME(expired(l.contents[i]));
         printf(" - ");
         printWord(aksi(l.contents[i]));
         printf(" - ");
-        TulisTIME(delivery(l.contents[i]));
+        TulisTIME(actionTime(l.contents[i]));
         printf("\n");
     }
 }
@@ -102,9 +102,9 @@ void printCommand(ListMakanan l, Word command){
     printf("==================================\n");
     for(int i =0 ; i < panjangListMakanan(l);i++){
         printf("%d. ",i+1);
-        TIME temp = delivery(ELMT(l,i));
+        TIME temp = actionTime(ELMT(l,i));
         printWord(nama(ELMT(l,i)));
-        if(!isZeroTIME(delivery(l.contents[i]))){
+        if(!isZeroTIME(actionTime(l.contents[i]))){
             printf(" (");
             PrintKalimatDurasi(temp);
             printf(")");
