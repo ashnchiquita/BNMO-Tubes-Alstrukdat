@@ -4,6 +4,7 @@
 #include "../boolean.h"
 #include "../tree.h"
 #include "charmachine.h"
+#include "set.h"
 
 /**
  * traversing n-ary tree
@@ -146,7 +147,7 @@ ListTree *populateResepFromFile(ListMakanan listMakanan, char fileL[]) {
     Object nodeVal;
 
     STARTFILE_R(fileL);
-    currentChar = 999;
+    currentChar = 0;
 
     while(currentChar != -1) {
         ADV_R();
@@ -331,20 +332,21 @@ ListMakanan checkNonExisting(Tree resep, PrioQueue inventory) {
 ListMakanan getRecommendation(ListTree listTree, PrioQueue inventory) {
     int lenListM = listTree.sizeEff, lenListNa, lenLa = 0;
     ListMakanan listNa, listRekomendasi;
-    Tree treeTemp, treeToC, *treeNaU, **listAll = malloc(sizeof(Tree*) * listTree.sizeEff);
+    Tree *treeNaU, **listAll = malloc(sizeof(Tree*) * listTree.sizeEff);
+    Set set;
 
     CreateListMakanan(&listRekomendasi);
 
     for (int i = 0; i < lenListM; ++i) {
         // 1. check subset direct children from tree,
-        treeToC = listTree.list[i];
+        set = *getSetFromTree(&listTree.list[i]);
         Object obj;
-        obj.makananV = treeToC.value.makananV;
+        obj.makananV = set.imnRoot.value.makananV;
         int lenNaC;
         boolean expandedFc = true;
 
         while (expandedFc) {
-            listNa = checkNonExisting(treeToC, inventory);
+            listNa = checkNonExisting(set.imnRoot, inventory);
             lenListNa = panjangListMakanan(listNa);
 
             if (lenListNa == 0) {
@@ -354,7 +356,7 @@ ListMakanan getRecommendation(ListTree listTree, PrioQueue inventory) {
 
             // add non existing makanan to tree temp
             listAll[lenLa] = createTreeNode(NULL, obj);
-            treeTemp = *listAll[lenLa];
+            set.imnRoot = *listAll[lenLa];
             ++lenLa;
             expandedFc = false;
 
@@ -371,13 +373,11 @@ ListMakanan getRecommendation(ListTree listTree, PrioQueue inventory) {
                 for (int k = 0; k < lenNaC; ++k) {
                     Object childTemp;
                     childTemp.makananV = treeNaU->children[k]->value.makananV;
-                    addChildren(&treeTemp, childTemp);
+                    addToSet(&set, childTemp);
                     expandedFc = true;
                 }
 
             }
-
-            treeToC = treeTemp;
 
         }
 
@@ -385,6 +385,7 @@ ListMakanan getRecommendation(ListTree listTree, PrioQueue inventory) {
 
     // free the heap
     for (int i = 0; i < lenLa; ++i) {
+
         free(listAll[i]);
     }
 

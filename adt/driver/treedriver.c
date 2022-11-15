@@ -135,9 +135,10 @@ void path_finding() {
 }
 
 /**
- * driver's main function. caution: machine dependent.
+ * driver's main function
  *
  */
+ // TODO: create independent unit tests
 int main() {
     TIME T1;
     TIME T2;
@@ -147,7 +148,7 @@ int main() {
     CreateTime(&T1,1,0,0);
     CreateTime(&T2,0,2,15);
 
-    Makanan m = {12,nama,T1,T2,aksi};
+    /*Makanan m = {12,nama,T1,T2,aksi};
     Makanan m1 = {20,nama,T1,T2,aksi};
     Makanan m2 = {21,nama,T1,T2,aksi};
     Makanan m3 = {22,nama,T1,T2,aksi};
@@ -222,30 +223,34 @@ int main() {
 
     displayCookBook(listTree);
 
-    printf("\n---end---\n");
+    printf("\n---end---\n");*/
 
-//    ListMakanan listMakanan = *configMakananP();
-//    char fileL[] = "/home/zidane/kuliah/Semester 3/IF2110 - Algoritma & Struktur Data/BNMO-Tubes-Alstrukdat/adt/config-r.txt";
+    ListMakanan listMakanan = *configMakananP();
+    char fileL[] = "/home/zidane/kuliah/Semester 3/IF2110 - Algoritma & Struktur Data/BNMO-Tubes-Alstrukdat/adt/config-r.txt";
 
-//    PrioQueue inventory;
-//    MakeEmptyQ(&inventory, 12, false);
-   // ListTree listTree = *populateResepFromFile(listMakanan, fileL);
-   // Makanan mi = {37,nama,T1,T2,aksi};
+    PrioQueue inventory;
+    MakeEmptyQ(&inventory, 12, false);
+    ListTree listTree = *populateResepFromFile(listMakanan, fileL);
+     printf("\nx\n");
+    for (int i = 0; i < listTree.sizeEff; ++i) {
+        printf("head: %d ", listTree.list[i].value.makananV.id);
+       traverseTree_Makanan(listTree.list[i]);
+       printf("\n");
+   }
+
     Makanan mi1 = {10,nama,T1,T2,aksi};
     Makanan mi2 = {14,nama,T1,T2,aksi};
     Makanan mi3 = {11,nama,T1,T2,aksi};
 
+    //Enqueue(&inventory, mi);
+    Enqueue(&inventory, mi1);
+    Enqueue(&inventory, mi2);
+    Enqueue(&inventory, mi3);
+    ListMakanan rekomendasi = getRecommendation(listTree, inventory);
 
-
- //   Enqueue(&inventory, mi);
-//    Enqueue(&inventory, mi1);
-//    Enqueue(&inventory, mi2);
-//    Enqueue(&inventory, mi3);
-//    ListMakanan rekomendasi = getRecommendation(listTree, inventory);
-//
-//    for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
-//        printf("%d ", rekomendasi.contents[i].id);
-//    }
+    for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
+        printf("%d ", rekomendasi.contents[i].id);
+    }
 
 
 }
