@@ -19,6 +19,11 @@ typedef struct {
 } listKulkas;
 
 typedef struct {
+    Address T[10];
+    int length;
+} listLeaves;
+
+typedef struct {
     int x;
     int y;
     int w;
@@ -44,21 +49,21 @@ typedef Address BinTree;
 #define RIGHT(p) (p)->right
 #define DOWN(p) (p)->down
 
-void tryFit(BinTree * kulkas, listKulkas * lk, Makanan test, boolean * fit) {
-    BinTree tempTree, root;
+void tryFit(BinTree * kulkas, listKulkas * lk, Makanan test, boolean * fit, listLeaves * ll) {
+    BinTree tempTree;
     listKulkas tempLK;
     int i;
 
     tempTree = copyBinTree(*kulkas);
-    root = tempTree;
+
     tempLK = copyList(*lk);
     insertLK(&tempLK, test);
     *fit = true;
 
     for (i = 0; i < tempLK.length && *fit; i++) {
-        node = findNode(root, tempLK.T[i].w, tempLK.T[i].h);
+        node = findNode(tempTree, tempLK.T[i].w, tempLK.T[i].h);
         if (node != NIL) {
-            splitNode(node, tempLK.T[i].w, tempLK.T[i].h);
+            splitNode(node, tempLK.T[i].w, tempLK.T[i].h, ll);
         } else {
             *fit = false;
         }
@@ -69,6 +74,7 @@ void tryFit(BinTree * kulkas, listKulkas * lk, Makanan test, boolean * fit) {
         *lk = tempLK;
     }
 }
+
 
 Address newNode(ElType nd) {
     Address p;
@@ -90,20 +96,38 @@ void setNodeDesc(nodeDesc * nd, int x, int y, int w, int h, int idx) {
 }
 
 boolean isFit(Address node, int w, int h) {
-    return (w <= INFO(node).w) && (h <= INFO(node).h)
+    return (w <= INFO(node).w) && (h <= INFO(node).h);
 }
 
-Address findNode(Address root, int w, int h) {
-    if (isFit(root,w,h)) {
-        return root;
-    } else if (ROOT(root).usedByIdx != -1) {
-        return findNode(RIGHT(root), w, h) || findNode(DOWN(root), w, h); // benerin nih traversenya
+Address findNode(BinTree tree, int w, int h) {
+    if (isOneElmt(tree)) {
+
     } else {
-        return NIL;
+        findNode(RIGHT(tree));
+        findNode(LEFT(tree));
     }
 }
 
-void splitNode(Address leaf, int w, int h, int idx) {
-    
+void splitNode(Address * leaf, int w, int h, int idx, listLeaves * ll) {
+    nodeDesc n1, n2;
+    Address p1, p2;
+
+    INFO(*leaf).usedByIdx = idx;
+
+    if (INFO(*leaf).h - h != 0) {
+        setNodeDesc(&n1,INFO(*leaf).x, INFO(*leaf).y + h, INFO(*leaf).w,INFO(*leaf).h - h, -1);
+        p1 = newNode(n1);
+        if (p1 != NULL) {
+            RIGHT(*leaf) = p1;
+        }
+    }
+    if (INFO(*leaf).w - w != 0) {
+        setNodeDesc(&n2,INFO(*leaf).x + w, INFO(*leaf).y, INFO(*leaf).w - w, h, -1);
+        p2 = newNode(n2);
+        if (p2 != NULL) {
+            DOWN(*leaf) = p2;
+        }
+    }
 }
+
 #endif
