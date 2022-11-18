@@ -37,7 +37,7 @@ BNMO is CLI (Command Line Interface) Game that we made using c language. This ga
 
 | Nama                           |   NIM    |                                                   Workload management                                                   |
 | ------------------------------ | :------: | :---------------------------------------------------------------------------------------------------------------------: |
-| Chiquita Ahsanunnisa       | 13521129 |                                     ADT Queue, Command Parser, Inisiasi (Splash Screen, Command START, Command EXIT), Notification, Refrigerator, Laporan                                   |
+| Chiquita Ahsanunnisa       | 13521129 |                                     ADT Queue, Command Parser, Inisiasi (Splash Screen, Command START, Command EXIT), Notifikasi, Kulkas, Laporan                                   |
 | Nathania Callista Djuanedi | 13521139 |                                     ADT Sederhana (Time, Point, Makanan, Simulator), Makanan, Mekanisme Waktu, ADT Stack, Fitur UNDO/REDO, Waktu Pengolahan Makanan, Laporan         |
 | Hanif Muhammad Zhafran     | 13521157 |                                     ADT Matriks, Peta, Laporan                                                   |
 | Ferindya Aulia Berlianty   | 13521161 |                                     ADT List Statik, ADT Mesin Karakter dan Mesin Kata, Laporan                  |
