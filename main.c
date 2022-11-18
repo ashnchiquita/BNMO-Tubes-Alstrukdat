@@ -397,7 +397,22 @@ int main() {
                     valid = false;
                 }
             
-            /* HELP */
+            /* RECOMMENDATION */
+            } else if (wordEqual(currentWord, strToWord("RECOMM"))) {
+
+                if (EndWord) {
+                    started = false;
+                } else {
+                    valid = false;
+                }
+
+                ListMakanan rekomendasi = getRecommendation(treeResep, Inventory);
+
+                for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
+                    printf("%d ", rekomendasi.contents[i].id);
+                }
+
+                /* HELP */
             } else if (wordEqual(currentWord, strToWord("HELP"))) {
                 ADVWORD();
                 if (EndWord) {
