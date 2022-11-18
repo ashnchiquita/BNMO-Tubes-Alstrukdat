@@ -15,8 +15,6 @@ BNMO is CLI (Command Line Interface) Game that we made using c language. This ga
 
 1. Clone this repository
 2. If you want to edit the configuration file, it is inside `config/config.txt`
-3. Execute `run.bat` if you're in windows
-4. If you're in UNIX based OS, Execute `run.sh`
 
 ## Features Done
 
@@ -38,16 +36,16 @@ BNMO is CLI (Command Line Interface) Game that we made using c language. This ga
 
 | Nama                           |   NIM    |                                                   Workload management                                                   |
 | ------------------------------ | :------: | :---------------------------------------------------------------------------------------------------------------------: |
-| Chiquita Ahsanunnisa       | 13521129 |                                     ADT Queue, command parser, inisiasi (splash screen, command START, command EXIT), notification, refrigerator, laporan                                   |
-| Nathania Callista Djuanedi | 13521139 |                                     ADT Sederhana (Time, Point, Makanan, Simulator), makanan, time mechanism, ADT Stack, fitur UNDO/REDO, food processing time, laporan         |
-| Hanif Muhammaad Zhafran    | 13521157 |                                     ADT Matriks, peta, laporan                                                   |
-| Ferindya Aulia Berlianty   | 13521161 |                                     ADT List Statik, ADT Mesin Karakter dan Mesin Kata, laporan                  |
-| Zidane Firztullah          | 13521163 |                                     ADT Tree, food recommendation, laporan                                       | 
+| Chiquita Ahsanunnisa       | 13521129 |                                     ADT Queue, Command Parser, Inisiasi (Splash Screen, Command START, Command EXIT), Notification, Refrigerator, Laporan                                   |
+| Nathania Callista Djuanedi | 13521139 |                                     ADT Sederhana (Time, Point, Makanan, Simulator), Makanan, Mekanisme Waktu, ADT Stack, Fitur UNDO/REDO, Waktu Pengolahan Makanan, Laporan         |
+| Hanif Muhammad Zhafran     | 13521157 |                                     ADT Matriks, Peta, Laporan                                                   |
+| Ferindya Aulia Berlianty   | 13521161 |                                     ADT List Statik, ADT Mesin Karakter dan Mesin Kata, Laporan                  |
+| Zidane Firzatullah         | 13521163 |                                     ADT Tree, Rekomendasi Makanan, Laporan                                       | 
 
 ## Program Structure
 
 ```
-|.vscode
+└───.vscode
 │       settings.json
 │
 └───adt
