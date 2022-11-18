@@ -275,3 +275,18 @@ void printKulkas(MatKul mat, listKulkas lk) {
         }
     }
 }
+
+void printTA(treeArr t) {
+    int i;
+    for (i = 0; i < t.length; i++) {
+        printf("%d ", t.T[i].usedByIdx);
+    }
+}
+
+void printLK(listKulkas lk) {
+    int i;
+    for (i = 0; i < lk.length; i++) {
+        printWord(nama(lk.T[i]));
+        printf(", ");
+    }
+}

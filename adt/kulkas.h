@@ -9,7 +9,7 @@
 #define MAXHEIGHT 10
 #define MAXWIDTH 20
 
-#define MAXLK 20 /* pilih 200 karena ukuran kulkas yang dipilih 200 satuan luas */
+#define MAXLK 20
 #define MAXTA 100
 
 typedef struct {
@@ -103,4 +103,7 @@ void matrixKulkas(MatKul * mat, treeArr t, listKulkas lk);
 void printKulkas(MatKul mat, listKulkas lk);
 /* Mendisplay state kulkas */
 
+void printTA(treeArr t);
+
+void printLK(listKulkas lk);
 #endif

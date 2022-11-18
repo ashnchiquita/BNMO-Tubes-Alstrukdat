@@ -92,6 +92,18 @@ void printState(states temp){
     PrintPrioQueue(temp.inventory);
     printf("=====lokasi pemain====\n");
     TulisPOINT(temp.posisiPemain);
+    printf("\n=====list kulkas====\n");
+    printLK(temp.lk);
+    printf("\n=====tree kulkas====\n");
+    printTA(temp.t);
+    printf("\n=====state notif====");
+    printf("\n cmd : ");
+    printWL(temp.sn.command, " ");
+    printf("\n exp : ");
+    printWL(temp.sn.exp, ", ");
+    printf("\n deliv : ");
+    printWL(temp.sn.deliv, ", ");
+    printf("\n");
 }
 
 void printStack(Stack S){

@@ -67,6 +67,6 @@ void addingFood(Makanan temp, PrioQueue *Inventory, ListTree treeResep,WordList 
         deleteAtAdr(Inventory,food,&temp2);
         appendWL(nama(temp2), act);
     }
-    setCommandArgs(sn, * act);
+    setCommandArgs(sn, *act);
     Enqueue(Inventory,temp);
-};
+}
