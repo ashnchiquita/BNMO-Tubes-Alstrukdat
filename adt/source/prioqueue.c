@@ -95,7 +95,7 @@ void Enqueue (PrioQueue * Q, infotype X) {
         found = false;
         for (i =  Head(*Q); i <= Tail(*Q) && !found; i++) {
             if (SortDeliv(*Q)) {
-                compareTime = TGT(delivery(Elmt(*Q, i)), delivery(X));
+                compareTime = TGT(actionTime(Elmt(*Q, i)), actionTime(X));
             } else {
                 compareTime = TGT(expired(Elmt(*Q, i)), expired(X));
             }
@@ -130,7 +130,7 @@ void Dequeue (PrioQueue * Q, infotype * X) {
     id(*X) = id(InfoHead(*Q));
     nama(*X) = nama(InfoHead(*Q));
     expired(*X) = expired(InfoHead(*Q));
-    delivery(*X) = delivery(InfoHead(*Q));
+    actionTime(*X) = actionTime(InfoHead(*Q));
     aksi(*X) = aksi(InfoHead(*Q));
 
     if (CountElmt(*Q) == 1) {
@@ -167,7 +167,7 @@ void PrintPrioQueue (PrioQueue Q) {
             printWord(nama(Elmt(Q, i)));
             printf(" - ");
             if (SortDeliv(Q)) {
-                PrintKalimatDurasi(delivery(Elmt(Q, i)));
+                PrintKalimatDurasi(actionTime(Elmt(Q, i)));
             } else {
                 PrintKalimatDurasi(expired(Elmt(Q, i)));
             }
@@ -250,11 +250,11 @@ void update1Min(PrioQueue *Q) {
     if(!IsEmpty(*Q)) {
         for (i = Head(*Q); i <= Tail(*Q); i++) {
             if (SortDeliv(*Q)) {
-                if (!isZeroTIME(delivery(Elmt(*Q, i)))) {
-                    PrevMenit(&delivery(Elmt(*Q, i)));
+                if (!isZeroTIME(actionTime(Elmt(*Q, i)))) {
+                    PrevMenit(&actionTime(Elmt(*Q, i)));
                 } else {
                     CreateTime (&zeroTime, 0, 0, 0);
-                    delivery(Elmt(*Q, i)) = zeroTime;
+                    actionTime(Elmt(*Q, i)) = zeroTime;
                 }
             } else {
                 if (!isZeroTIME(expired(Elmt(*Q, i)))) {
@@ -298,7 +298,7 @@ void finishDelivery (PrioQueue * delivQ, PrioQueue * inventQ, stateNotif * sn) {
     count = 0;
     prevLength = CountElmt(*delivQ);
     if (!IsEmpty(*delivQ)) {
-        while (count < prevLength && isZeroTIME(delivery(InfoHead(*delivQ)))) {
+        while (count < prevLength && isZeroTIME(actionTime(InfoHead(*delivQ)))) {
             Dequeue(delivQ, &temp);
             Enqueue(inventQ, temp);
             count++;
@@ -390,7 +390,7 @@ void setElmt(PrioQueue * Q, address idx, infotype X) {
     id(Elmt(*Q, idx)) = id(X);
     nama(Elmt(*Q, idx)) = nama(X);
     expired(Elmt(*Q, idx)) = expired(X);
-    delivery(Elmt(*Q, idx)) = delivery(X);
+    actionTime(Elmt(*Q, idx)) = actionTime(X);
     aksi(Elmt(*Q, idx)) = aksi(X);
 }
 
@@ -408,7 +408,7 @@ void deleteAtAdr(PrioQueue *Q, address idx, infotype *X) {
         id(*X) = id(Elmt(*Q, idx));
         nama(*X) = nama(Elmt(*Q, idx));
         expired(*X) = expired(Elmt(*Q, idx));
-        delivery(*X) = delivery(Elmt(*Q, idx));
+        actionTime(*X) = actionTime(Elmt(*Q, idx));
         aksi(*X) = aksi(Elmt(*Q, idx));
 
         for (i = idx + 1; i <= Tail(*Q); i++) {

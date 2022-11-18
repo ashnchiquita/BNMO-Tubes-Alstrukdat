@@ -21,6 +21,8 @@ void notifikasiGoreng(Makanan m);
 
 void notifikasiGagal(ListMakanan m);
 
-void handleFoodAction(ListTree treeResep, PrioQueue * Inventory, boolean *command,Makanan temp, WordList * act, stateNotif * sn);
+void handleFoodAction(ListTree treeResep, PrioQueue * Inventory, boolean *command,Makanan temp);
+
+void addingFood(Makanan temp, PrioQueue *Inventory, ListTree treeResep,WordList *act, stateNotif *sn);
 
 #endif

@@ -17,7 +17,7 @@ void notifikasiPembelian(Makanan m){
     printf(". ");
     printWord(nama(m));
     printf(" akan diantar dalam ");
-    PrintKalimatDurasi(delivery(m));
+    PrintKalimatDurasi(actionTime(m));
     printf("\n");
 }
 
@@ -33,7 +33,7 @@ void notifikasiGagal(ListMakanan m){
         printf("\n");
     }
 }
-void handleFoodAction(ListTree treeResep, PrioQueue * Inventory,boolean *command, Makanan temp, WordList * act, stateNotif * sn){
+void handleFoodAction(ListTree treeResep, PrioQueue * Inventory,boolean *action, Makanan temp){
     Tree TempRecipe = *searchRecipeById(&treeResep,id(temp)); 
 
     /*ListMakanan completed adalah bahan - bahan makanan yang dibutuhkan dalam resep dan dimiliki inventory*/
@@ -44,18 +44,7 @@ void handleFoodAction(ListTree treeResep, PrioQueue * Inventory,boolean *command
 
     /*Jika panjang list missed adalah 0, berarti semua makanan dimiliki, dan aksi menggoreng dapat dilakukan*/
     if(panjangListMakanan(missed) == 0){
-        notifikasiGoreng(temp);
-
-        /*Memasukkan barang yang sudah digoreng ke dalam Inventory*/
-        for(int i = 0; i < panjangListMakanan(completed);i++){
-            Makanan temp;
-            address food = indexOfName(* Inventory,nama(ELMT(completed,i)));
-            deleteAtAdr(Inventory,food,&temp);
-            appendWL(nama(temp), act);
-        }
-        setCommandArgs(sn, * act);
-        Enqueue(Inventory,temp);
-        *command = true;
+        *action = true;
     }else{
         /*Jika panjang list makanan tidak sama dengan 0, berarti akan ada minimal satu item yang tidak dimiliki inventory*/
         printf("\nGagal membuat ");
@@ -66,3 +55,18 @@ void handleFoodAction(ListTree treeResep, PrioQueue * Inventory,boolean *command
         notifikasiGagal(missed);
     }
 }
+
+void addingFood(Makanan temp, PrioQueue *Inventory, ListTree treeResep,WordList *act, stateNotif *sn){
+    Tree TempRecipe = *searchRecipeById(&treeResep,id(temp)); 
+    /*ListMakanan completed adalah bahan - bahan makanan yang dibutuhkan dalam resep dan dimiliki inventory*/
+    ListMakanan completed = getMakanan(TempRecipe,* Inventory);
+    notifikasiGoreng(temp);
+    for(int i = 0; i < panjangListMakanan(completed);i++){
+        Makanan temp2;
+        address food = indexOfName(* Inventory,nama(ELMT(completed,i)));
+        deleteAtAdr(Inventory,food,&temp2);
+        appendWL(nama(temp2), act);
+    }
+    setCommandArgs(sn, * act);
+    Enqueue(Inventory,temp);
+};

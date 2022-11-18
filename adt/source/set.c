@@ -1,4 +1,4 @@
-#include "set.h"
+#include "../set.h"
 
 Tree *addToSet(Set *set, Object value) {
     // search if a value exists in set
