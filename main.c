@@ -1,9 +1,9 @@
-#include "./adt/config.h"
-#include "./adt/commands.h"
-#include "./adt/simulator.h"
-#include "./adt/time.h"
-#include "./adt/point.h"
-#include "./adt/prioqueue.h"
+#include "adt/config.h"
+#include "adt/commands.h"
+#include "adt/simulator.h"
+#include "adt/time.h"
+#include "adt/point.h"
+#include "adt/prioqueue.h"
 #include "adt/tree.h"
 #include "adt/stack.h"
 #include "adt/notif.h"
@@ -295,9 +295,8 @@ int main() {
             } else if (wordEqual(currentWord, strToWord("COOKBOOK"))) {
                 ADVWORD();
                 if (EndWord) {
-
-                    /* CODE COOKBOOK */
-
+                    displayCookBook(treeResep);
+                    printf("\n");
                 } else {
                     valid = false;
                 }
@@ -434,7 +433,6 @@ int main() {
                     printf("\n|  INSERT KULKAS : Memasukkan makanan dari inventoy ke kulkas                      |");
                     printf("\n|  TAKE KULKAS   : Mengambil makanan dari kulkas dan menaruhnya ke inventory       |");
                     printf("\n|  REKOMENDASI   : Menampilkan rekomendasi makanan yang dapat dibuat               |");
-                    printf("\n|  AUTO BNMO     : Memainkan BNMO secara otomatis                                  |");
                     printf("\n|  EXIT          : Keluar dari game                                                |");
                     printf("\n|                                                                                  |");
                     printf("\n------------------------------------------------------------------------------------\n\n");
@@ -551,7 +549,7 @@ int main() {
                                 STARTWORD();
                                 nomor = wordToInt(currentWord);
 
-                                while((!((nomor - 1) >= 1 && (nomor - 1) <= lk.length)) && nomor != 0){
+                                while((!(nomor >= 1 && nomor <= lk.length)) && nomor != 0){
                                     printf("\nNomor makanan tidak terdapat, silakan masukan input lagi\n");
                                     printf("\nMasukkan 0 untuk kembali ke menu.");
                                     printf("\nMasukkan nomor makanan di kulkas: ");
@@ -625,7 +623,6 @@ int main() {
 
             states tempState = {waktuGame,pemain.lokasi,tempQueue1,tempQueue2,tempLK,tempKulkas,sn};
             PushStack(&state,tempState);
-            printState(tempState);
         }else if(wait){
             /*Mengcopy Delivery dan Inventory ke temp1 dan temp2*/
             copyPrioQueue(Delivery,&tempQueue1);
@@ -671,7 +668,6 @@ int main() {
             states tempState = {waktuGame,pemain.lokasi,tempQueue1,tempQueue2, tempLK, tempKulkas, sn};
             /* Push States ke dalam stack */
             PushStack(&state,tempState);
-            printState(tempState);
         }   
         /*Selalu menampilkan peta, lokasi pemain, waktu game, dan notifikasi ke layaar*/
         if (started) {
@@ -683,15 +679,6 @@ int main() {
                 createWL(&act);
             }
         }
-        // printf("\nSTATES \n");
-        // if (!IsEmptyStack(state)) {
-        //     printState(InfoTopStack(state));
-        // }
-        // printf("\nREDO \n");
-        // if (!IsEmptyStack(redo)) {
-        //     printState(InfoTopStack(redo));
-        // }
-        //printStack(state);
     }
 
     /* Splash Screen Outro */
