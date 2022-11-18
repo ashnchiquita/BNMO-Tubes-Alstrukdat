@@ -15,6 +15,7 @@ BNMO is CLI (Command Line Interface) Game that we made using c language. This ga
 
 1. Clone this repository
 2. If you want to edit the configuration file, it is inside `config/config.txt`
+3. If you ran the program, it is inside `main.c`
 
 ## Features Done
 
@@ -45,6 +46,10 @@ BNMO is CLI (Command Line Interface) Game that we made using c language. This ga
 ## Program Structure
 
 ```
+|   README.md
+|   main
+|   main.c
+|
 └───.vscode
 │       settings.json
 │
