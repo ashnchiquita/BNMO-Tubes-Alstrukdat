@@ -132,6 +132,8 @@ void Dequeue (PrioQueue * Q, infotype * X) {
     expired(*X) = expired(InfoHead(*Q));
     actionTime(*X) = actionTime(InfoHead(*Q));
     aksi(*X) = aksi(InfoHead(*Q));
+    w(*X) = w(InfoHead(*Q));
+    h(*X) = h(InfoHead(*Q));
 
     if (CountElmt(*Q) == 1) {
         Head(*Q) = Nil;
@@ -392,6 +394,8 @@ void setElmt(PrioQueue * Q, address idx, infotype X) {
     expired(Elmt(*Q, idx)) = expired(X);
     actionTime(Elmt(*Q, idx)) = actionTime(X);
     aksi(Elmt(*Q, idx)) = aksi(X);
+    w(Elmt(*Q, idx)) = w(X);
+    h(Elmt(*Q, idx)) = h(X);
 }
 
 /* Delete */
@@ -410,6 +414,8 @@ void deleteAtAdr(PrioQueue *Q, address idx, infotype *X) {
         expired(*X) = expired(Elmt(*Q, idx));
         actionTime(*X) = actionTime(Elmt(*Q, idx));
         aksi(*X) = aksi(Elmt(*Q, idx));
+        w(*X) = w(Elmt(*Q, idx));
+        h(*X) = h(Elmt(*Q, idx));
 
         for (i = idx + 1; i <= Tail(*Q); i++) {
             setElmt(Q, i - 1, Elmt(*Q, i));
