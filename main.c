@@ -432,7 +432,7 @@ int main() {
                     printf("\n|  KULKAS        : Menampilkan makanan di kulkas                                   |");
                     printf("\n|  INSERT KULKAS : Memasukkan makanan dari inventoy ke kulkas                      |");
                     printf("\n|  TAKE KULKAS   : Mengambil makanan dari kulkas dan menaruhnya ke inventory       |");
-                    printf("\n|  REKOMENDASI   : Menampilkan rekomendasi makanan yang dapat dibuat               |");
+                    printf("\n|  RECOMM        : Menampilkan rekomendasi makanan yang dapat dibuat               |");
                     printf("\n|  EXIT          : Keluar dari game                                                |");
                     printf("\n|                                                                                  |");
                     printf("\n------------------------------------------------------------------------------------\n\n");
@@ -477,7 +477,18 @@ int main() {
                         valid = false;
                     }
                 }
+            /* RECOMMENDATION */
+            } else if (wordEqual(currentWord, strToWord("RECOMM"))) {
+               ADVWORD();
+                if (EndWord) {
+                    ListMakanan rekomendasi = getRecommendation(treeResep, Inventory);
 
+                    for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
+                        printf("%d ", rekomendasi.contents[i].id);
+                    }
+                } else {
+                    valid = false;
+                }
             } else if (wordEqual(currentWord, strToWord("INSERT"))) {
                 appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
@@ -562,6 +573,7 @@ int main() {
                                 
                                     if (success) {
                                         printf("Makanan berhasil dihapus dari kulkas.\n");
+                                        Enqueue(&Inventory,food);
                                         appendWL(nama(food), &act);
                                         command = true;
                                 
