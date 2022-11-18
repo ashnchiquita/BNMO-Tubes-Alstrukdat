@@ -39,14 +39,10 @@ BNMO is CLI (Command Line Interface) Game that we made using c language. This ga
 | Nama                           |   NIM    |                                                   Workload management                                                   |
 | ------------------------------ | :------: | :---------------------------------------------------------------------------------------------------------------------: |
 | Chiquita Ahsanunnisa       | 13521129 |                                     ADT Queue, command parser, inisiasi (splash screen, command START, command EXIT), notification, refrigerator, laporan                                   |
-| Nathania Callista Djuanedi | 13521139 |                                     ADT Sederhana (Time, Point, Makanan, Simulator), makanan, time mechanism, ADT Stack, fitur UNDO/REDO, food processing time, laporan         
-|
-| Hanif Muhammaad Zhafran    | 13521157 | 
-ADT Matriks, peta, laporan
-|
-| Ferindya Aulia Berlianty   | 13521161 |                                     ADT List Statik, ADT Mesin Karakter dan Mesin Kata, laporan                    |
-| Zidane Firztullah          | 13521163 |                                     ADT Tree, food recommendation, laporan
-| 
+| Nathania Callista Djuanedi | 13521139 |                                     ADT Sederhana (Time, Point, Makanan, Simulator), makanan, time mechanism, ADT Stack, fitur UNDO/REDO, food processing time, laporan         |
+| Hanif Muhammaad Zhafran    | 13521157 |                                     ADT Matriks, peta, laporan                                                   |
+| Ferindya Aulia Berlianty   | 13521161 |                                     ADT List Statik, ADT Mesin Karakter dan Mesin Kata, laporan                  |
+| Zidane Firztullah          | 13521163 |                                     ADT Tree, food recommendation, laporan                                       | 
 
 ## Program Structure
 
@@ -96,22 +92,21 @@ ADT Matriks, peta, laporan
     |       treedriver.c
     │
     ├───source
-    │       charmachine.c
-    |       commands.c
-    |       config.c
-    |       kulkas.c
-    |       liststatik.c
-    |       makanan.c
-    |       matrix.c
-    |       notif.c
-    |       point.c
-    |       prioqueue.c
-    |       set.c
-    |       simulator.c
-    |       stack.c
-    |       time.c
-    |       tree.c
-    |       tree_ext.c
-    |       wordmachine.c
-    │
+            charmachine.c
+            commands.c
+            config.c
+            kulkas.c
+            liststatik.c
+            makanan.c
+            matrix.c
+            notif.c
+            point.c
+            prioqueue.c
+            set.c
+            simulator.c
+            stack.c
+            time.c
+            tree.c
+            tree_ext.c
+            wordmachine.c
     ```
