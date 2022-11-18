@@ -62,6 +62,18 @@ ListMakanan configMakanan(){
         ADVWORD();
         Word aksi;
         aksi = CopyPaste(currentWord);
+        ADVNEWLINE();
+
+        // Mendapatkan width makanan 
+        ADVWORD();
+        int width;
+        width = wordToInt(currentWord);
+        ADVNEWLINE();
+
+        // Mendapatkan height makanan 
+        ADVWORD();
+        int height;
+        height = wordToInt(currentWord);
 
         /*Jika sudah berada pada MAKANAN terakhir dalam list, gunakan ADVWORD
         agar MARK terbaca dan EndWord bernilai True*/ 
@@ -74,7 +86,7 @@ ListMakanan configMakanan(){
         }
 
         // Simpan data - data di atas dalam variable MAKANAN mTemp
-        Makanan mTemp = {id,nama,expired,delivery,aksi};
+        Makanan mTemp = {id,nama,expired,delivery,aksi,width,height};
         // Masukkan mTemp ke dalam ListMakanan
         addMakanan(&l,mTemp);
         i++;
@@ -143,6 +155,18 @@ ListMakanan *configMakananP(){
         ADVWORD();
         Word aksi;
         aksi = CopyPaste(currentWord);
+        ADVNEWLINE();
+
+        // Mendapatkan width makanan 
+        ADVWORD();
+        int width;
+        width = wordToInt(currentWord);
+        ADVNEWLINE();
+
+        // Mendapatkan height makanan 
+        ADVWORD();
+        int height;
+        height = wordToInt(currentWord);
 
         /*Jika sudah berada pada MAKANAN terakhir dalam list, gunakan ADVWORD
         agar MARK terbaca dan EndWord bernilai True*/
@@ -155,7 +179,7 @@ ListMakanan *configMakananP(){
         }
 
         // Simpan data - data di atas dalam variable MAKANAN mTemp
-        Makanan mTemp = {id,nama,expired,delivery,aksi};
+        Makanan mTemp = {id,nama,expired,delivery,aksi, width, height};
         // Masukkan mTemp ke dalam ListMakanan
         addMakanan(l,mTemp);
         i++;

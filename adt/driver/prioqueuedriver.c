@@ -2,6 +2,7 @@
 #include "../makanan.h"
 #include "../time.h"
 #include "../wordmachine.h"
+#include "../notif.h"
 #include <stdio.h>
 
 int main () {
@@ -11,9 +12,11 @@ int main () {
     boolean working;
     Word nama;
     TIME exp, deliv;
+    stateNotif sn;
 
     MakeEmptyQ(&delivQ, 5, true);
     MakeEmptyQ(&inventQ, 5, false);
+    createEmptySN(&sn);
 
     working = true;
 
@@ -47,14 +50,14 @@ int main () {
             menit = wordToInt(currentWord);
             CreateTime(&expired(food), hari, jam, menit);
 
-            printf("Waktu delivery (<hari> <jam> <menit>): ");
+            printf("Waktu aksi (<hari> <jam> <menit>): ");
             STARTWORD();
             hari = wordToInt(currentWord);
             ADVWORD();
             jam = wordToInt(currentWord);
             ADVWORD();
             menit = wordToInt(currentWord);
-            CreateTime(&delivery(food), hari, jam, menit);
+            CreateTime(&actionTime(food), hari, jam, menit);
 
             printf("Aksi : "); 
             STARTWORD();
@@ -73,7 +76,7 @@ int main () {
             STARTWORD();
             N = wordToInt(currentWord);
 
-            updateAllQueue(&delivQ, &inventQ, N);
+            updateAllQueue(&delivQ, &inventQ, N, &sn);
             printf("Update berhasil.\n");
         } else if (command == 3) {
             printf("\nNama makanan : "); 
@@ -94,8 +97,8 @@ int main () {
                 TulisTIME(expired(food));
                 printf("\n");
             
-                printf("Waktu delivery : ");
-                TulisTIME(delivery(food));
+                printf("Waktu aksi : ");
+                TulisTIME(actionTime(food));
                 printf("\n");
             
                 printf("Aksi : "); 

@@ -47,7 +47,7 @@ void PopStack(Stack * S, states* X){
 /* Menghapus X dari Stack S. */
 /* I.S. S  tidak mungkin kosong */
 /* F.S. X adalah nilai elemen TOP yang lama, TOP berkurang 1 */
-void UNDO(Stack *stackCommand, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory,  stateNotif * sn){
+void UNDO(Stack *stackCommand, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory,listKulkas * lk, treeArr *t, stateNotif * sn){
     states top;
     states temp;
     if(stackLength(*stackCommand) > 1){
@@ -58,12 +58,14 @@ void UNDO(Stack *stackCommand, Stack *redo, TIME *waktuMain, POINT *lokasi, Prio
         *lokasi = InfoTopStack(*stackCommand).posisiPemain;
         *delivery = InfoTopStack(*stackCommand).delivery;
         *inventory = InfoTopStack(*stackCommand).inventory;
+        *lk = InfoTopStack(*stackCommand).lk;
+        *t =  InfoTopStack(*stackCommand).t;
     }else{
         printf("BNMO sudah berada pada keadaan semula, tidak bisa UNDO!\n");
     }
     
 };
-void REDO(Stack *stackCommand, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory, stateNotif * sn){
+void REDO(Stack *stackCommand, Stack *redo, TIME *waktuMain, POINT *lokasi, PrioQueue *delivery, PrioQueue *inventory,listKulkas * lk, treeArr *t, stateNotif * sn){
     states top; 
     states temp;
     
@@ -74,6 +76,8 @@ void REDO(Stack *stackCommand, Stack *redo, TIME *waktuMain, POINT *lokasi, Prio
         *lokasi = top.posisiPemain;
         *delivery = top.delivery;
         *inventory = top.inventory;
+        *lk = top.lk;
+        *t = top.t;
         *sn = top.sn;
     }else{
         printf("Tidak ada command yang bisa di-redo!\n");

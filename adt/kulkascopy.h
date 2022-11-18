@@ -6,11 +6,11 @@
 #include "wordmachine.h"
 #include "time.h"
 
-#define MAXHEIGHT 10
-#define MAXWIDTH 20
+#define MAXHEIGHT 50
+#define MAXWIDTH 50
 
-#define MAXLK 20 /* pilih 200 karena ukuran kulkas yang dipilih 200 satuan luas */
-#define MAXTA 100
+#define MAXLK 200 /* pilih 200 karena ukuran kulkas yang dipilih 200 satuan luas */
+#define MAXTA 256
 
 typedef struct {
     Makanan T[MAXLK];

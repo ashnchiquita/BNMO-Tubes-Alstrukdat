@@ -4,6 +4,7 @@
         "notif.h": "c",
         "wordmachine.h": "c",
         "matrix.h": "c",
-        "ios": "cpp"
+        "ios": "cpp",
+        "stdio.h": "c"
     }
 }
