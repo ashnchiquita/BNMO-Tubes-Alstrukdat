@@ -1,9 +1,8 @@
 #include <stdio.h>
-#include "../queue.h"
 #include "../boolean.h"
-#include "makanan.h"
-#include "config.h"
-#include "tree.h"
+#include "../makanan.h"
+#include "../config.h"
+#include "../tree.h"
 
 void copyArr(const char arrS[], char arrD[], int len) {
     for (int i = 0; i < len; ++i) {
@@ -11,128 +10,136 @@ void copyArr(const char arrS[], char arrD[], int len) {
     }
 }
 
-void path_finding() {
-    int map[10][10] = {{'S', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-                       {'#', '#', '#', '#', 'T', '#', '#', 'X', '#', '#'},
-                       {'#', 'M', '#', '#', '#', '#', '#', 'X', '#', '#'},
-                       {'#', '#', '#', '#', '#', '#', '#', 'X', '#', '#'},
-                       {'#', '#', '#', '#', 'X', 'X', 'X', 'X', '#', '#'},
-                       {'#', 'X', '#', '#', '#', '#', '#', '#', '#', '#'},
-                       {'#', 'X', '#', '#', '#', '#', '#', '#', 'C', '#'},
-                       {'#', 'X', 'X', 'X', '#', '#', 'F', '#', '#', '#'},
-                       {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-                       {'#', '#', '#', '#', '#', '#', 'B', '#', '#', '#'}};
-
-    boolean visited[10][10];
-    for (int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 10; ++j) {
-            if (map[i][j] == 'X')
-                visited[i][j] = true;
-            else
-                visited[i][j] = false;
-        }
-    }
-
-    Thing source;
-    source.row = 0;
-    source.col = 0;
-    source.aNum = 0;
-
-    Queue q;
-    CreateQueue(&q);
-    enqueue(&q, source);
-    int i = 0;
-    char flow[] = {'F', 'C', 'T'};
-    char firstPath[100];
-
-    while (!isEmptyQNP(q)) {
-        Thing cur;
-        dequeue(&q, &cur);
-        if (i == 3)
-            break;
-
-        // TODO: csp for scheduling
-        if (map[cur.row][cur.col] == flow[i]) {
-            printf("path found! path: ");
-
-            if (i == 0) {
-                copyArr(cur.acts, firstPath, cur.aNum);
-            }
-
-            for (int i = 0; i < 10; ++i) {
-                for (int j = 0; j < 10; ++j) {
-                    if (map[i][j] == 'X')
-                        visited[i][j] = true;
-                    else
-                        visited[i][j] = false;
-                }
-            }
-
-            printf("\n");
-            CreateQueue(&q);
-            Thing can;
-            can.aNum = cur.aNum;
-            can.row = can.row;
-            can.col = can.col;
-
-            enqueue(&q, can);
-
-            ++i;
-        }
-
-        if (cur.row - 1 >= 0 && visited[cur.row - 1][cur.col] == false) {
-            Thing new;
-            new.row = cur.row - 1;
-            new.col = cur.col;
-            new.aNum = cur.aNum;
-            copyArr(cur.acts, new.acts, cur.aNum);
-            new.acts[new.aNum] = 'u';
-            new.aNum += 1;
-            enqueue(&q, new);
-            visited[cur.row - 1][cur.col] = true;
-        }
-
-        if (cur.col - 1 >= 0 && visited[cur.row][cur.col - 1] == false) {
-            Thing new;
-            new.row = cur.row;
-            new.col = cur.col - 1;
-            new.aNum = cur.aNum;
-            copyArr(cur.acts, new.acts, cur.aNum);
-            new.acts[new.aNum] = 'l';
-            new.aNum += 1;
-            enqueue(&q, new);
-            visited[cur.row][cur.col - 1] = true;
-        }
-
-        if (cur.row + 1 < 10 && visited[cur.row + 1][cur.col] == false) {
-            Thing new;
-            new.row = cur.row + 1;
-            new.col = cur.col;
-            new.aNum = cur.aNum;
-            copyArr(cur.acts, new.acts, cur.aNum);
-            new.acts[new.aNum] = 'd';
-            new.aNum += 1;
-            enqueue(&q, new);
-            visited[cur.row + 1][cur.col] = true;
-        }
-
-        if (cur.col + 1 < 10 && visited[cur.row][cur.col + 1] == false) {
-            Thing new;
-            new.row = cur.row;
-            new.col = cur.col + 1;
-            new.aNum = cur.aNum;
-            copyArr(cur.acts, new.acts, cur.aNum);
-            new.acts[new.aNum] = 'r';
-            new.aNum += 1;
-            enqueue(&q, new);
-            visited[cur.row][cur.col + 1] = true;
-        }
-    }
-}
+//void path_finding() {
+//    int map[10][10] = {{'S', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
+//                       {'#', '#', '#', '#', 'T', '#', '#', 'X', '#', '#'},
+//                       {'#', 'M', '#', '#', '#', '#', '#', 'X', '#', '#'},
+//                       {'#', '#', '#', '#', '#', '#', '#', 'X', '#', '#'},
+//                       {'#', '#', '#', '#', 'X', 'X', 'X', 'X', '#', '#'},
+//                       {'#', 'X', '#', '#', '#', '#', '#', '#', '#', '#'},
+//                       {'#', 'X', '#', '#', '#', '#', '#', '#', 'C', '#'},
+//                       {'#', 'X', 'X', 'X', '#', '#', 'F', '#', '#', '#'},
+//                       {'#', '#', '#', '#', '#', '#', '#', '#', '#', '#'},
+//                       {'#', '#', '#', '#', '#', '#', 'B', '#', '#', '#'}};
+//
+//    boolean visited[10][10];
+//    for (int i = 0; i < 10; ++i) {
+//        for (int j = 0; j < 10; ++j) {
+//            if (map[i][j] == 'X')
+//                visited[i][j] = true;
+//            else
+//                visited[i][j] = false;
+//        }
+//    }
+//
+//    Thing source;
+//    source.row = 0;
+//    source.col = 0;
+//    source.aNum = 0;
+//
+//    Queue q;
+//    CreateQueue(&q);
+//    enqueue(&q, source);
+//    int i = 0;
+//    char flow[] = {'F', 'C', 'T'};
+//    char firstPath[100];
+//
+//    while (!isEmptyQNP(q)) {
+//        Thing cur;
+//        dequeue(&q, &cur);
+//        if (i == 3)
+//            break;
+//
+//        // TODO: csp for scheduling
+//        if (map[cur.row][cur.col] == flow[i]) {
+//            printf("path found! path: ");
+//
+//            if (i == 0) {
+//                copyArr(cur.acts, firstPath, cur.aNum);
+//            }
+//
+//            for (int i = 0; i < 10; ++i) {
+//                for (int j = 0; j < 10; ++j) {
+//                    if (map[i][j] == 'X')
+//                        visited[i][j] = true;
+//                    else
+//                        visited[i][j] = false;
+//                }
+//            }
+//
+//            printf("\n");
+//            CreateQueue(&q);
+//            Thing can;
+//            can.aNum = cur.aNum;
+//            can.row = can.row;
+//            can.col = can.col;
+//
+//            enqueue(&q, can);
+//
+//            ++i;
+//        }
+//
+//        if (cur.row - 1 >= 0 && visited[cur.row - 1][cur.col] == false) {
+//            Thing new;
+//            new.row = cur.row - 1;
+//            new.col = cur.col;
+//            new.aNum = cur.aNum;
+//            copyArr(cur.acts, new.acts, cur.aNum);
+//            new.acts[new.aNum] = 'u';
+//            new.aNum += 1;
+//            enqueue(&q, new);
+//            visited[cur.row - 1][cur.col] = true;
+//        }
+//
+//        if (cur.col - 1 >= 0 && visited[cur.row][cur.col - 1] == false) {
+//            Thing new;
+//            new.row = cur.row;
+//            new.col = cur.col - 1;
+//            new.aNum = cur.aNum;
+//            copyArr(cur.acts, new.acts, cur.aNum);
+//            new.acts[new.aNum] = 'l';
+//            new.aNum += 1;
+//            enqueue(&q, new);
+//            visited[cur.row][cur.col - 1] = true;
+//        }
+//
+//        if (cur.row + 1 < 10 && visited[cur.row + 1][cur.col] == false) {
+//            Thing new;
+//            new.row = cur.row + 1;
+//            new.col = cur.col;
+//            new.aNum = cur.aNum;
+//            copyArr(cur.acts, new.acts, cur.aNum);
+//            new.acts[new.aNum] = 'd';
+//            new.aNum += 1;
+//            enqueue(&q, new);
+//            visited[cur.row + 1][cur.col] = true;
+//        }
+//
+//        if (cur.col + 1 < 10 && visited[cur.row][cur.col + 1] == false) {
+//            Thing new;
+//            new.row = cur.row;
+//            new.col = cur.col + 1;
+//            new.aNum = cur.aNum;
+//            copyArr(cur.acts, new.acts, cur.aNum);
+//            new.acts[new.aNum] = 'r';
+//            new.aNum += 1;
+//            enqueue(&q, new);
+//            visited[cur.row][cur.col + 1] = true;
+//        }
+//    }
+//}
 
 void populateTest() {
     printf("---populate from file testing---\n");
-    ListMakanan listMakanan = *configMakananP();
+    ListMakanan *temp = configMakananP(), listMakanan;
+
+    if (temp == NULL) {
+        printf("POPULATE: red\n");
+        return;
+    }
+
+    listMakanan = *temp;
+    printf("dsa");
     char fileL[] = "/home/zidane/kuliah/Semester 3/IF2110 - Algoritma & Struktur Data/BNMO-Tubes-Alstrukdat/adt/config-r.txt";
     ListTree listTree = *populateResepFromFile(listMakanan, fileL);
 
