@@ -1,39 +1,49 @@
-# BNMO
+# BNMO Cooking Game Simulator
 
-Tugas Besar Alstrukdat IF2110
+### Tugas Besar IF2110 Algoritma dan Struktur Data 2022/2023
+### Created by Group H of K2 IF'21
 
+## About BNMO Cooking Game Simulator
 BNMO is a robot game owned by Indra and Doni. Therefore, Indra asked for help from BNMO and Doni to help prepare this special dinner. However, there is a problem. BNMO doesn't know how to cook and Doni can't help with the preparations because of something else. BNMO cannot learn from youcub videos because BNMO is a computer so the easiest thing to do is to make a simulation program for BNMO to emulate. Therefore, Doni asks for your help to develop this simulation program.
 
-BNMO is CLI (Command Line Interface) Game that we made using c language. This game includes a lot of data structure and also Abstract Data Types that we made ourself. Some of them are Stack, Queue, Linked list, and many more. The purpose of the game is to food cooking simulation from raw ingredients to dish.
+BNMO is CLI (Command Line Interface) Game that we made using C language. This game includes a lot of data structure and also Abstract Data Types that we made ourself. Some of them are Stack, Priority Queue, Tree, and many more. The purpose of the game is to food cooking simulation from raw ingredients to dish.
 
 ## Setup
 
-- If you're in windows based, install GNU Compiler (GCC) and set the PATH (Because UNIX already have the gcc installed by the first place).
-- If you're in UNIX based just follow the Usage instruction.
+- If you use Windows-based OS, you must install GNU Compiler (GCC) and set the PATH.
+- If you use UNIX-based OS, you can compile the program directly (see instructions below).
 
-## Usage
+## How To Compile Program?
 
 1. Clone this repository
 2. If you want to edit the configuration file, it is inside `config/config.txt`
-3. If you ran the program, it is inside `main.c`
+3. If you want to compile this program, type this inside your terminal `gcc main.c ./adt/source/makanan.c ./adt/source/charmachine.c ./adt/source/wordmachine.c ./adt/source/time.c ./adt/source/config.c ./adt/source/commands.c ./adt/source/simulator.c ./adt/source/point.c ./adt/source/prioqueue.c ./adt/source/tree.c ./adt/source/tree_ext.c ./adt/source/matrix.c ./adt/source/stack.c ./adt/source/notif.c ./adt/source/set.c ./adt/source/kulkas.c  -o driver -lm`
 
-## Features Done
+## How To Run Program?
+After compiling, you can run the program by running the executable file. Type `./driver` inside your terminal and have fun playing BNMO Cooking Game Simulator!
 
-- Main menu
-- Initiation
+## Finished Features
+
+- Initiation (splash screen, START and EXIT command, all txt files configuration)
 - Simulator
 - Food
 - Recipe
 - Inventory
-- Ordering groceries and Delivery
-- Food processing
-- Time mechanism
-- Command includes (UNDO, REDO, CATALOG, COOKBOOK)
-- Validation and Error Handling
+- Command to order food and Delivery
+- Map
+- Food Processing
+- Time Mechanism
+- Others: UNDO, REDO, CATALOG, COOKBOOK, HELP
+- Command Parser, Validation, and Error Handling
 - Notification
-- All the bonus includes refrigerator, food processing time, and food recommendation.
+- Bonus: Refrigerator
+- Bonus: Food processing time
+- Bonus: Food recommendation
 
-## Member List:
+## Unfinished Features
+- Bonus: Auto BNMO
+
+## Members List:
 
 | Nama                           |   NIM    |                                                   Workload management                                                   |
 | ------------------------------ | :------: | :---------------------------------------------------------------------------------------------------------------------: |
