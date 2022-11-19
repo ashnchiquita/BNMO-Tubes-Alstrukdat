@@ -689,11 +689,8 @@ int main() {
             copyPrioQueue(Delivery,&tempQueue1);
             copyPrioQueue(Inventory,&tempQueue2);
             
-            addingFood(temp,&tempQueue2,treeResep,&act,&sn);
-
-            /*Mengupdate waktu sesuai menit yang di wait*/
             updateAllQueue(&tempQueue1,&tempQueue2,updateMenit, &sn);
-
+            addingFood(temp,&tempQueue2,treeResep,&act,&sn);
             /*Mengcopy kembali temp1 ke delivery dan temp2 ke inventory*/
             copyPrioQueue(tempQueue1,&Delivery);
             copyPrioQueue(tempQueue2,&Inventory);

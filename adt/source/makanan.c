@@ -8,6 +8,7 @@ void CreateListMakanan(ListMakanan *l){
     }
 }
 
+
 int panjangListMakanan(ListMakanan l){
     int i = IDX_MIN;
     int count = 0;
@@ -116,4 +117,38 @@ void printCommand(ListMakanan l, Word command){
 
 boolean isFound(ListMakanan l, int idx){
     return(idx >= 0 && idx < panjangListMakanan(l));
+}
+
+boolean isIdFound(ListMakanan l, int id){
+    for(int i =0 ; i < panjangListMakanan(l);i++){
+        Makanan temp = ELMT(l,i);
+        if(id(temp) == id){
+            return true;
+        }
+    }
+    return false;
+}
+
+// Makanan getMakanan(ListMakanan l, int id){
+//     for(int i = 0; i < panjangListMakanan(l);i++){
+//         if(ELMT(l,i).id == id){
+//             return ELMT(l,i);
+//         }
+//     }
+// }
+
+void setMakanan(ListMakanan *l, Makanan new, int id ){
+    
+    for(int i = 0; i < panjangListMakanan(*l);i++){
+        if(ELMT(*l,i).id == id){
+            ELMT(*l,i).id = id; 
+            ELMT(*l,i).actionTime = new.actionTime;
+            ELMT(*l,i).aksi = new.aksi;
+            ELMT(*l,i).expired = new.expired;
+            ELMT(*l,i).namaMakanan = new.namaMakanan;
+            ELMT(*l,i).w = new.w;
+            ELMT(*l,i).h = new.h;
+        }
+    }
+    
 }

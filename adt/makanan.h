@@ -57,6 +57,12 @@ int getIdx(ListMakanan l, int id);
 
 void printCommand(ListMakanan l, Word command);
 
-boolean isFound(ListMakanan l, int id);
+boolean isFound(ListMakanan l, int idx);
+
+boolean isIdFound(ListMakanan l, int id);
 /* Mengembalikan nilai true jika ada makanan dengan id yang diminta, di dalam list makanan */
+
+// Makanan getMakanan(ListMakanan l, int id);
+
+void setMakanan(ListMakanan *l, Makanan new, int id);
 #endif

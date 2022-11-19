@@ -5,6 +5,7 @@
 ListMakanan *configMakananP(){
     Word temp1;
     Makanan mTemp;
+    boolean finised = false;
     int HH,JJ,MM;
     STARTFILE("./adt/configMakanan.txt");
     // Mendapatkan banyaknya data makanan yang akan diberikan
@@ -16,7 +17,7 @@ ListMakanan *configMakananP(){
     // Membuat ListMakanan untuk menampung semua makanan yang ada
     ListMakanan *l = malloc(sizeof(ListMakanan));
     CreateListMakanan(l);
-    while(!EndWord){
+    while(!EndWord && !finised){
         // Mendapatkan ID makanan
         ADVWORD();
         int id = wordToInt(currentWord);
@@ -78,7 +79,7 @@ ListMakanan *configMakananP(){
         /*Jika sudah berada pada MAKANAN terakhir dalam list, gunakan ADVWORD
         agar MARK terbaca dan EndWord bernilai True*/
         if(i == n-1){
-            ADVWORD();
+            finised = true;
         }else{
             /*Jika belum pada MAKANAN terakhir di list, gunakan ADVNEWLINE
             agar MARK tidak terbaca dan EndWord bernilai false*/
@@ -87,8 +88,12 @@ ListMakanan *configMakananP(){
 
         // Simpan data - data di atas dalam variable MAKANAN mTemp
         Makanan mTemp = {id,nama,expired,delivery,aksi, width, height};
-        // Masukkan mTemp ke dalam ListMakanan
-        addMakanan(l,mTemp);
+        if(isIdFound(*l,id)){
+            setMakanan(l,mTemp,id);
+        }else{
+            // Masukkan mTemp ke dalam ListMakanan
+            addMakanan(l,mTemp);
+        }
         i++;
     }
     return l;
