@@ -7,6 +7,7 @@
 
 #include "tree.h"
 
+// Multiset
 typedef struct treeSet {
     Tree imnRoot;
 } Set;
