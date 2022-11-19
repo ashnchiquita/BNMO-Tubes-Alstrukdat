@@ -495,15 +495,20 @@ int main() {
                 }
             /* RECOMMENDATION */
             } else if (wordEqual(currentWord, strToWord("RECOMM"))) {
-               ADVWORD();
+                ADVWORD();
                 if (EndWord) {
                     ListMakanan rekomendasi = getRecommendation(treeResep, Inventory);
-
-                    for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
-                        printf("%d. id makanan: %d nama makanan: ", i+1, rekomendasi.contents[i].id);
-                        printWord(rekomendasi.contents[i].namaMakanan);
-                        printf("\n");
+                    if (id(rekomendasi.contents[0]) == -1) {
+                        printf("Tidak ada rekomendasi karena inventory kurang/tidak lengkap.\n");
+                    } else {
+                        printf("Rekomendasi:\n");
+                        for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
+                            printf("%d. ", i + 1);
+                            printWord(nama(rekomendasi.contents[i]));
+                            printf("\n");
+                        }
                     }
+
                 } else {
                     valid = false;
                 }
