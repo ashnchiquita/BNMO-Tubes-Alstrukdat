@@ -316,28 +316,65 @@ boolean searchInventory(PrioQueue inventory, int id) {
     return false;
 }
 
-ListMakanan checkNonExisting(Tree resep, PrioQueue inventory) {
-    int itemC = resep.childrenCount;
+// copied from prioqueue.c
+address indexOfId(PrioQueue Q, int id) {
+/* I.S. Q dan nama terdefinisi */
+/* F.S. Mengembalikan address pertama ditemukannya Makanan dengan nama name, jika tidak ada mengembalikan Nil */
+    /* KAMUS LOKAL */
+    address i;
+    boolean found;
+
+    /* ALGORITMA */
+    i = 0;
+    found = false;
+    while (i <= Tail(Q) && !found) {
+        if (id(Elmt(Q, i)) == id) {
+            found = true;
+        } else {
+            i++;
+        }
+    }
+
+    if (found) {
+        return i;
+    } else {
+        return Nil;
+    }
+}
+
+ListMakanan checkNonExisting(Tree resep, PrioQueue *inventory) {
+    int itemC = resep.childrenCount, index;
     ListMakanan listMakanan;
     CreateListMakanan(&listMakanan);
+    Makanan dump;
 
     for (int i = 0; i < itemC; ++i) {
-        if (searchInventory(inventory, resep.children[i]->value.makananV.id) == false)
-            addMakanan(&listMakanan, resep.children[i]->value.makananV);
+        if (searchInventory(*inventory, resep.children[i]->value.makananV.id) == true) {
+            index = indexOfId(*inventory, resep.children[i]->value.makananV.id);
+            deleteAtAdr(inventory,index,&dump);
+            continue;
+        }
+
+        // else
+        addMakanan(&listMakanan, resep.children[i]->value.makananV);
+
     }
+
     return listMakanan;
 }
 
-
-ListMakanan getRecommendation(ListTree listTree, PrioQueue inventory) {
-    int lenListM = listTree.sizeEff, lenListNa, lenLa = 0;
+ListMakanan getRecommendation(ListTree listTree, PrioQueue inventoryR) {
+    int lenListM = listTree.sizeEff, lenListNa, lenLa = 0, cwd;
     ListMakanan listNa, listRekomendasi;
     Tree *treeNaU, **listAll = malloc(sizeof(Tree*) * listTree.sizeEff);
+    PrioQueue inventory;
     Set set;
 
     CreateListMakanan(&listRekomendasi);
 
     for (int i = 0; i < lenListM; ++i) {
+        cwd = 0;
+        copyPrioQueue(inventoryR, &inventory);
         // 1. check subset direct children from tree,
         set = *getSetFromTree(&listTree.list[i]);
         Object obj;
@@ -346,7 +383,7 @@ ListMakanan getRecommendation(ListTree listTree, PrioQueue inventory) {
         boolean expandedFc = true;
 
         while (expandedFc) {
-            listNa = checkNonExisting(set.imnRoot, inventory);
+            listNa = checkNonExisting(set.imnRoot, &inventory);
             lenListNa = panjangListMakanan(listNa);
 
             if (lenListNa == 0) {
@@ -354,10 +391,13 @@ ListMakanan getRecommendation(ListTree listTree, PrioQueue inventory) {
                 break;
             }
 
-            // add non existing makanan to tree temp
+            if (cwd > 0) {
+                free(listAll[lenLa]);
+            }
+
+            // add non existing makanan to set (union)
             listAll[lenLa] = createTreeNode(NULL, obj);
             set.imnRoot = *listAll[lenLa];
-            ++lenLa;
             expandedFc = false;
 
             // lenListNa > 0 -> not subset
@@ -378,12 +418,14 @@ ListMakanan getRecommendation(ListTree listTree, PrioQueue inventory) {
                 }
 
             }
-
+            ++cwd;
         }
+        DeAlokasi(&inventory);
+        ++lenLa;
 
     }
 
-    // free the heap
+    // free da heap
     for (int i = 0; i < lenLa; ++i) {
 
         free(listAll[i]);
