@@ -1,7 +1,7 @@
 #ifndef BNMO_TUBES_ALSTRUKDAT_UNIONU_H
 #define BNMO_TUBES_ALSTRUKDAT_UNIONU_H
 
-#include "makanan.h"
+#include "./Makanan/makanan.h"
 
 typedef union objectU {
     int intV;

@@ -1,16 +1,18 @@
-#include "adt/config.h"
-#include "adt/commands.h"
-#include "adt/simulator.h"
-#include "adt/time.h"
-#include "adt/point.h"
-#include "adt/prioqueue.h"
-#include "adt/tree.h"
-#include "adt/stack.h"
-#include "adt/notif.h"
-#include "adt/kulkas.h"
-#include "adt/wordmachine.h"
-#include "adt/charmachine.h"
-#include "adt/set.h"
+#include "adt/Config/config.h"
+#include "adt/Commands/commands.h"
+#include "adt/Simulator/simulator.h"
+#include "adt/Makanan/makanan.h"
+#include "adt/Time/time.h"
+#include "adt/Point/point.h"
+#include "adt/Prioqueue/prioqueue.h"
+#include "adt/Tree/tree.h"
+#include "adt/Stack/stack.h"
+#include "adt/Notifikasi/notif.h"
+#include "adt/Kulkas/kulkas.h"
+#include "adt/Wordmachine/wordmachine.h"
+#include "adt/Charmachine/charmachine.h"
+#include "adt/Set/set.h"
+
 
 void tampilanLayar(Simulator pemain, TIME waktuMain, stateNotif sn, int mode){
     printf("\n");
@@ -77,7 +79,7 @@ int main() {
                     listMakanan = *configMakananP();
 
                     peta = configPeta(&lokasiPemain);
-                    treeResep = *populateResepFromFile(listMakanan, "./adt/config-r.txt");
+                    treeResep = *populateResepFromFile(listMakanan, "./adt/Config/config-r.txt");
 
                     /* Membuat list delivery dan list inventory yang menggunakan priority Queue*/
                     MakeEmptyQ(&Delivery,100,true);
