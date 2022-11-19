@@ -9,7 +9,7 @@
 #define MAXHEIGHT 10
 #define MAXWIDTH 20
 
-#define MAXLK 20
+#define MAXLK 50
 #define MAXTA 100
 
 typedef struct {

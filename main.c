@@ -24,7 +24,7 @@ void tampilanLayar(Simulator pemain, TIME waktuMain, stateNotif sn, int mode){
 
 int main() {
     /* KAMUS */
-    boolean started, valid, unredo, command, wait, action, success,buySuccess ;
+    boolean started, valid, unredo, command, wait, action, success, buySuccess ;
     int waitX, waitY, updateMenit, modeNotif, nomor;
     Word moveDirection, nama, pilihan;
     Simulator pemain;
@@ -571,6 +571,8 @@ int main() {
                             if (lk.length == 0) {
                                 printf("Kulkas kosong.\n");
                             } else {
+                                matrixKulkas(&matKulkas, kulkas, lk);
+                                printKulkas(matKulkas, lk);
                                 printf("\nMasukkan 0 untuk kembali ke menu.");
                                 printf("\nMasukkan nomor makanan di kulkas: ");
                                 STARTWORD();
@@ -592,7 +594,7 @@ int main() {
                                         Enqueue(&Inventory,food);
                                         appendWL(nama(food), &act);
                                         command = true;
-                                
+                                        matrixKulkas(&matKulkas, kulkas, lk);
                                     } else {
                                         printf("Makanan gagal dihapus dari kulkas.\n");
                                         insertKulkas(&kulkas, &lk, food, &success);
@@ -624,7 +626,7 @@ int main() {
         }
         
         if (!valid) {
-            printf("Command tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.\n");
+            printf("\nCommand tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.\n");
             untilEndWord();
         }
     
@@ -677,17 +679,15 @@ int main() {
             /* Push States ke dalam stack */
             PushStack(&state,tempState);
 
-
         }else if(action){
             /*Mengcopy Delivery dan Inventory ke temp1 dan temp2*/
             copyPrioQueue(Delivery,&tempQueue1);
             copyPrioQueue(Inventory,&tempQueue2);
             
-           
+            addingFood(temp,&tempQueue2,treeResep,&act,&sn);
+
             /*Mengupdate waktu sesuai menit yang di wait*/
             updateAllQueue(&tempQueue1,&tempQueue2,updateMenit, &sn);
-
-            addingFood(temp,&tempQueue2,treeResep,&act,&sn);
 
             /*Mengcopy kembali temp1 ke delivery dan temp2 ke inventory*/
             copyPrioQueue(tempQueue1,&Delivery);
