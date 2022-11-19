@@ -13,14 +13,14 @@ BNMO is CLI (Command Line Interface) Game that we made using C language. This ga
 - If you use Windows-based OS, you must install GNU Compiler (GCC) and set the PATH.
 - If you use UNIX-based OS, you can compile the program directly (see instructions below).
 
-## How To Compile Program?
+## How To Compile This Program?
 
 1. Clone this repository
 2. If you want to edit the configuration file, it is inside `config/config.txt`
-3. If you want to compile this program on Linux, type this inside your terminal `gcc main.c ./adt/Wordmachine/wordmachine.c ./adt/Charmachine/charmachine.c ./adt/Time/time.c ./adt/Point/point.c ./adt/Config/config.c ./adt/Prioqueue/prioqueue.c ./adt/Stack/stack.c ./adt/Notifikasi/notif.c ./adt/Commands/commands.c ./adt/Simulator/simulator.c ./adt/Matrix/matrix.c ./adt/Makanan/makanan.c ./adt/Tree/tree.c ./adt/Kulkas/kulkas.c ./adt/Tree/tree_ext.c ./adt/Set/set.c  -o driver -lm`
+3. If you want to compile this program on Linux, type this inside your terminal `gcc main.c ./adt/Wordmachine/wordmachine.c ./adt/Charmachine/charmachine.c ./adt/Time/time.c ./adt/Point/point.c ./adt/Config/config.c ./adt/Prioqueue/prioqueue.c ./adt/Stack/stack.c ./adt/Notifikasi/notif.c ./adt/Commands/commands.c ./adt/Simulator/simulator.c ./adt/Matrix/matrix.c ./adt/Makanan/makanan.c ./adt/Tree/tree.c ./adt/Kulkas/kulkas.c ./adt/Tree/tree_ext.c ./adt/Set/set.c  -o main -lm`
 
-## How To Run Program?
-After compiling, you can run the program by running the executable file. Type `./driver` inside your terminal and have fun playing BNMO Cooking Game Simulator!
+## How To Run This Program?
+After compiling, you can run the program by running the executable file. Type `./main` inside your terminal and have fun playing BNMO Cooking Game Simulator!
 
 ## Finished Features
 
@@ -43,7 +43,7 @@ After compiling, you can run the program by running the executable file. Type `.
 ## Unfinished Features
 - Bonus: Auto BNMO
 
-## Members List:
+## Members List and Workload Management
 
 | Nama                           |   NIM    |                                                   Workload management                                                   |
 | ------------------------------ | :------: | :---------------------------------------------------------------------------------------------------------------------: |
@@ -53,12 +53,18 @@ After compiling, you can run the program by running the executable file. Type `.
 | Ferindya Aulia Berlianty   | 13521161 |                                     ADT List Statik, ADT Mesin Karakter dan Mesin Kata, Laporan                  |
 | Zidane Firzatullah         | 13521163 |                                     ADT Tree, Rekomendasi Makanan, Laporan                                       | 
 
-## Program Structure
+## Folder Structure
 
 ```
 |   README.md
 |   main
 |   main.c
+|
+└───doc
+|       Form_Asistensi.pdf
+|       IF2110-TB-H-2.pdf 
+|       Notulensi_Rapat.pdf 
+|       Progress_Milestone.pdf 
 |
 └───.vscode
 │       settings.json
