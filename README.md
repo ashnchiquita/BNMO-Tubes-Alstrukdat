@@ -16,7 +16,7 @@ BNMO is CLI (Command Line Interface) Game that we made using C language. This ga
 ## How To Compile This Program?
 
 1. Clone this repository
-2. If you want to edit the configuration file, it is inside `config/config.txt`
+2. If you want to edit the configuration file, it is inside `adt/Config` folder
 3. If you want to compile this program on Linux, type this inside your terminal `gcc main.c ./adt/Wordmachine/wordmachine.c ./adt/Charmachine/charmachine.c ./adt/Time/time.c ./adt/Point/point.c ./adt/Config/config.c ./adt/Prioqueue/prioqueue.c ./adt/Stack/stack.c ./adt/Notifikasi/notif.c ./adt/Commands/commands.c ./adt/Simulator/simulator.c ./adt/Matrix/matrix.c ./adt/Makanan/makanan.c ./adt/Tree/tree.c ./adt/Kulkas/kulkas.c ./adt/Tree/tree_ext.c ./adt/Set/set.c  -o main -lm`
 
 ## How To Run This Program?
