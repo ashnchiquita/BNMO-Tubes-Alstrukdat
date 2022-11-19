@@ -408,19 +408,23 @@ int main() {
             
             /* RECOMMENDATION */
             } else if (wordEqual(currentWord, strToWord("RECOMM"))) {
-
+                ADVWORD();
                 if (EndWord) {
-                    started = false;
+                    ListMakanan rekomendasi = getRecommendation(treeResep, Inventory);
+                    if (id(rekomendasi.contents[0]) == -1) {
+                        printf("Tidak ada rekomendasi karena inventory kurang/tidak lengkap.\n");
+                    } else {
+                        printf("Rekomendasi:\n");
+                        for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
+                            printf("%d. ", i + 1);
+                            printWord(nama(rekomendasi.contents[i]));
+                            printf("\n");
+                        }
+                    }
+
                 } else {
                     valid = false;
                 }
-
-                ListMakanan rekomendasi = getRecommendation(treeResep, Inventory);
-
-                for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
-                    printf("%d ", rekomendasi.contents[i].id);
-                }
-
                 /* HELP */
             } else if (wordEqual(currentWord, strToWord("HELP"))) {
                 ADVWORD();
@@ -547,7 +551,8 @@ int main() {
                                         printf("Makanan gagal dimasukkan ke dalam kulkas karena kulkas tidak muat.\n");
                                         Enqueue(&Inventory, food);
                                     }
-                                } 
+                                }
+ 
                             }
                         } else {
                             valid = false;
@@ -569,6 +574,8 @@ int main() {
                             if (lk.length == 0) {
                                 printf("Kulkas kosong.\n");
                             } else {
+                                matrixKulkas(&matKulkas, kulkas, lk);
+                                printKulkas(matKulkas, lk);
                                 printf("\nMasukkan 0 untuk kembali ke menu.");
                                 printf("\nMasukkan nomor makanan di kulkas: ");
                                 STARTWORD();
@@ -590,6 +597,7 @@ int main() {
                                         Enqueue(&Inventory,food);
                                         appendWL(nama(food), &act);
                                         command = true;
+                                        matrixKulkas(&matKulkas, kulkas, lk);
                                 
                                     } else {
                                         printf("Makanan gagal dihapus dari kulkas.\n");
@@ -622,7 +630,7 @@ int main() {
         }
         
         if (!valid) {
-            printf("Command tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.\n");
+            printf("\nCommand tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.\n");
             untilEndWord();
         }
     
