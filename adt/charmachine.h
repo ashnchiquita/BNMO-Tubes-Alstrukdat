@@ -20,6 +20,8 @@ void START();
           Jika currentChar != MARK maka EOP akan padam (false)
           Jika currentChar = MARK maka EOP akan menyala (true) */
 void STARTFILE(char *str);
+/* I.S. : File yang ingin dibaca sudah tersedia*/
+/* F.S. : Membaca seluruh isi file dalam file */
 
 void ADV();
 /* Pita dimajukan satu karakter.
@@ -29,6 +31,14 @@ void ADV();
           Jika  currentChar = MARK maka EOP akan menyala (true) */
 
 void STARTFILE_R(char *str);
+/* I.S. : File yang ingin dibaca sudah tersedia*/
+/* F.S. : Membaca seluruh isi file dalam file */
+
 void ADV_R();
+/* Pita dimajukan satu karakter.
+   I.S. : Karakter pada jendela = currentChar, currentChar != MARK
+   F.S. : currentChar adalah karakter berikutnya dari currentChar yang lama,
+          currentChar mungkin = MARK
+          Jika  currentChar = MARK maka EOP akan menyala (true) */
 
 #endif

@@ -8,9 +8,10 @@
 #include "makanan.h"
 #include "matrix.h"
 
-ListMakanan configMakanan();
 ListMakanan *configMakananP();
-Matrix configPeta(POINT *lokasiPemain);
+/* Membaca file makanan dalam file .txt, mengembalikan list makanan*/
 
+Matrix configPeta(POINT *lokasiPemain);
+/* Membaca file peta dalam file .txt, mengembalikan matrix peta */
 
 #endif

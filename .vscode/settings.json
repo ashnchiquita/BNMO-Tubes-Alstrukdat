@@ -3,6 +3,8 @@
         "boolean.h": "c",
         "notif.h": "c",
         "wordmachine.h": "c",
-        "matrix.h": "c"
+        "matrix.h": "c",
+        "ios": "cpp",
+        "stdio.h": "c"
     }
 }

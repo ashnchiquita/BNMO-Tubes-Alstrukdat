@@ -1,7 +1,6 @@
 #ifndef MAKANAN_H
 #define MAKANAN_H
 
-#include "liststatik.h"
 #include "boolean.h"
 #include "wordmachine.h"
 #include "charmachine.h"
@@ -13,6 +12,8 @@ typedef struct{
     TIME expired;
     TIME actionTime;
     Word aksi;
+    int w;
+    int h;
 }Makanan;
 
 typedef struct 
@@ -25,6 +26,8 @@ typedef struct
 #define expired(e) (e).expired
 #define actionTime(e) (e).actionTime
 #define aksi(e) (e).aksi
+#define w(m) (m).w
+#define h(m) (m).h
 #define makanan(m,i) (m).contents[(i)]
 
 void CreateListMakanan(ListMakanan *l);

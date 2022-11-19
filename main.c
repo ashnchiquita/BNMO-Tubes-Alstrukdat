@@ -1,12 +1,16 @@
-#include "./adt/config.h"
-#include "./adt/commands.h"
-#include "./adt/simulator.h"
-#include "./adt/time.h"
-#include "./adt/point.h"
-#include "./adt/prioqueue.h"
+#include "adt/config.h"
+#include "adt/commands.h"
+#include "adt/simulator.h"
+#include "adt/time.h"
+#include "adt/point.h"
+#include "adt/prioqueue.h"
 #include "adt/tree.h"
 #include "adt/stack.h"
 #include "adt/notif.h"
+#include "adt/kulkas.h"
+#include "adt/wordmachine.h"
+#include "adt/charmachine.h"
+#include "adt/set.h"
 
 void tampilanLayar(Simulator pemain, TIME waktuMain, stateNotif sn, int mode){
     printf("\n");
@@ -20,20 +24,23 @@ void tampilanLayar(Simulator pemain, TIME waktuMain, stateNotif sn, int mode){
 
 int main() {
     /* KAMUS */
-    boolean started, valid, unredo, command, wait,action;
-    int waitX, waitY, updateMenit, modeNotif, actionDuration;
+    boolean started, valid, unredo, command, wait, action, success,buySuccess ;
+    int waitX, waitY, updateMenit, modeNotif, nomor;
     Word moveDirection, nama, pilihan;
     Simulator pemain;
     TIME waktuGame;
     ListMakanan listMakanan, buy;
     POINT lokasiPemain;
-    Makanan temp;
-    PrioQueue Delivery, Inventory, tempQueue1, tempQueue2; 
+    Makanan temp, food, buyMakanan;
+    PrioQueue Delivery, Inventory, tempQueue1, tempQueue2;
     ListTree treeResep;
     Matrix peta;
-    Stack state,redo;
     WordList act;
     stateNotif sn;
+    listKulkas lk, tempLK;
+    treeArr kulkas, tempKulkas;
+    MatKul matKulkas;
+    Stack state,redo;
 
     /* ALGORITMA */
 
@@ -68,6 +75,7 @@ int main() {
 
                     /* Memulai konfigurasi dengan membaca file */
                     listMakanan = *configMakananP();
+
                     peta = configPeta(&lokasiPemain);
                     treeResep = *populateResepFromFile(listMakanan, "./adt/config-r.txt");
 
@@ -86,9 +94,13 @@ int main() {
                     CreateTime(&waktuGame, 0, 0, 0);
                     createEmptySN(&sn);
                     createWL(&act);
+                    createLK(&lk);
+                    createTA(&kulkas);
+                    CreateMatKul(10,20,&matKulkas);
+
                     modeNotif = 1;
 
-                    states init = {waktuGame,lokasiPemain,Delivery,Inventory,sn};
+                    states init = {waktuGame,lokasiPemain,Delivery,Inventory,lk, kulkas, sn};
                     PushStack(&state,init);
                 
                     /*Ucapan selamat bermain untuk peserta */
@@ -115,6 +127,7 @@ int main() {
         } else {
             valid = false;
         }
+
         if (!valid) {
             printf("Silakan masukkan command yang valid.\n");
             untilEndWord();
@@ -127,7 +140,7 @@ int main() {
         wait = false;
         valid = true;
         action = false;
-
+        buySuccess= false;
         printf("Enter Command: ");
         STARTWORD();
         if (!EndWord) {
@@ -150,11 +163,9 @@ int main() {
                         /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
                         if(isFound(Mix,wordToInt(currentWord)-1)){
                             temp = ELMT(Mix,wordToInt(currentWord) - 1);
-                            
-                            // TulisTIME(actionTime(temp));
                             handleFoodAction(treeResep,&Inventory,&action,temp);
-                            setCommandArgs(&sn, act);
-                        };
+                            updateMenit = TIMEToMenit(actionTime(temp));
+                        }
                     }else{
                         printf("BNMO tidak berada di area Mix\n");
                     }
@@ -178,9 +189,7 @@ int main() {
 
                         if(isFound(Chop,wordToInt(currentWord)-1)){
                             temp = ELMT(Chop,wordToInt(currentWord) - 1);
-                            
                             handleFoodAction(treeResep,&Inventory,&action,temp);
-                            setCommandArgs(&sn, act);
                             updateMenit = TIMEToMenit(actionTime(temp));  
                         };
                     }else{
@@ -209,9 +218,8 @@ int main() {
                         /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
                         if(isFound(Fry,wordToInt(currentWord)-1)){
                             temp = ELMT(Fry,wordToInt(currentWord) - 1);
-
                             handleFoodAction(treeResep,&Inventory,&action,temp);
-                            setCommandArgs(&sn, act);
+                            updateMenit = TIMEToMenit(actionTime(temp));
                         };
                     }else{
                         printf("BNMO tidak berada di area Fry\n");
@@ -240,10 +248,9 @@ int main() {
                         /*Mencari nama makanan yang mau dibeli nyimpan dalam variabel temp*/
                         if(isFound(Boil,wordToInt(currentWord)-1)){
                             temp = ELMT(Boil,wordToInt(currentWord) - 1);
-
                             handleFoodAction(treeResep,&Inventory,&action,temp);
-                            setCommandArgs(&sn, act);
-                        };
+                            updateMenit = TIMEToMenit(actionTime(temp));
+                        }
                     }else{
                         printf("BNMO tidak berada di area BOIL\n");
                     }
@@ -254,7 +261,7 @@ int main() {
             } else if (wordEqual(currentWord, strToWord("UNDO"))) {
                 ADVWORD();
                 if (EndWord) {
-                    UNDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory, &sn);
+                    UNDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory, &lk, &kulkas, &sn);
                     fixedDisplay(&peta,pemain);
                     modeNotif = 2;
                     unredo = true;
@@ -267,7 +274,7 @@ int main() {
             } else if (wordEqual(currentWord, strToWord("REDO"))) {
                 ADVWORD();
                 if (EndWord) {
-                    REDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory, &sn);
+                    REDO(&state,&redo,&waktuGame,&pemain.lokasi,&Delivery,&Inventory,&lk, &kulkas, &sn);
                     fixedDisplay(&peta,pemain);
                     modeNotif = 3;
                     unredo = true;
@@ -288,9 +295,8 @@ int main() {
             } else if (wordEqual(currentWord, strToWord("COOKBOOK"))) {
                 ADVWORD();
                 if (EndWord) {
-
-                    /* CODE COOKBOOK */
-
+                    displayCookBook(treeResep);
+                    printf("\n");
                 } else {
                     valid = false;
                 }
@@ -299,7 +305,6 @@ int main() {
             } else if (wordEqual(currentWord, strToWord("BUY"))) {
                 appendWL(CopyPaste(currentWord), &act);
                 ADVWORD();
-
                 if (EndWord) {                 
                     if(isLocAdjacent(peta,pemain,'T')){
                         /*Mencari makanan yang memiliki aksi Buy dan menampilkan listnya ke layar*/
@@ -315,13 +320,14 @@ int main() {
 
                         /* Jika input user benar, maka makanan akan masuk ke delivery list dan waktu game bertambah 1 menit */
                         if(isFound(buy,wordToInt(currentWord)-1)){
-                            temp = ELMT(buy,wordToInt(currentWord) - 1);
-                            appendWL(CopyPaste(nama(temp)), &act);
+                            buyMakanan = ELMT(buy,wordToInt(currentWord) - 1);
+                            appendWL(CopyPaste(nama(buyMakanan)), &act);
                             /*Menampilkan notifikasi bahwa pembelian berhasil */
-                            notifikasiPembelian(temp);
+                            notifikasiPembelian(buyMakanan);
                             setCommandArgs(&sn, act);
+                            buySuccess = true;
                             /*Menambahkan makanan ke delivery list */
-                            Enqueue(&Delivery,temp);
+                            // Enqueue(&Delivery,buyMakanan);
                             
                             command = true;
                         }
@@ -419,32 +425,33 @@ int main() {
             } else if (wordEqual(currentWord, strToWord("HELP"))) {
                 ADVWORD();
                 if (EndWord) {
-                    printf("\n\n-------------------- *** : : ---* Guide Commands *--- : : *** --------------------");
-                    printf("\n|                                                                                |");
-                    printf("\n|  START       : Memulai game                                                    |");
-                    printf("\n|  BUY         : Memesan bahan makanan                                           |");
-                    printf("\n|  MIX         : Mencampurkan dua atau lebih makanan menjadi satu makanan        |");
-                    printf("\n|  CHOP        : Memotong satu bahan makanan menjadi bahan yang sudah terpotong  |");
-                    printf("\n|  FRY         : Menggoreng satu atau lebih bahan makanan                        |");
-                    printf("\n|  BOIL        : Merebus satu bahan makanan                                      |");
-                    printf("\n|  MOVE NORTH  : Menggerakkan simulator BNMO satu satuan ke arah utara           |");
-                    printf("\n|  MOVE SOUTH  : Menggerakkan simulator BNMO satu satuan ke arah selatan         |");
-                    printf("\n|  MOVE EAST   : Menggerakkan simulator BNMO satu satuan ke arah timur           |");
-                    printf("\n|  MOVE WEST   : Menggerakkan simulator BNMO satu satuan ke arah barat           |");
-                    printf("\n|  WAIT x y    : Menunggu selama x jam dan y menit tanpa melakukan apa-apa       |");
-                    printf("\n|  CATALOG     : Menampilkan bahan dan makanan yang tersedia pada aplikasi       |");
-                    printf("\n|  COOKBOOK    : Menampilkan resep-resep yang tersedia pada sistem               |");
-                    printf("\n|  INVENTORY   : Menampilkan inventory makanan milik pengguna                    |");
-                    printf("\n|  DELIVERY    : Menampilkan delivery list                                       |");
-                    printf("\n|  UNDO        : Membatalkan command yang dilakukan sebelumnya                   |");
-                    printf("\n|  REDO        : Membatalkan command UNDO                                        |");
-                    printf("\n|  HELP        : Menampilkan guide command kepada pengguna                       |");
-                    printf("\n|  KULKAS      : Menyimpan makanan di kulkas                                     |");
-                    printf("\n|  REKOMENDASI : Menampilkan rekomendasi makanan yang dapat dibuat               |");
-                    printf("\n|  AUTO BNMO   : Memainkan BNMO secara otomatis                                  |");
-                    printf("\n|  EXIT        : Keluar dari game                                                |");
-                    printf("\n|                                                                                |");
-                    printf("\n----------------------------------------------------------------------------------\n\n");
+                    printf("\n\n--------------------- *** : : ---* Guide Commands *--- : : *** ---------------------");
+                    printf("\n|                                                                                  |");
+                    printf("\n|  START         : Memulai game                                                    |");
+                    printf("\n|  BUY           : Memesan bahan makanan                                           |");
+                    printf("\n|  MIX           : Mencampurkan dua atau lebih makanan menjadi satu makanan        |");
+                    printf("\n|  CHOP          : Memotong satu bahan makanan menjadi bahan yang sudah terpotong  |");
+                    printf("\n|  FRY           : Menggoreng satu atau lebih bahan makanan                        |");
+                    printf("\n|  BOIL          : Merebus satu bahan makanan                                      |");
+                    printf("\n|  MOVE NORTH    : Menggerakkan simulator BNMO satu satuan ke arah utara           |");
+                    printf("\n|  MOVE SOUTH    : Menggerakkan simulator BNMO satu satuan ke arah selatan         |");
+                    printf("\n|  MOVE EAST     : Menggerakkan simulator BNMO satu satuan ke arah timur           |");
+                    printf("\n|  MOVE WEST     : Menggerakkan simulator BNMO satu satuan ke arah barat           |");
+                    printf("\n|  WAIT x y      : Menunggu selama x jam dan y menit tanpa melakukan apa-apa       |");
+                    printf("\n|  CATALOG       : Menampilkan bahan dan makanan yang tersedia pada aplikasi       |");
+                    printf("\n|  COOKBOOK      : Menampilkan resep-resep yang tersedia pada sistem               |");
+                    printf("\n|  INVENTORY     : Menampilkan inventory makanan milik pengguna                    |");
+                    printf("\n|  DELIVERY      : Menampilkan delivery list                                       |");
+                    printf("\n|  UNDO          : Membatalkan command yang dilakukan sebelumnya                   |");
+                    printf("\n|  REDO          : Membatalkan command UNDO                                        |");
+                    printf("\n|  HELP          : Menampilkan guide command kepada pengguna                       |");
+                    printf("\n|  KULKAS        : Menampilkan makanan di kulkas                                   |");
+                    printf("\n|  INSERT KULKAS : Memasukkan makanan dari inventoy ke kulkas                      |");
+                    printf("\n|  TAKE KULKAS   : Mengambil makanan dari kulkas dan menaruhnya ke inventory       |");
+                    printf("\n|  RECOMM        : Menampilkan rekomendasi makanan yang dapat dibuat               |");
+                    printf("\n|  EXIT          : Keluar dari game                                                |");
+                    printf("\n|                                                                                  |");
+                    printf("\n------------------------------------------------------------------------------------\n\n");
                 } else {
                     valid = false;
                 }
@@ -486,7 +493,128 @@ int main() {
                         valid = false;
                     }
                 }
-            }else {
+            /* RECOMMENDATION */
+            } else if (wordEqual(currentWord, strToWord("RECOMM"))) {
+               ADVWORD();
+                if (EndWord) {
+                    ListMakanan rekomendasi = getRecommendation(treeResep, Inventory);
+
+                    for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
+                        printf("%d ", rekomendasi.contents[i].id);
+                    }
+                } else {
+                    valid = false;
+                }
+            } else if (wordEqual(currentWord, strToWord("INSERT"))) {
+                appendWL(CopyPaste(currentWord), &act);
+                ADVWORD();
+                if (EndWord) {
+                    valid = false;
+                } else {
+                    if (wordEqual(currentWord, strToWord("KULKAS"))) {
+                        appendWL(CopyPaste(currentWord), &act);
+                        ADVWORD();
+                        if (EndWord) {
+                            if (isFullLK(lk)) {
+                                printf("Kulkas penuh.\n");
+                            } else if (IsEmpty(Inventory)) {
+                                printf("Inventory kosong, tidak ada makanan yang bisa dimasukkan ke kulkas.\n");
+                            } else {
+                                printf("List Makanan di Inventory\n(nama - waktu sisa kedaluarsa)\n");
+                                PrintPrioQueue(Inventory);
+                                printf("\nMasukkan 0 untuk kembali ke menu.");
+                                printf("\nMasukkan nomor makanan di inventory: ");
+                                STARTWORD();
+                                nomor = wordToInt(currentWord);
+
+                                while(!isAdrValid(Inventory, nomor - 1) && nomor != 0){
+                                    printf("\nNomor makanan tidak terdapat, silakan masukan input lagi\n");
+                                    printf("\nMasukkan 0 untuk kembali ke menu.");
+                                    printf("\nMasukkan nomor makanan di inventory: ");
+                                    STARTWORD();
+                                    nomor = wordToInt(currentWord);
+                                }
+
+                                if (nomor != 0) {
+                                    deleteAtAdr(&Inventory, nomor - 1, &food);
+                                    insertKulkas(&kulkas,&lk,food,&success);
+                                
+                                    if (success) {
+                                        printf("Makanan berhasil dimasukkan ke dalam kulkas.\n");
+                                        appendWL(nama(food), &act);
+                                        command = true;
+                                    } else {
+                                        printf("Makanan gagal dimasukkan ke dalam kulkas karena kulkas tidak muat.\n");
+                                        Enqueue(&Inventory, food);
+                                    }
+                                } 
+                            }
+                        } else {
+                            valid = false;
+                        }
+                    } else {
+                        valid = false;
+                    }
+                }
+            } else if (wordEqual(currentWord, strToWord("TAKE"))) {
+                appendWL(CopyPaste(currentWord), &act);
+                ADVWORD();
+                if (EndWord) {
+                    valid = false;
+                } else {
+                    if (wordEqual(currentWord, strToWord("KULKAS"))) {
+                        appendWL(CopyPaste(currentWord), &act);
+                        ADVWORD();
+                        if (EndWord) {
+                            if (lk.length == 0) {
+                                printf("Kulkas kosong.\n");
+                            } else {
+                                printf("\nMasukkan 0 untuk kembali ke menu.");
+                                printf("\nMasukkan nomor makanan di kulkas: ");
+                                STARTWORD();
+                                nomor = wordToInt(currentWord);
+
+                                while((!(nomor >= 1 && nomor <= lk.length)) && nomor != 0){
+                                    printf("\nNomor makanan tidak terdapat, silakan masukan input lagi\n");
+                                    printf("\nMasukkan 0 untuk kembali ke menu.");
+                                    printf("\nMasukkan nomor makanan di kulkas: ");
+                                    STARTWORD();
+                                    nomor = wordToInt(currentWord);
+                                }
+
+                                if (nomor != 0) {
+                                    deleteKulkas(&kulkas, &lk, nomor - 1, &food, &success);
+                                
+                                    if (success) {
+                                        printf("Makanan berhasil dihapus dari kulkas.\n");
+                                        Enqueue(&Inventory,food);
+                                        appendWL(nama(food), &act);
+                                        command = true;
+                                
+                                    } else {
+                                        printf("Makanan gagal dihapus dari kulkas.\n");
+                                        insertKulkas(&kulkas, &lk, food, &success);
+                                    }
+                
+                                }
+                            }
+                        } else {
+                            valid = false;
+                        }
+                    } else {
+                        valid = false;
+                    }
+                }
+            } else if (wordEqual(currentWord, strToWord("KULKAS"))) {
+                ADVWORD();
+                if (EndWord) {
+                    printf("\n");
+                    matrixKulkas(&matKulkas, kulkas, lk);
+                    printKulkas(matKulkas, lk);
+                } else {
+                    valid = false;
+                }
+            } else {
                 valid = false;
             }
         } else {
@@ -497,16 +625,32 @@ int main() {
             printf("Command tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.\n");
             untilEndWord();
         }
-
+    
         /*Kalau misalnya commandnya valid, update 1 menit ke delivery, inventory, dan waktu game*/
-        if(command){
-            update1Min(&Delivery);
-            update1Min(&Inventory);
+        if (command) {
+            /*Mengcopy Delivery dan Inventory ke temp1 dan temp2*/
+            copyPrioQueue(Delivery,&tempQueue1);
+            copyPrioQueue(Inventory,&tempQueue2);
+
+            update1Min(&tempQueue1);
+            update1Min(&tempQueue2);
+            if(buySuccess){
+                Enqueue(&tempQueue1,buyMakanan);
+            }
+            finishDelivery(&tempQueue1,&tempQueue2, &sn);
+            cleanKedaluarsa(&tempQueue2, &sn);
+
+            /*Mengcopy kembali temp1 ke delivery dan temp2 ke inventory*/
+            copyPrioQueue(tempQueue1,&Delivery);
+            copyPrioQueue(tempQueue2,&Inventory);
+
+            copyLK(&tempLK,lk);
+            copyTA(&tempKulkas, kulkas);
+
             NextMenit(&waktuGame);
             setCommandArgs(&sn, act);
-            finishDelivery(&Delivery,&Inventory, &sn);
-            cleanKedaluarsa(&Inventory, &sn);
-            states tempState = {waktuGame,pemain.lokasi,Delivery,Inventory, sn};
+
+            states tempState = {waktuGame,pemain.lokasi,tempQueue1,tempQueue2,tempLK,tempKulkas,sn};
             PushStack(&state,tempState);
         }else if(wait){
             /*Mengcopy Delivery dan Inventory ke temp1 dan temp2*/
@@ -520,32 +664,39 @@ int main() {
             copyPrioQueue(tempQueue1,&Delivery);
             copyPrioQueue(tempQueue2,&Inventory);
 
+            copyLK(&tempLK,lk);
+            copyTA(&tempKulkas, kulkas);
+
             /* Menambahkan N menit waktu ke dalam waktu game */
             NextNMenit(&waktuGame,updateMenit);
-            states tempState = {waktuGame,pemain.lokasi,tempQueue1,tempQueue2, sn};
+            setCommandArgs(&sn, act);
+
+            states tempState = {waktuGame,pemain.lokasi,tempQueue1,tempQueue2,tempLK,tempKulkas,sn};
             /* Push States ke dalam stack */
             PushStack(&state,tempState);
 
+
         }else if(action){
-            
             /*Mengcopy Delivery dan Inventory ke temp1 dan temp2*/
             copyPrioQueue(Delivery,&tempQueue1);
             copyPrioQueue(Inventory,&tempQueue2);
             
+           
             /*Mengupdate waktu sesuai menit yang di wait*/
             updateAllQueue(&tempQueue1,&tempQueue2,updateMenit, &sn);
 
-            /* Menambahkan makanan yang sudah dibuat ke dalam inventory */
             addingFood(temp,&tempQueue2,treeResep,&act,&sn);
-            setCommandArgs(&sn, act);
 
             /*Mengcopy kembali temp1 ke delivery dan temp2 ke inventory*/
             copyPrioQueue(tempQueue1,&Delivery);
             copyPrioQueue(tempQueue2,&Inventory);
 
+            copyLK(&tempLK,lk);
+            copyTA(&tempKulkas, kulkas);
+
             /* Menambahkan N menit waktu ke dalam waktu game */
             NextNMenit(&waktuGame,updateMenit);
-            states tempState = {waktuGame,pemain.lokasi,tempQueue1,tempQueue2, sn};
+            states tempState = {waktuGame,pemain.lokasi,tempQueue1,tempQueue2, tempLK, tempKulkas, sn};
             /* Push States ke dalam stack */
             PushStack(&state,tempState);
         }   
