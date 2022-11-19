@@ -500,7 +500,9 @@ int main() {
                     ListMakanan rekomendasi = getRecommendation(treeResep, Inventory);
 
                     for (int i = 0; i < panjangListMakanan(rekomendasi); ++i) {
-                        printf("%d ", rekomendasi.contents[i].id);
+                        printf("%d. id makanan: %d nama makanan: ", i+1, rekomendasi.contents[i].id);
+                        printWord(rekomendasi.contents[i].namaMakanan);
+                        printf("\n");
                     }
                 } else {
                     valid = false;
