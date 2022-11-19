@@ -21,10 +21,10 @@ int panjangListMakanan(ListMakanan l){
 
 void printMakanan(ListMakanan l){
     printf("===================  List Makanan  =======================\n");
-    printf("Nama - Durasi Kadaluwarsa - Aksi yang Diperlukan - Delivery Time\n");
+    printf("Nama - Durasi Kadaluwarsa - Aksi yang Diperlukan - Action Time\n");
     int length = panjangListMakanan(l);
     for(int i =0 ; i < length;i++){
-        printf("%d.   ",i+1);
+        printf("%d.",i+1);
         printWord(nama(l.contents[i]));
         printf(" - ");
         TulisTIME(expired(l.contents[i]));

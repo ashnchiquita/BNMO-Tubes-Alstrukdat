@@ -17,9 +17,6 @@ typedef struct
 #define lokasiPemain(S) (S).lokasi
 
 void createSimulator(Simulator *S, POINT p, Word nama);
-
-// void ubahLokasi(Simulator S);
-
-// void ubahInventory(Simulator s);
-
+/* I.S : S,p, dan nama terdefinisi */
+/* F.S. : Meng-assign nilai POINT simulator menjadi p dan nilai Nama simulator menjadi nama */
 #endif

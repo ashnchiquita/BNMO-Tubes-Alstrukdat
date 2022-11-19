@@ -24,14 +24,14 @@ void tampilanLayar(Simulator pemain, TIME waktuMain, stateNotif sn, int mode){
 
 int main() {
     /* KAMUS */
-    boolean started, valid, unredo, command, wait, action, success;
+    boolean started, valid, unredo, command, wait, action, success,buySuccess ;
     int waitX, waitY, updateMenit, modeNotif, nomor;
     Word moveDirection, nama, pilihan;
     Simulator pemain;
     TIME waktuGame;
     ListMakanan listMakanan, buy;
     POINT lokasiPemain;
-    Makanan temp, food;
+    Makanan temp, food, buyMakanan;
     PrioQueue Delivery, Inventory, tempQueue1, tempQueue2;
     ListTree treeResep;
     Matrix peta;
@@ -140,7 +140,7 @@ int main() {
         wait = false;
         valid = true;
         action = false;
-
+        buySuccess= false;
         printf("Enter Command: ");
         STARTWORD();
         if (!EndWord) {
@@ -320,13 +320,14 @@ int main() {
 
                         /* Jika input user benar, maka makanan akan masuk ke delivery list dan waktu game bertambah 1 menit */
                         if(isFound(buy,wordToInt(currentWord)-1)){
-                            temp = ELMT(buy,wordToInt(currentWord) - 1);
-                            appendWL(CopyPaste(nama(temp)), &act);
+                            buyMakanan = ELMT(buy,wordToInt(currentWord) - 1);
+                            appendWL(CopyPaste(nama(buyMakanan)), &act);
                             /*Menampilkan notifikasi bahwa pembelian berhasil */
-                            notifikasiPembelian(temp);
+                            notifikasiPembelian(buyMakanan);
                             setCommandArgs(&sn, act);
+                            buySuccess = true;
                             /*Menambahkan makanan ke delivery list */
-                            Enqueue(&Delivery,temp);
+                            // Enqueue(&Delivery,buyMakanan);
                             
                             command = true;
                         }
@@ -626,7 +627,7 @@ int main() {
             printf("Command tidak valid.\nUntuk melihat list command dan keterangannya, silakan masukkan command 'HELP'.\n");
             untilEndWord();
         }
-
+    
         /*Kalau misalnya commandnya valid, update 1 menit ke delivery, inventory, dan waktu game*/
         if (command) {
             /*Mengcopy Delivery dan Inventory ke temp1 dan temp2*/
@@ -635,6 +636,9 @@ int main() {
 
             update1Min(&tempQueue1);
             update1Min(&tempQueue2);
+            if(buySuccess){
+                Enqueue(&tempQueue1,buyMakanan);
+            }
             finishDelivery(&tempQueue1,&tempQueue2, &sn);
             cleanKedaluarsa(&tempQueue2, &sn);
 
@@ -679,9 +683,11 @@ int main() {
             copyPrioQueue(Delivery,&tempQueue1);
             copyPrioQueue(Inventory,&tempQueue2);
             
-            addingFood(temp,&tempQueue2,treeResep,&act,&sn);
+           
             /*Mengupdate waktu sesuai menit yang di wait*/
             updateAllQueue(&tempQueue1,&tempQueue2,updateMenit, &sn);
+
+            addingFood(temp,&tempQueue2,treeResep,&act,&sn);
 
             /*Mengcopy kembali temp1 ke delivery dan temp2 ke inventory*/
             copyPrioQueue(tempQueue1,&Delivery);
