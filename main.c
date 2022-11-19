@@ -544,11 +544,10 @@ int main() {
                                         appendWL(nama(food), &act);
                                         command = true;
                                     } else {
-                                        printf("Makanan gagal dimasukkan ke dalam kulkas karena kulkas penuh.\n");
+                                        printf("Makanan gagal dimasukkan ke dalam kulkas karena kulkas tidak muat.\n");
                                         Enqueue(&Inventory, food);
                                     }
-                                }
- 
+                                } 
                             }
                         } else {
                             valid = false;
@@ -570,7 +569,6 @@ int main() {
                             if (lk.length == 0) {
                                 printf("Kulkas kosong.\n");
                             } else {
-                                printKulkas(matKulkas, lk);
                                 printf("\nMasukkan 0 untuk kembali ke menu.");
                                 printf("\nMasukkan nomor makanan di kulkas: ");
                                 STARTWORD();
