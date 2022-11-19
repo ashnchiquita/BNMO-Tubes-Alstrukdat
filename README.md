@@ -62,7 +62,7 @@ After compiling, you can run the program by running the executable file. Type `.
 |
 └───doc
 |       Form_Asistensi.pdf
-|       IF2110-TB-H-2.pdf 
+|       IF2110_TB_02_H.pdf 
 |       Notulensi_Rapat.pdf 
 |       Progress_Milestone.pdf 
 |
