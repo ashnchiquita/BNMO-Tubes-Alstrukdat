@@ -17,7 +17,7 @@ BNMO is CLI (Command Line Interface) Game that we made using C language. This ga
 
 1. Clone this repository
 2. If you want to edit the configuration file, it is inside `config/config.txt`
-3. If you want to compile this program, type this inside your terminal `gcc main.c ./adt/source/makanan.c ./adt/source/charmachine.c ./adt/source/wordmachine.c ./adt/source/time.c ./adt/source/config.c ./adt/source/commands.c ./adt/source/simulator.c ./adt/source/point.c ./adt/source/prioqueue.c ./adt/source/tree.c ./adt/source/tree_ext.c ./adt/source/matrix.c ./adt/source/stack.c ./adt/source/notif.c ./adt/source/set.c ./adt/source/kulkas.c  -o driver -lm`
+3. If you want to compile this program on Linux, type this inside your terminal `gcc main.c ./adt/Wordmachine/wordmachine.c ./adt/Charmachine/charmachine.c ./adt/Time/time.c ./adt/Point/point.c ./adt/Config/config.c ./adt/Prioqueue/prioqueue.c ./adt/Stack/stack.c ./adt/Notifikasi/notif.c ./adt/Commands/commands.c ./adt/Simulator/simulator.c ./adt/Matrix/matrix.c ./adt/Makanan/makanan.c ./adt/Tree/tree.c ./adt/Kulkas/kulkas.c ./adt/Tree/tree_ext.c ./adt/Set/set.c  -o driver -lm`
 
 ## How To Run Program?
 After compiling, you can run the program by running the executable file. Type `./driver` inside your terminal and have fun playing BNMO Cooking Game Simulator!
@@ -64,62 +64,103 @@ After compiling, you can run the program by running the executable file. Type `.
 │       settings.json
 │
 └───adt
-    │   boolean.h
-    │   charmachine.h
-    |   commands.h
-    |   config-r.txt
-    |   config.h
-    |   configMakanan.txt
-    |   configPeta.txt
-    |   kulkas.h
-    |   liststatik.h
-    |   makanan.h
-    |   matrix.h
-    |   notif.h
-    |   objectU.h
-    |   point.h
-    |   prioqueue.h
-    |   set.h
-    |   simulator.h
-    |   stack.h
-    |   time.h
-    |   tree.h
-    |   wordmachine.h
-    │
-    ├───driver
-    │       configdriver.c
-    │       driver.exe
-    │       driver_liststatik.c
-    │       driverkulkas.c
-    │       driverkulkas
-    |       main.exe
+    ├───Charmachine 
+    |       charmachine.h
+    |       charmachine.c
+    |       charmachinedriver.c
+    |
+    |
+    ├─── Commands
+    |       commands.h
+    |        commands.c
+    |        commandsdriver.c
+    |    
+    ├─── Config
+    |        config-r.txt
+    |        config.c
+    |        config.h
+    |        configdriver.c
+    |        configMakanan.txt
+    |        configPeta.txt
+    |
+    |
+    ├─── Kulkas
+    |        kulkas.c
+    |        kulkas.h
+    |        driverkulkas.c
+    |
+    |
+    ├─── Liststatik
+    |       liststatik.c
+    |       liststatik.h
+    |       driver_liststatik.c
+    |
+    |
+    ├─── Makanan
+    |       makanan.c
+    |       makanan.h
     |       makanandriver.c
-    |       matrixdriver.c
-    |       matrixdriver.exe
-    |       pointdriver.c
-    |       prioqueuedriver.c
-    |       simulatordriver.c
-    |       stackdriver.c
-    |       timedriver.c
-    |       timedriver.exe
-    |       treedriver.c
-    │
-    ├───source
-            charmachine.c
-            commands.c
-            config.c
-            kulkas.c
-            liststatik.c
-            makanan.c
-            matrix.c
-            notif.c
-            point.c
-            prioqueue.c
-            set.c
-            simulator.c
-            stack.c
-            time.c
-            tree.c
-            tree_ext.c
-            wordmachine.c
+    |
+    |
+    ├─── Matrix
+    |        matrix.c
+    |        matrix.h
+    |        matrixdriver.c
+    |        
+    |        
+    ├─── Notifikasi
+    |        notif.c
+    |        notif.h
+    |        
+    |        
+    ├─── Point
+    |        point.c
+    |        point.h
+    |        pointdriver.c
+    |            
+    ├─── Prioqueue
+    |        prioqueue.c
+    |        prioqueue.h
+    |        prioqueuedriver.c
+    |        
+    |        
+    ├─── Set
+    |        set.c
+    |        set.h
+    |        
+    |        
+    ├─── Simulator
+    |        simulator.c
+    |        simulator.h
+    |        simulatordriver.c
+    |        
+    |        
+    ├─── Stack
+    |        stack.c
+    |        stack.h
+    |        stackdriver.c
+    |        
+    |        
+    ├─── Time 
+    |        time.c
+    |        time.h
+    |        timedriver.c
+    |        
+    |        
+    ├─── Tree
+    |        tree_ext.c
+    |        tree.c
+    |        tree.h
+    |        treedriver.c
+    |        
+    |        
+    ├─── Wordmachine
+    |        wordmachine.c
+    |        wordmachine.h
+    |        wordmachinedriver.c
+    |        
+    |        
+    │   boolean.h
+    |   objectU.h
+    
     ```
