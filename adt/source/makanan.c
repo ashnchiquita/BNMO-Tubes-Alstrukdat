@@ -93,8 +93,6 @@ int getIdx(ListMakanan l, int id){
     return i;
 }
 
-
-
 void printCommand(ListMakanan l, Word command){
     printf("==================================\n");
     printf("========    ");

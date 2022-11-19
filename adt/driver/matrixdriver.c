@@ -6,9 +6,10 @@ int main() {
 
     POINT lokasiPemain;
     Simulator pemain;
+    PrioQueue inventory;
     Matrix peta = configPeta(&lokasiPemain);
     Word nama = {"BMNO", 4};
-    createSimulator(&pemain, lokasiPemain, nama);
+    createSimulator(&pemain, lokasiPemain, nama,inventory);
 
     printf("Apakah index matrix valid (-1, -1): %d\n", isMatrixIdxValid(-1, -1));
     printf("Apakah index matrix valid (1,1): %d\n", isMatrixIdxValid(1,1));

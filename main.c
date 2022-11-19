@@ -90,7 +90,7 @@ int main() {
                     /*Meminta input nama user untuk disimpan dalam simulator */
                     printf("Masukkan nama pertama anda : \n");
                     STARTINPUT();
-                    createSimulator(&pemain,lokasiPemain, currentWord);
+                    createSimulator(&pemain,lokasiPemain, currentWord,Inventory);
                     CreateTime(&waktuGame, 0, 0, 0);
                     createEmptySN(&sn);
                     createWL(&act);

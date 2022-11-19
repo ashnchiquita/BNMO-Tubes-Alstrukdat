@@ -56,13 +56,18 @@ int getIdx(ListMakanan l, int id);
 /* Mengembalikan index makanan dengan id tertentu yang berada dalam list makanan */
 
 void printCommand(ListMakanan l, Word command);
+/* I.S. : Listmakanan l terdefinisi dan word command terdefinisi */
+/* F.S. : Menampilkan semua makanan dari Listmakanan l yang memiliki command yang sama */
 
 boolean isFound(ListMakanan l, int idx);
+/* Mengembalikan nilai benar jika index berada dalam range 1 sampai length(l)-1 */
 
 boolean isIdFound(ListMakanan l, int id);
 /* Mengembalikan nilai true jika ada makanan dengan id yang diminta, di dalam list makanan */
 
-// Makanan getMakanan(ListMakanan l, int id);
 
 void setMakanan(ListMakanan *l, Makanan new, int id);
+/* I.S. : List makanan terdefinisi, id pasti berada dalam Listmakanan */
+/* F.S. : Makanan dengan id dalam Listmakanan terganti menjadi new */
+
 #endif

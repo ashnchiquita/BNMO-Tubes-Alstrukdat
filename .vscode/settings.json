@@ -5,6 +5,7 @@
         "wordmachine.h": "c",
         "matrix.h": "c",
         "ios": "cpp",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "set.h": "c"
     }
 }
